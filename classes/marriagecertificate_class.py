@@ -1,4 +1,4 @@
-from Classes.document_class import Document
+from classes.document_class import Document
 
 
 class MarriageCertificate(Document):
