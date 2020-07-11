@@ -1,10 +1,19 @@
 import unittest
+from classes.user_class import User
 
 
 class UserClassTest(unittest.TestCase):
-    def test_two_equals_two(self):
-        value_to_check = 2
-        self.assertEqual(value_to_check, 2)
+    def test_get_first_name(self):
+        test_string = "Test"
+        test_user_class = User()
+        test_user_class._first_name = test_string
+        self.assertEqual(test_user_class.get_first_name(), test_string)
+
+    def test_set_first_name(self):
+        test_string = "Test"
+        test_user_class = User()
+        test_user_class.set_first_name(test_string)
+        self.assertEqual(test_user_class._first_name, test_string)
 
 
 if __name__ == '__main__':

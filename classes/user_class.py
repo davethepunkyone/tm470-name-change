@@ -16,3 +16,9 @@ class User:
         self._email = None
         self._verified_state = None
 
+    def set_first_name(self, first_name):
+        self._first_name = first_name
+
+    def get_first_name(self):
+        return self._first_name
+
