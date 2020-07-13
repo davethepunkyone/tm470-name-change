@@ -1,3 +1,5 @@
+import json
+
 
 class User:
     """This is a class for the User object.
@@ -21,7 +23,7 @@ class User:
         return self._user_id
 
     @user_id.setter
-    def user_id(self, user_id) -> None:
+    def user_id(self, user_id: int) -> None:
         try:
             id_to_use = int(user_id)
             self._user_id = id_to_use
@@ -36,7 +38,7 @@ class User:
         return self._first_name
 
     @first_name.setter
-    def first_name(self, first_name) -> None:
+    def first_name(self, first_name: str) -> None:
         self._first_name = first_name
 
     @property
@@ -44,7 +46,7 @@ class User:
         return self._surname
 
     @surname.setter
-    def surname(self, surname) -> None:
+    def surname(self, surname: str) -> None:
         self._surname = surname
 
     @property
@@ -52,7 +54,7 @@ class User:
         return self._email
 
     @email.setter
-    def email(self, email) -> None:
+    def email(self, email: str) -> None:
         self._email = email
 
     @property
@@ -60,8 +62,22 @@ class User:
         return self._verified_state
 
     @verified_state.setter
-    def verified_state(self, verified_state) -> None:
+    def verified_state(self, verified_state: bool) -> None:
         if verified_state not in (1, 0, False, True, None):
             raise ValueError("Verified State provided ({0}) is not boolean or None".format(verified_state))
         else:
             self._verified_state = verified_state
+
+    @property
+    def return_user_as_dict(self) -> dict:
+        return {
+            "id": self.user_id,
+            "first_name": self.first_name,
+            "surname": self.surname,
+            "email": self.email,
+            "verified_state": self.verified_state
+        }
+
+    @property
+    def return_user_as_json(self) -> json:
+        return json.dumps(self.return_user_as_dict, indent=4)

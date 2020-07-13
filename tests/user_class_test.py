@@ -1,4 +1,5 @@
 import unittest
+import json
 from classes.user_class import User
 
 test_id = 100
@@ -68,7 +69,15 @@ class UserClassTest(unittest.TestCase):
         different_state = 2
         with self.assertRaises(ValueError) as err:
             self.test_user.verified_state = different_state
-        self.assertEqual(str(err.exception), "Verified State provided ({0}) is not boolean or None".format(different_state))
+        self.assertEqual(str(err.exception),
+                         "Verified State provided ({0}) is not boolean or None".format(different_state))
+
+    def test_conversion_to_dict(self) -> None:
+        self.assertEqual(self.test_user.return_user_as_dict.get("id"), test_id)
+        self.assertEqual(self.test_user.return_user_as_dict.get("first_name"), test_first_name)
+        self.assertEqual(self.test_user.return_user_as_dict.get("surname"), test_surname)
+        self.assertEqual(self.test_user.return_user_as_dict.get("email"), test_email)
+        self.assertEqual(self.test_user.return_user_as_dict.get("verified_state"), test_state)
 
 
 if __name__ == '__main__':
