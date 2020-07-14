@@ -1,25 +1,20 @@
 import unittest
 import json
 from classes.user_class import User
-
-test_id = 100
-test_first_name = "Testy"
-test_surname = "McTesterson"
-test_email = "testymctesterson@test.com"
-test_state = True
+from globals.test_globals import test_user_id, test_first_name, test_surname, test_email, test_state
 
 
 class UserClassTest(unittest.TestCase):
     def setUp(self) -> None:
         self.test_user = User()
-        self.test_user.user_id = test_id
+        self.test_user.user_id = test_user_id
         self.test_user.first_name = test_first_name
         self.test_user.surname = test_surname
         self.test_user.email = test_email
         self.test_user.verified_state = test_state
 
     def test_get_id(self) -> None:
-        self.assertEqual(self.test_user.user_id, test_id)
+        self.assertEqual(self.test_user.user_id, test_user_id)
 
     def test_set_id(self) -> None:
         different_id = 999
@@ -31,7 +26,7 @@ class UserClassTest(unittest.TestCase):
         with self.assertRaises(ValueError) as err:
             self.test_user.user_id = different_id
         self.assertEqual(str(err.exception), "ID provided ({0}) is not numeric or None".format(different_id))
-        self.assertEqual(self.test_user.user_id, test_id)
+        self.assertEqual(self.test_user.user_id, test_user_id)
 
     def test_get_first_name(self) -> None:
         self.assertEqual(self.test_user.first_name, test_first_name)
@@ -73,7 +68,7 @@ class UserClassTest(unittest.TestCase):
                          "Verified State provided ({0}) is not boolean or None".format(different_state))
 
     def test_conversion_to_dict(self) -> None:
-        self.assertEqual(self.test_user.return_user_as_dict.get("id"), test_id)
+        self.assertEqual(self.test_user.return_user_as_dict.get("id"), test_user_id)
         self.assertEqual(self.test_user.return_user_as_dict.get("first_name"), test_first_name)
         self.assertEqual(self.test_user.return_user_as_dict.get("surname"), test_surname)
         self.assertEqual(self.test_user.return_user_as_dict.get("email"), test_email)
