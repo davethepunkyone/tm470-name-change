@@ -1,5 +1,5 @@
 import json
-from datetime import datetime
+import datetime
 
 
 class Document:
@@ -160,10 +160,10 @@ class Document:
 
     @added_datetime.setter
     def added_datetime(self, date_val: datetime) -> None:
-        if date_val is not datetime:
-            raise ValueError("Added Datetime value provided ({0}) is not date/time or None".format(date_val))
-        else:
+        if isinstance(date_val, datetime.datetime):
             self._added_datetime = date_val
+        else:
+            raise ValueError("Added Datetime value provided ({0}) is not date/time or None".format(date_val))
 
     @property
     def last_modified_datetime(self) -> datetime:
@@ -171,7 +171,8 @@ class Document:
 
     @last_modified_datetime.setter
     def last_modified_datetime(self, date_val: datetime) -> None:
-        if date_val is not datetime:
-            raise ValueError("Last Modified Datetime value provided ({0}) is not date/time or None".format(date_val))
-        else:
+        if isinstance(date_val, datetime.datetime):
             self._last_modified_datetime = date_val
+        else:
+            raise ValueError("Last Modified Datetime value provided ({0}) is not date/time or None".format(date_val))
+
