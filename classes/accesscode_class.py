@@ -6,7 +6,7 @@ class AccessCode:
     This contains the following parameters:
     - ID"""
 
-    def __init__(self):
+    def __init__(self, **kwargs):
         self._id = None
         self._user_id = None
         self._uploaded_document_id = None

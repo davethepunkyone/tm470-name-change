@@ -7,7 +7,7 @@ class DecreeAbsolute(Document):
     This contains the following parameters:
     - ID"""
 
-    def __init__(self):
+    def __init__(self, **kwargs):
         super().__init__()
         self._marriage_certificate_details = None  # Use MarriageCertificate object
         self._decree_absolute_date = None

@@ -8,7 +8,7 @@ class Document:
     This contains the following parameters:
     - ID"""
 
-    def __init__(self):
+    def __init__(self, **kwargs):
         self._document_id = None
         self._user_id = None
         self._complete = None

@@ -11,7 +11,7 @@ class User:
     - Email Address
     - Verified State"""
 
-    def __init__(self):
+    def __init__(self, **kwargs):
         self._user_id = None
         self._first_name = None
         self._surname = None

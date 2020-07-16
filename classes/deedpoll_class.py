@@ -7,7 +7,7 @@ class DeedPoll(Document):
     This contains the following parameters:
     - ID"""
 
-    def __init__(self):
+    def __init__(self, **kwargs):
         super().__init__()
         self._name_change_date = None
         self._registered_with_courts = None
