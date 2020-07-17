@@ -23,3 +23,12 @@ test_age_on_cert = 25
 test_cert_number = "A741"
 test_registration_district = "Exeter"
 test_marriage_no = 41
+
+# Deed Poll Class Test
+test_change_name_date = datetime.date(2015, 7, 4)
+test_changed_with_courts = True
+
+# Decree Absolute Class Test
+test_decree_absolute_date = datetime.date(2020, 4, 25)
+test_issuing_court = "Plymouth"
+test_no_of_matter = "A41"

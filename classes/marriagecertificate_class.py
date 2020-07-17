@@ -16,7 +16,7 @@ class MarriageCertificate(Document):
     This class also inherits all properties from Document class."""
 
     def __init__(self, **kwargs):
-        super().__init__()
+        super().__init__(**kwargs)
         self._marriage_date = None
         self._age_on_certificate = None
         self._certificate_number = None
