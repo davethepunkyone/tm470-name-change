@@ -1,11 +1,13 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <title>Change Your Name</title>
-        <link rel="stylesheet" type="text/css" href="../static/default.css" />
-    </head>
-    <body>
-        <h1>Welcome to Change Your Name!</h1>
-        <p>Hello, {{ user.username }}!</p>
-    </body>
-</html>
+<html lang="en" dir="ltr">
+   <head>
+      <meta charset="utf-8">
+      <title>Change Your Name</title>
+   </head>
+   <body>
+      {% extends "template_general.html" %}
+      {% block content %}
+      <h1> Welcome to Change Your Name </h1>
+      <p> This is a test to see how this behaves </p>
+      {% endblock %}
+   </body>

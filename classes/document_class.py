@@ -13,9 +13,9 @@ class Document:
         self._user_id = None
         self._complete = None
         self._uploaded_file_id = None
-        self._old_first_name = None
+        self._old_forenames = None
         self._old_surname = None
-        self._new_first_name = None
+        self._new_forenames = None
         self._new_surname = None
         self._address_id = None
         self._document_verified_state = None
@@ -80,12 +80,12 @@ class Document:
                 raise ValueError("Uploaded ID provided ({0}) is not numeric or None".format(upload_id_val))
 
     @property
-    def old_first_name(self) -> str:
-        return self._old_first_name
+    def old_forenames(self) -> str:
+        return self._old_forenames
 
-    @old_first_name.setter
-    def old_first_name(self, name: str) -> None:
-        self._old_first_name = name
+    @old_forenames.setter
+    def old_forenames(self, name: str) -> None:
+        self._old_forenames = name
 
     @property
     def old_surname(self) -> str:
@@ -96,12 +96,12 @@ class Document:
         self._old_surname = name
 
     @property
-    def new_first_name(self) -> str:
-        return self._new_first_name
+    def new_forenames(self) -> str:
+        return self._new_forenames
 
-    @new_first_name.setter
-    def new_first_name(self, name: str) -> None:
-        self._new_first_name = name
+    @new_forenames.setter
+    def new_forenames(self, name: str) -> None:
+        self._new_forenames = name
 
     @property
     def new_surname(self) -> str:

@@ -1,14 +1,14 @@
 import unittest
 import json
 from classes.user_class import User
-from globals.test_globals import test_user_id, test_first_name, test_surname, test_email, test_state
+from globals.test_globals import test_user_id, test_forenames, test_surname, test_email, test_state
 
 
 class UserClassTest(unittest.TestCase):
     def setUp(self) -> None:
         self.test_user = User()
         self.test_user.user_id = test_user_id
-        self.test_user.first_name = test_first_name
+        self.test_user.forenames = test_forenames
         self.test_user.surname = test_surname
         self.test_user.email = test_email
         self.test_user.verified_state = test_state
@@ -28,13 +28,13 @@ class UserClassTest(unittest.TestCase):
         self.assertEqual(str(err.exception), "ID provided ({0}) is not numeric or None".format(different_id))
         self.assertEqual(self.test_user.user_id, test_user_id)
 
-    def test_get_first_name(self) -> None:
-        self.assertEqual(self.test_user.first_name, test_first_name)
+    def test_get_forenames(self) -> None:
+        self.assertEqual(self.test_user.forenames, test_forenames)
 
-    def test_set_first_name(self) -> None:
+    def test_set_forenames(self) -> None:
         different_name = "Adam"
-        self.test_user.first_name = different_name
-        self.assertEqual(self.test_user.first_name, different_name)
+        self.test_user.forenames = different_name
+        self.assertEqual(self.test_user.forenames, different_name)
 
     def test_get_surname(self) -> None:
         self.assertEqual(self.test_user.surname, test_surname)
@@ -69,7 +69,7 @@ class UserClassTest(unittest.TestCase):
 
     def test_conversion_to_dict(self) -> None:
         self.assertEqual(self.test_user.return_user_as_dict.get("id"), test_user_id)
-        self.assertEqual(self.test_user.return_user_as_dict.get("first_name"), test_first_name)
+        self.assertEqual(self.test_user.return_user_as_dict.get("forenames"), test_forenames)
         self.assertEqual(self.test_user.return_user_as_dict.get("surname"), test_surname)
         self.assertEqual(self.test_user.return_user_as_dict.get("email"), test_email)
         self.assertEqual(self.test_user.return_user_as_dict.get("verified_state"), test_state)

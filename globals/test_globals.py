@@ -2,7 +2,7 @@ import datetime
 
 # User Class Test
 test_user_id = 100
-test_first_name = "Testy"
+test_forenames = "Testy"
 test_surname = "McTesterson"
 test_email = "testymctesterson@test.com"
 test_state = True
@@ -10,7 +10,7 @@ test_state = True
 # Document Class Test
 test_doc_id = 300
 test_uploaded_file_id = 5871
-test_old_first_name = "Miguel"
+test_old_forenames = "Miguel"
 test_old_surname = "El Testo"
 test_address_id = 4511
 test_doc_verified_id = 17221

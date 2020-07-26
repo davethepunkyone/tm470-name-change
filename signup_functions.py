@@ -20,6 +20,7 @@ def generate_email(user: User):
         .format(user.first_name, access_code, expiry_date.strftime("%d/%m/%Y %H:%M:%S"))
     print(email_body)
 
+
 # TODO - Remove below, for testing only
 x = User()
 x.first_name = "Testy"

@@ -6,14 +6,14 @@ class User:
 
     This contains the following parameters:
     - User ID
-    - First Name
+    - Forenames
     - Surname
     - Email Address
     - Verified State"""
 
     def __init__(self, **kwargs):
         self._user_id = None
-        self._first_name = None
+        self._forenames = None
         self._surname = None
         self._email = None
         self._verified_state = None
@@ -34,12 +34,12 @@ class User:
                 raise ValueError("ID provided ({0}) is not numeric or None".format(user_id))
 
     @property
-    def first_name(self) -> str:
-        return self._first_name
+    def forenames(self) -> str:
+        return self._forenames
 
-    @first_name.setter
-    def first_name(self, first_name: str) -> None:
-        self._first_name = first_name
+    @forenames.setter
+    def forenames(self, forenames: str) -> None:
+        self._forenames = forenames
 
     @property
     def surname(self) -> str:
@@ -72,7 +72,7 @@ class User:
     def return_user_as_dict(self) -> dict:
         return {
             "id": self.user_id,
-            "first_name": self.first_name,
+            "forenames": self.forenames,
             "surname": self.surname,
             "email": self.email,
             "verified_state": self.verified_state

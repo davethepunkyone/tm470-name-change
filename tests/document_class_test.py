@@ -11,9 +11,9 @@ class DocumentClassTest(unittest.TestCase):
         self.test_doc.user_id = tg.test_user_id
         self.test_doc.complete = tg.test_state
         self.test_doc.uploaded_file_id = tg.test_uploaded_file_id
-        self.test_doc.old_first_name = tg.test_old_first_name
+        self.test_doc.old_forenames = tg.test_old_forenames
         self.test_doc.old_surname = tg.test_old_surname
-        self.test_doc.new_first_name = tg.test_first_name
+        self.test_doc.new_forenames = tg.test_forenames
         self.test_doc.new_surname = tg.test_surname
         self.test_doc.address_id = tg.test_address_id
         self.test_doc.document_verified_state = tg.test_state
@@ -54,7 +54,7 @@ class DocumentClassTest(unittest.TestCase):
         self.assertEqual(self.test_doc.uploaded_file_id, different_id)
 
     def test_get_old_first_name(self) -> None:
-        self.assertEqual(self.test_doc.old_first_name, tg.test_old_first_name)
+        self.assertEqual(self.test_doc.old_forenames, tg.test_old_forenames)
 
     def test_set_old_first_name(self) -> None:
         different_name = "Alan"
@@ -70,12 +70,12 @@ class DocumentClassTest(unittest.TestCase):
         self.assertEqual(self.test_doc.old_surname, different_name)
 
     def test_get_new_first_name(self) -> None:
-        self.assertEqual(self.test_doc.new_first_name, tg.test_first_name)
+        self.assertEqual(self.test_doc.new_forenames, tg.test_forenames)
 
     def test_set_new_first_name(self) -> None:
         different_name = "Zack"
-        self.test_doc.new_first_name = different_name
-        self.assertEqual(self.test_doc.new_first_name, different_name)
+        self.test_doc.new_forenames = different_name
+        self.assertEqual(self.test_doc.new_forenames, different_name)
 
     def test_get_new_surname(self) -> None:
         self.assertEqual(self.test_doc.new_surname, tg.test_surname)
