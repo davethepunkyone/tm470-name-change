@@ -1,3 +1,7 @@
+* {
+  font-family: Calibri;
+}
+
 h1 {
   color: blue;
   text-align: center;
@@ -6,4 +10,66 @@ h1 {
 p {
   color: red;
   text-align: left;
+}
+
+header {
+  position: fixed;
+  top: 5px;
+  width: 97%;
+  padding: 10px;
+  height: 50px;
+  line-height: 50px;
+  background-color: #4472C4;
+  color: white;
+  vert-align: middle;
+  border-style: solid;
+  border-color: #2F528F;
+}
+
+footer {
+  position: fixed;
+  bottom: 5px;
+  width: 97%;
+  padding: 10px;
+  height: 50px;
+  line-height: 50px;
+  background-color: black;
+  color: white;
+  vert-align: middle;
+  border-style: solid;
+  border-color: #2F528F;
+}
+
+.main {
+  position: fixed;
+  top: 75px;
+  width: 97%;
+  height: 850px;
+  padding: 10px;
+  background-color: #F2F2F2;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  border-style: solid;
+  border-color: #2F528F;
+}
+
+.header_text {
+  float: left;
+  color: white;
+  font-weight: bold;
+  font-size: 30px;
+}
+
+.header_image {
+  float: left;
+}
+
+.links {
+  float: left;
+  text-align: left;
+}
+
+.copyright {
+  float: right;
+  text-align: right;
 }

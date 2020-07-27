@@ -7,18 +7,18 @@
    </head>
    <body>
       <header>
-         <div class="container">
-            <h1 class="logo">Change Your Name</h1>
-            <strong>
-               <nav>
-                  <ul class="menu">
-                      <li>test</li>
-                  </ul>
-               </nav>
-            </strong>
-         </div>
+         <div class="header_image"><img src={{url_for('static', filename='placeholder_logo.png')}} width="50%" height="50%"></div>
+         <div class="header_text">Change Your Name</div>
       </header>
+      <div class="main">
       {% block content %}
       {% endblock %}
+      </div>
+      <footer>
+         <div class="footer">
+            <div class="links">About | How It Works | FAQ | Contact</div>
+            <div class="copyright">&#169; CYN 2020</div>
+         </div>
+      </footer>
    </body>
 </html>
