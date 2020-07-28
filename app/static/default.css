@@ -3,19 +3,32 @@
 }
 
 h1 {
-  color: blue;
-  text-align: center;
+  color: black;
+  margin-top: 5px;
+  margin-bottom: 10px;
+  font-weight: bold;
+  font-size: 30px;
+}
+
+h2 {
+  color: black;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  font-weight: bold;
+  font-size: 22px;
 }
 
 p {
-  color: red;
+  color: black;
   text-align: left;
 }
 
 header {
+  /*margin: auto;*/
   position: fixed;
   top: 5px;
-  width: 97%;
+  /*width: 97%;*/
+  width: 1000px;
   padding: 10px;
   height: 50px;
   line-height: 50px;
@@ -27,9 +40,11 @@ header {
 }
 
 footer {
+  /*margin: auto;*/
   position: fixed;
-  bottom: 5px;
-  width: 97%;
+  top: 965px;
+  /*bottom: 5px;*/
+  width: 1000px;
   padding: 10px;
   height: 50px;
   line-height: 50px;
@@ -38,30 +53,73 @@ footer {
   vert-align: middle;
   border-style: solid;
   border-color: #2F528F;
+  font-size: large;
 }
 
 .main {
+  /*margin: auto;*/
   position: fixed;
-  top: 75px;
-  width: 97%;
-  height: 850px;
-  padding: 10px;
+  /*alignment: center;*/
+  top: 85px;
+  width: 1000px;
+  height: 870px;
+  padding-left: 10px;
+  padding-right: 10px;
   background-color: #F2F2F2;
-  margin-top: 10px;
-  margin-bottom: 10px;
   border-style: solid;
   border-color: #2F528F;
+}
+
+.nav {
+  /*margin: auto;*/
+  position: fixed;
+  alignment: center;
+  top: 85px;
+  width: 170px;
+  height: 870px;
+  padding-left: 10px;
+  padding-right: 10px;
+  background-color: #F2F2F2;
+  border-style: solid;
+  border-color: #2F528F;
+}
+
+.main_w_nav {
+  /*margin: auto;*/
+  position: fixed;
+  /*alignment: center;*/
+  top: 85px;
+  left: 208px;
+  width: 800px;
+  height: 870px;
+  padding-left: 10px;
+  padding-right: 10px;
+  background-color: #F2F2F2;
+  border-style: solid;
+  border-color: #2F528F;
+}
+
+.darkened_section {
+  margin: auto;
+  background-color: #D0CECE;
+  padding-left: 10px;
+  padding-right: 10px;
+  border-color: #2F528F;
+  border-style: solid;
 }
 
 .header_text {
   float: left;
   color: white;
-  font-weight: bold;
-  font-size: 30px;
+  margin-left: 20px;
+  /*font-weight: bold;*/
+  font-size: 36px;
 }
 
 .header_image {
   float: left;
+  width: 101px;
+  height: 50px;
 }
 
 .links {

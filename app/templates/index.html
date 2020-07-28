@@ -7,7 +7,21 @@
    <body>
       {% extends "template_general.html" %}
       {% block content %}
-      <h1> Welcome to Change Your Name </h1>
-      <p> This is a test to see how this behaves </p>
+      <div class="main">
+         <h1>Welcome to Change Your Name</h1>
+
+         <div class="darkened_section">
+            <h2>Returning Users</h2>
+            <p>If you already have an account, please enter your details below to log in.</p>
+            <p><a href="{{ url_for('account_home') }}">Access Account Home</a></p>
+         </div>
+
+         <h2>What is Change Your Name?</h2>
+         <p>Change your name is a service that allows people who have legally changed their name to easily communicate
+         their new name to any organisations or companies from the comfort of their own home.</p>
+         <p> This is a test to see how this behaves </p>
+
+
+      </div>
       {% endblock %}
    </body>
