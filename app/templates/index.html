@@ -13,6 +13,14 @@
          <div class="darkened_section">
             <h2>Returning Users</h2>
             <p>If you already have an account, please enter your details below to log in.</p>
+            <form id="login">
+               <label for="email_address">Email Address: </label>
+               <input type="text" id="email_address" name="email_address"><br />
+               <label for="pwd">Password: </label>
+               <input type="password" id="pwd" name="password"><br />
+            </form>
+            <p><button type="submit" form="login" value="Submit">Submit</button></p>
+            <p><a>Forgotten Password?</a></p>
             <p><a href="{{ url_for('account_home') }}">Access Account Home</a></p>
          </div>
 
