@@ -149,3 +149,9 @@ input {
 .footer_link:hover {
   font-weight: bold;
 }
+
+.to_remove {
+  background-color: yellow;
+  border-color: red;
+  border-style: dashed;
+}
