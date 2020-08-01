@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+   <head>
+      <meta charset="utf-8">
+      <title>Change Your Name</title>
+      <link rel="stylesheet" type="text/css" href="../static/default.css" />
+   </head>
+   <body>
+      <a href="{{ url_for('account_home') }}"><div class="nav_button top_button">Account Home</div></a>
+      <a href="{{ url_for('new_document_selection') }}"><div class="nav_button">Add New Document</div></a>
+      {% if nav.show_manage_documents %}
+      <div class="nav_button">Manage Documents</div>
+      {% endif %}
+      {% if nav.show_create_access_code %}
+      <div class="nav_button">Create Access Code</div>
+      {% endif %}
+      {% if nav.show_manage_access_code %}
+      <div class="nav_button">Manage Access Codes</div>
+      {% endif %}
+      <div class="nav_button bottom_button">Edit Profile</div>
+   </body>
+</html>

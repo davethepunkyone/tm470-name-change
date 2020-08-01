@@ -2,6 +2,10 @@
   font-family: Calibri;
 }
 
+a, a:link, a:visited, a:active, a:hover {
+   text-decoration: none;
+}
+
 h1 {
   color: black;
   margin-top: 5px;
@@ -147,6 +151,36 @@ input {
 }
 
 .footer_link:hover {
+  font-weight: bold;
+}
+
+.nav_button {
+  background-color: #D6DCE5;
+  border-color: #2F528F;
+  border-style: solid;
+  text-align: center;
+  padding: 5px;
+  font-weight: bold;
+  text-decoration: none;
+  margin-bottom: 10px;
+}
+
+.top_button {
+  margin-top: 10px;
+}
+
+.bottom_button {
+  position: absolute;
+  bottom: 1px;
+  width: 82%;
+}
+
+.nav_button:hover {
+  background-color: #4472C4;
+}
+
+.general_link {
+  text-decoration: underline;
   font-weight: bold;
 }
 
