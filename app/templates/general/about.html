@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+   <head>
+      <meta charset="utf-8">
+      <title>Change Your Name: About</title>
+   </head>
+   <body>
+      {% extends "template_general.html" %}
+      {% block content %}
+
+      {% if nav.show_nav %}
+      <div class="main_w_nav">
+      {% else %}
+      <div class="main">
+      {% endif %}
+         <h1>About Change Your Name</h1>
+         <p class="to_remove"> This is some text to explain about Change Your Name </p>
+      </div>
+      {% endblock %}
+   </body>

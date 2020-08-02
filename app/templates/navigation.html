@@ -9,14 +9,17 @@
       <a href="{{ url_for('account_home') }}"><div class="nav_button top_button">Account Home</div></a>
       <a href="{{ url_for('new_document_selection') }}"><div class="nav_button">Add New Document</div></a>
       {% if nav.show_manage_documents %}
-      <div class="nav_button">Manage Documents</div>
+      <a href="{{ url_for('manage_all_documents') }}"><div class="nav_button">Manage Documents</div></a>
       {% endif %}
       {% if nav.show_create_access_code %}
-      <div class="nav_button">Create Access Code</div>
+      <a href="{{ url_for('generate_code_document_selection') }}"><div class="nav_button">Create Access Code</div></a>
       {% endif %}
       {% if nav.show_manage_access_code %}
-      <div class="nav_button">Manage Access Codes</div>
+      <a href="{{ url_for('manage_all_access_codes') }}"><div class="nav_button">Manage Access Codes</div></a>
       {% endif %}
-      <div class="nav_button bottom_button">Edit Profile</div>
+      <div class="bottom_button">
+         <a href="{{ url_for('edit_profile') }}"><div class="nav_button">Edit Profile</div></a>
+         <a href="{{ url_for('logout') }}"><div class="nav_button">Logout</div></a>
+      </div>
    </body>
 </html>

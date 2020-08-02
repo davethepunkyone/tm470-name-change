@@ -2,7 +2,7 @@
   font-family: Calibri;
 }
 
-a, a:link, a:visited, a:active, a:hover {
+a, a:link, a:visited, a:hover, a:active  {
    text-decoration: none;
 }
 
@@ -163,6 +163,8 @@ input {
   font-weight: bold;
   text-decoration: none;
   margin-bottom: 10px;
+  border-radius: 10px;
+  box-shadow: 2px 2px;
 }
 
 .top_button {
@@ -172,11 +174,12 @@ input {
 .bottom_button {
   position: absolute;
   bottom: 1px;
-  width: 82%;
+  width: 88%;
 }
 
 .nav_button:hover {
   background-color: #4472C4;
+  box-shadow: 0px 0px;
 }
 
 .general_link {

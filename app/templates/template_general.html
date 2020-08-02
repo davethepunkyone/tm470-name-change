@@ -11,12 +11,20 @@
                                                src={{url_for('static', filename='placeholder_logo.png')}}></a>
          <div class="header_text">Change Your Name</div>
       </header>
+      {% if nav.show_nav %}
+      <div class="nav">
+         {% include "navigation.html" %}
+      </div>
+      {% endif %}
+
       {% block content %}
       {% endblock %}
       <footer>
          <div class="footer">
-            <div class="links"><a class="footer_link">About</a> | <a class="footer_link">How It Works</a> |
-               <a class="footer_link">FAQ</a> | <a class="footer_link">Contact</a></div>
+            <div class="links"><a class="footer_link" href="{{ url_for('about') }}">About</a> |
+               <a class="footer_link" href="{{ url_for('how_it_works') }}">How It Works</a> |
+               <a class="footer_link" href="{{ url_for('faq') }}">FAQ</a> |
+               <a class="footer_link" href="{{ url_for('contact') }}">Contact</a></div>
             <div class="copyright">&#169; CYN 2020</div>
          </div>
       </footer>
