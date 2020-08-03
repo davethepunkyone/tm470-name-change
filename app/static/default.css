@@ -60,7 +60,7 @@ footer {
   font-size: large;
 }
 
-label {
+/*label {
   width:120px;
   clear:left;
   text-align:right;
@@ -72,7 +72,7 @@ label {
 
 input {
     float:left;
-}
+}*/
 
 .main {
   /*margin: auto;*/

@@ -2,7 +2,7 @@ from flask import render_template, redirect, url_for
 from app import app
 
 user = {"username": "test@test.com",
-        "logged_in": True}
+        "logged_in": False}
 
 nav = {"show_nav": True,
        "show_manage_documents": True,
@@ -170,3 +170,17 @@ def manage_access_code():
 @app.route('/manage_all_codes')
 def manage_all_access_codes():
     return render_template('manage_access_code/manage_all_codes.html', user=user, nav=nav)
+
+
+# Errors
+
+
+@app.errorhandler(404)
+def page_not_found(error):
+    return render_template('errors/404.html', user=user, nav=nav)
+
+
+@app.errorhandler(500)
+def internal_server_error(error):
+    return render_template('errors/500.html', user=user, nav=nav)
+
