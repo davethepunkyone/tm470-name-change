@@ -9,9 +9,45 @@
       {% block content %}
       <div class="main_w_nav">
          <h1>Add New Document</h1>
-         <p class="to_remove"> This is where the navigation circles should go </p>
+         <p class="to_remove"> This is where the navigation circles should go</p>
          <h2>Add Document Details</h2>
-         <p class="to_remove"> This is a test to see how this behaves </p>
+         <p>Please provide the following details for the {{ doc.type }}: <div class="to_remove">Help Tooltip Here</div></p>
+
+         {% if doc.type == "Marriage Certificate" %}
+         <form id="add_marriage_cert_details">
+            <label for="marriage_date">Marriage Date: </label>
+            <input type="text" id="marriage_date" name="marriage_date"><br />
+            <label for="marriage_age_cert">Age On Certificate: </label>
+            <input type="text" id="marriage_age_cert" name="marriage_age_cert"><br />
+            <label for="marriage_reg_district">Registration District: </label>
+            <input type="text" id="marriage_reg_district" name="marriage_reg_district"><br />
+            <label for="marriage_no">Marriage Number: </label>
+            <input type="text" id="marriage_no" name="reg_district"><br />
+         </form>
+         {% endif %}
+
+         {% if doc.type == "Deed Poll" %}
+         <form id="add_deed_poll_details">
+            <label for="deed_date">Date on Deed Poll: </label>
+            <input type="text" id="deed_date" name="deed_date"><br /><br />
+            <label>Has this been registered with the courts:</label><br />
+            <input type="radio" id="deed_poll_reg_yes" name="deed_registered" value="yes">
+            <label for="deed_poll_reg_yes">Yes</label><br />
+            <input type="radio" id="deed_poll_reg_no" name="deed_registered" value="no">
+            <label for="deed_poll_reg_no">No</label><br />
+         </form>
+         {% endif %}
+
+         {% if doc.type == "Decree Absolute" %}
+         <form id="add_decree_absolute_details">
+            <label for="decree_date">Decree Date: </label>
+            <input type="text" id="decree_date" name="decree_date"><br />
+            <label for="decree_issuing_court">Issuing Court: </label>
+            <input type="text" id="decree_issuing_court" name="decree_issuing_court"><br />
+            <label for="decree_no_of_matter">Number of Matter: </label>
+            <input type="text" id="decree_no_of_matter" name="decree_no_of_matter"><br />
+         </form>
+         {% endif %}
          <p class="to_remove"> <a class="general_link" href="{{ url_for('new_document_confirm_document_details') }}">Navigate to Step 7</a> </p>
       </div>
       {% endblock %}

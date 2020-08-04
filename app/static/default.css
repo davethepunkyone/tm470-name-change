@@ -140,6 +140,20 @@ input {
   height: 50px;
 }
 
+.upload_image {
+  border-style: solid;
+  border-color: #2F528F;
+  width: 700px;
+  height: 400px;
+}
+
+.upload_reference_image {
+  border-style: solid;
+  border-color: #2F528F;
+  width: 250px;
+  height: 175px;
+}
+
 .links {
   float: left;
   text-align: left;

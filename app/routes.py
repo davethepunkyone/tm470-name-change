@@ -2,12 +2,15 @@ from flask import render_template, redirect, url_for
 from app import app
 
 user = {"username": "test@test.com",
-        "logged_in": False}
+        "logged_in": True}
 
 nav = {"show_nav": True,
        "show_manage_documents": True,
        "show_create_access_code": True,
        "show_manage_access_code": True}
+
+doc = {"type": "Decree Absolute"}
+# Marriage Certificate | Deed Poll | Decree Absolute
 
 
 @app.route('/')
@@ -95,37 +98,37 @@ def new_document_selection():
 
 @app.route('/new_document_2')
 def new_document_upload_image():
-    return render_template('add_document/add_doc_2_upload_image.html', user=user, nav=nav)
+    return render_template('add_document/add_doc_2_upload_image.html', user=user, nav=nav, doc=doc)
 
 
 @app.route('/new_document_3')
 def new_document_confirm_image():
-    return render_template('add_document/add_doc_3_confirm_image.html', user=user, nav=nav)
+    return render_template('add_document/add_doc_3_confirm_image.html', user=user, nav=nav, doc=doc)
 
 
 @app.route('/new_document_4')
 def new_document_add_personal_details():
-    return render_template('add_document/add_doc_4_add_personal_details.html', user=user, nav=nav)
+    return render_template('add_document/add_doc_4_add_personal_details.html', user=user, nav=nav, doc=doc)
 
 
 @app.route('/new_document_5')
 def new_document_confirm_personal_details():
-    return render_template('add_document/add_doc_5_confirm_personal_details.html', user=user, nav=nav)
+    return render_template('add_document/add_doc_5_confirm_personal_details.html', user=user, nav=nav, doc=doc)
 
 
 @app.route('/new_document_6')
 def new_document_add_document_details():
-    return render_template('add_document/add_doc_6_add_document_details.html', user=user, nav=nav)
+    return render_template('add_document/add_doc_6_add_document_details.html', user=user, nav=nav, doc=doc)
 
 
 @app.route('/new_document_7')
 def new_document_confirm_document_details():
-    return render_template('add_document/add_doc_7_confirm_document_details.html', user=user, nav=nav)
+    return render_template('add_document/add_doc_7_confirm_document_details.html', user=user, nav=nav, doc=doc)
 
 
 @app.route('/new_document_8')
 def new_document_finish():
-    return render_template('add_document/add_doc_8_finish.html', user=user, nav=nav)
+    return render_template('add_document/add_doc_8_finish.html', user=user, nav=nav, doc=doc)
 
 
 # New Document Processes
@@ -177,10 +180,9 @@ def manage_all_access_codes():
 
 @app.errorhandler(404)
 def page_not_found(error):
-    return render_template('errors/404.html', user=user, nav=nav)
+    return render_template('errors/404.html', user=user, nav=nav, err=error)
 
 
 @app.errorhandler(500)
 def internal_server_error(error):
-    return render_template('errors/500.html', user=user, nav=nav)
-
+    return render_template('errors/500.html', user=user, nav=nav, err=error)

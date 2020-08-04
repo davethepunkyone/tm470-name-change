@@ -12,6 +12,10 @@
          <p class="to_remove"> This is where the navigation circles should go </p>
          <h2>Upload Image</h2>
          <p>Please upload an image of your document using the form below:</p>
+         <form>
+           <input type="file" id="myFile" name="filename">
+           <input type="submit">
+         </form>
 
          <p class="to_remove"> <a class="general_link" href="{{ url_for('new_document_confirm_image') }}">Navigate to Step 3</a> </p>
       </div>

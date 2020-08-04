@@ -11,6 +11,12 @@
          <h1>Add New Document</h1>
          <p class="to_remove"> This is where the navigation circles should go </p>
          <h2>Confirm Uploaded Image</h2>
+         <p>Your uploaded image should be shown in the box below:</p>
+         <img class="upload_image" src={{url_for('static', filename='placeholder_doc.png')}} />
+         <form id="login">
+            <input type="checkbox" id="image_correct" name="image_correct">
+            <label for="image_correct">I confirm all text is viewable in the image above.</label><br /><br />
+         </form>
          <p class="to_remove"> This is a test to see how this behaves </p>
          <p class="to_remove"> <a class="general_link" href="{{ url_for('new_document_add_personal_details') }}">Navigate to Step 4</a> </p>
       </div>
