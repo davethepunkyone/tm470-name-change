@@ -9,7 +9,7 @@ nav = {"show_nav": True,
        "show_create_access_code": True,
        "show_manage_access_code": True}
 
-doc = {"type": "Decree Absolute"}
+doc = {"type": "Deed Poll"}
 # Marriage Certificate | Deed Poll | Decree Absolute
 
 

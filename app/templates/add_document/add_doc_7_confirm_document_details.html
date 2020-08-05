@@ -11,6 +11,44 @@
          <h1>Add New Document</h1>
          <p class="to_remove"> This is where the navigation circles should go </p>
          <h2>Confirm Document Details</h2>
+         <p>Please confirm the following details are correct for the {{ doc.type }}:</p>
+
+         {% if doc.type == "Marriage Certificate" %}
+         <p>
+            <label for="marriage_date" class="label_float">Marriage Date: </label>
+            <div id="marriage_date">(data here)</div><br />
+            <label for="marriage_age_cert" class="label_float">Age On Certificate: </label>
+            <div id="marriage_age_cert">(data here)</div><br />
+            <label for="marriage_reg_district" class="label_float">Registration District: </label>
+            <div id="marriage_reg_district">(data here)</div><br />
+            <label for="marriage_no" class="label_float">Marriage Number: </label>
+            <div id="marriage_no">(data here)</div><br />
+         </p>
+         {% endif %}
+
+         {% if doc.type == "Deed Poll" %}
+         <p>
+            <label for="deed_date" class="label_float">Date on Deed Poll: </label>
+            <div id="deed_date">(data here)</div><br />
+            <label for="deed_poll_reg" class="label_float">Has this been registered with the courts:</label>
+            <div id="deed_poll_reg">(data here)</div><br />
+         </p>
+         {% endif %}
+
+         {% if doc.type == "Decree Absolute" %}
+         <p>
+            <label for="decree_date" class="label_float">Decree Date: </label>
+            <div id="decree_date">(data here)</div><br />
+            <label for="decree_issuing_court" class="label_float">Issuing Court: </label>
+            <div id="decree_issuing_court">(data here)</div><br />
+            <label for="decree_no_of_matter" class="label_float">Number of Matter: </label>
+            <div id="decree_no_of_matter">(data here)</div><br />
+         </p>
+         {% endif %}
+
+            <input type="checkbox" id="doc_details_correct" name="doc_details_correct">
+            <label for="doc_details_correct">I confirm all the details listed above are correct.</label><br /><br />
+         </form>
          <p class="to_remove"> This is a test to see how this behaves </p>
          <p class="to_remove"> <a class="general_link" href="{{ url_for('new_document_finish') }}">Navigate to Step 8</a> </p>
       </div>
