@@ -2,14 +2,15 @@ from flask import render_template, redirect, url_for
 from app import app
 
 user = {"username": "test@test.com",
-        "logged_in": True}
+        "logged_in": True,
+        "docs": ("Marriage Certificate", "Deed Poll")}
 
 nav = {"show_nav": True,
        "show_manage_documents": True,
        "show_create_access_code": True,
        "show_manage_access_code": True}
 
-doc = {"type": "Deed Poll"}
+doc = {"type": "Marriage Certificate"}
 # Marriage Certificate | Deed Poll | Decree Absolute
 
 

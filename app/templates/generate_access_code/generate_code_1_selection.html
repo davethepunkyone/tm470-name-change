@@ -11,6 +11,11 @@
          <h1>Generate Access Code</h1>
          <p class="to_remove"> This is where the navigation circles should go </p>
          <h2>Document Selection</h2>
+         <p>Please select the document you wish to generate an access code for:</p>
+         {% for doc in user.docs %}
+            <input type="radio" id="{{  doc|replace(" ", "")  }}" name="user_doc" value="male">
+            <label for="{{  doc|replace(" ", "")  }}">{{doc}}</label><br />
+         {% endfor %}
          <p class="to_remove"> This is a test to see how this behaves </p>
          <p class="to_remove"> <a class="general_link" href="{{ url_for('generate_code_access_details') }}">Navigate to Step 2</a> </p>
       </div>

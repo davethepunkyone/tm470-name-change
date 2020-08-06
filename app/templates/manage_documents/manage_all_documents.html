@@ -9,6 +9,11 @@
       {% block content %}
       <div class="main_w_nav">
          <h1>Manage All Documents</h1>
+         {% if user.docs|length > 0 %}
+            <p>There are {{ user.docs|length }} documents to display here.</p>
+         {% else %}
+            <p>There are no uploaded documents to manage.</p>
+         {% endif %}
          <p class="to_remove"> This is a test to see how this behaves </p>
          <p class="to_remove"> <a class="general_link" href="{{ url_for('manage_document') }}">Manage Existing Document</a> </p>
       </div>
