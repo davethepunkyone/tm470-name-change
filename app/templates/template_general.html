@@ -11,7 +11,7 @@
                                                src={{url_for('static', filename='placeholder_logo.png')}}></a>
          <div class="header_text">Change Your Name</div>
       </header>
-      {% if nav.show_nav %}
+      {% if user.logged_in %}
       <div class="nav">
          {% include "navigation.html" %}
       </div>

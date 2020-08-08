@@ -1,4 +1,6 @@
 import json
+from classes.document_class import Document
+from classes.accesscode_class import AccessCode
 
 
 class User:
@@ -17,6 +19,9 @@ class User:
         self._surname = None
         self._email = None
         self._verified_state = None
+        self._logged_in = False
+        self._docs = []
+        self._access_codes = []
 
     @property
     def user_id(self) -> int:
@@ -67,6 +72,39 @@ class User:
             raise ValueError("Verified State provided ({0}) is not boolean or None".format(verified_state))
         else:
             self._verified_state = verified_state
+
+    @property
+    def logged_in(self) -> bool:
+        return self._logged_in
+
+    @logged_in.setter
+    def logged_in(self, logged_in_state: bool) -> None:
+        if logged_in_state not in (1, 0, False, True, None):
+            raise ValueError("Logged In State provided ({0}) is not boolean or None".format(logged_in_state))
+        else:
+            self._logged_in = logged_in_state
+
+    @property
+    def docs(self) -> list:
+        return self._docs
+
+    @docs.setter
+    def docs(self, document) -> None:
+        if isinstance(document, Document):
+            self._docs.append(document)
+        else:
+            raise ValueError("Item provided is not a valid document")
+
+    @property
+    def access_codes(self) -> list:
+        return self._access_codes
+
+    @access_codes.setter
+    def access_codes(self, access_code) -> None:
+        if isinstance(access_code, AccessCode):
+            self._access_codes.append(access_code)
+        else:
+            raise ValueError("Item provided is not a valid access code")
 
     @property
     def return_user_as_dict(self) -> dict:

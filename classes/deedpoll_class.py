@@ -13,19 +13,8 @@ class DeedPoll(Document):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self._name_change_date = None
+        self.document_type = "Deed Poll"
         self._registered_with_courts = None
-
-    @property
-    def name_change_date(self) -> datetime.date:
-        return self._name_change_date
-
-    @name_change_date.setter
-    def name_change_date(self, date_val: datetime.date) -> None:
-        if isinstance(date_val, datetime.date):
-            self._name_change_date = date_val
-        else:
-            raise ValueError("Added Datetime value provided ({0}) is not date or None".format(date_val))
 
     @property
     def registered_with_courts(self) -> bool:

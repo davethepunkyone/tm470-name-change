@@ -10,6 +10,7 @@ class Document:
 
     def __init__(self, **kwargs):
         self._document_id = None
+        self._document_type = None
         self._user_id = None
         self._complete = None
         self._uploaded_file_id = None
@@ -18,6 +19,7 @@ class Document:
         self._new_forenames = None
         self._new_surname = None
         self._address_id = None
+        self._change_of_name_date = None
         self._document_verified_state = None
         self._document_verified_id = None
         self._added_datetime = None
@@ -37,6 +39,14 @@ class Document:
                 self._document_id = None
             else:
                 raise ValueError("Document ID provided ({0}) is not numeric or None".format(document_id))
+
+    @property
+    def document_type(self) -> str:
+        return self._document_type
+
+    @document_type.setter
+    def document_type(self, document_type: str) -> None:
+        self._document_type = document_type
 
     @property
     def user_id(self) -> int:
@@ -127,6 +137,17 @@ class Document:
                 raise ValueError("Address ID provided ({0}) is not numeric or None".format(address_id_val))
 
     @property
+    def change_of_name_date(self) -> datetime.date:
+        return self._change_of_name_date
+
+    @change_of_name_date.setter
+    def change_of_name_date(self, date_val: datetime.date) -> None:
+        if isinstance(date_val, datetime.date):
+            self._change_of_name_date = date_val
+        else:
+            raise ValueError("Added Datetime value provided ({0}) is not date or None".format(date_val))
+
+    @property
     def document_verified_state(self) -> int:
         return self._document_verified_state
 
@@ -176,3 +197,6 @@ class Document:
         else:
             raise ValueError("Last Modified Datetime value provided ({0}) is not date/time or None".format(date_val))
 
+    @property
+    def doc_type_with_date(self) -> str:
+        return self._document_type + " (" + self._change_of_name_date.strftime("%d/%m/%Y") + ")"

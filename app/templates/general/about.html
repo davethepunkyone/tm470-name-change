@@ -8,7 +8,7 @@
       {% extends "template_general.html" %}
       {% block content %}
 
-      {% if nav.show_nav %}
+      {% if user.logged_in %}
       <div class="main_w_nav">
       {% else %}
       <div class="main">

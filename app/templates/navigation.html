@@ -8,13 +8,13 @@
    <body>
       <a href="{{ url_for('account_home') }}"><div class="nav_button top_button">Account Home</div></a>
       <a href="{{ url_for('new_document_selection') }}"><div class="nav_button">Add New Document</div></a>
-      {% if nav.show_manage_documents %}
+      {% if user.docs|length > 0 %}
       <a href="{{ url_for('manage_all_documents') }}"><div class="nav_button">Manage Documents</div></a>
       {% endif %}
-      {% if nav.show_create_access_code %}
+      {% if user.docs|length > 0 %}
       <a href="{{ url_for('generate_code_document_selection') }}"><div class="nav_button">Create Access Code</div></a>
       {% endif %}
-      {% if nav.show_manage_access_code %}
+      {% if user.access_codes|length > 0 %}
       <a href="{{ url_for('manage_all_access_codes') }}"><div class="nav_button">Manage Access Codes</div></a>
       {% endif %}
       <div class="bottom_button">

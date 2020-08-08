@@ -17,22 +17,11 @@ class MarriageCertificate(Document):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self._marriage_date = None
+        self.document_type = "Marriage Certificate"
         self._age_on_certificate = None
         self._certificate_number = None
         self._registration_district = None
         self._marriage_number = None
-
-    @property
-    def marriage_date(self) -> datetime.date:
-        return self._marriage_date
-
-    @marriage_date.setter
-    def marriage_date(self, date_val: datetime.date) -> None:
-        if isinstance(date_val, datetime.date):
-            self._marriage_date = date_val
-        else:
-            raise ValueError("Added Datetime value provided ({0}) is not date or None".format(date_val))
 
     @property
     def age_on_certificate(self) -> int:

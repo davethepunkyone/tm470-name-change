@@ -21,7 +21,11 @@
             </form>
             <p><button type="submit" form="login" value="Submit">Submit</button></p>
             <p><a>Forgotten Password?</a></p>
-            <p class="to_remove"><a class="general_link" href="{{ url_for('account_home') }}">Access Account Home</a></p>
+            <p class="to_remove">
+               <a class="general_link" href="{{ url_for('account_home') }}">Access Account Home</a><br />
+               <a class="general_link" href="{{ url_for('test', test_conditions=1) }}">Login as test user 1</a><br />
+               <a class="general_link" href="{{ url_for('test', test_conditions=2) }}">Login as test user 2</a><br />
+            </p>
          </div>
 
          <h2>What is Change Your Name?</h2>

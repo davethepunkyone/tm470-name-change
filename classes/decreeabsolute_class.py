@@ -11,8 +11,8 @@ class DecreeAbsolute(Document):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
+        self.document_type = "Decree Absolute"
         self._marriage_certificate_details = None  # Use MarriageCertificate object
-        self._decree_absolute_date = None
         self._issuing_court = None
         self._number_of_matter = None
 
@@ -26,17 +26,6 @@ class DecreeAbsolute(Document):
             self._marriage_certificate_details = cert_val
         else:
             raise ValueError("Added Marriage Details are not in MarriageCertificate class format.")
-
-    @property
-    def decree_absolute_date(self) -> datetime.date:
-        return self._decree_absolute_date
-
-    @decree_absolute_date.setter
-    def decree_absolute_date(self, date_val: datetime.date) -> None:
-        if isinstance(date_val, datetime.date):
-            self._decree_absolute_date = date_val
-        else:
-            raise ValueError("Added Datetime value provided ({0}) is not date or None".format(date_val))
 
     @property
     def issuing_court(self) -> str:
