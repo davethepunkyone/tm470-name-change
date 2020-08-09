@@ -11,11 +11,37 @@
          <h1>Manage All Documents</h1>
          {% if user.docs|length > 0 %}
             <p>There are {{ user.docs|length }} documents to display here.</p>
+         <table>
+            <tr>
+               <th>Document Type</th>
+               <th>Date of Name Change</th>
+               <th>Verified</th>
+            </tr>
+
+            {% for doc in user.docs %}
+            <tr>
+               <td>{{doc.document_type}}</td>
+               <td>{{doc.change_of_name_date_as_string}}</td>
+               {% if doc.document_verified_state.value == 9 %}
+                  <td><img class="icon_image" title="Verified"
+                           src={{url_for('static', filename='verified_tick.png')}}></td>
+               {% elif doc.document_verified_state.value == 1 %}
+                  <td><img class="icon_image" title="Awaiting Verification"
+                           src={{url_for('static', filename='awaiting_verification.png')}}></td>
+               {% elif doc.document_verified_state.value == 2 %}
+                  <td>Verification Failed</td>
+               {% else %}
+                  <td></td>
+               {% endif %}
+            </tr>
+            {% endfor %}
+
+         </table>
          {% else %}
             <p>There are no uploaded documents to manage.</p>
          {% endif %}
-         <p class="to_remove"> This is a test to see how this behaves </p>
-         <p class="to_remove"> <a class="general_link" href="{{ url_for('manage_document') }}">Manage Existing Document</a> </p>
+         <p class="to_remove"> <a class="general_link"
+                                  href="{{ url_for('manage_document') }}">Manage Existing Document</a> </p>
       </div>
       {% endblock %}
    </body>

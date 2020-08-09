@@ -9,6 +9,27 @@
       {% block content %}
       <div class="main_w_nav">
          <h1>Manage All Access Codes</h1>
+                  {% if user.docs|length > 0 %}
+            <p>There are {{ user.access_codes|length }} codes to display here.</p>
+         <table>
+            <tr>
+               <th>Access Code</th>
+               <th>Document</th>
+               <th>Expiry Time</th>
+            </tr>
+
+            {% for code in user.access_codes %}
+            <tr>
+               <td>{{code.generated_code}}</td>
+               <td>{{code.uploaded_document.document_type}}</td>
+               <td>{{code.expiry_to_string}}</td>
+            </tr>
+            {% endfor %}
+
+         </table>
+         {% else %}
+            <p>There are no uploaded documents to manage.</p>
+         {% endif %}
          <p class="to_remove"> This is a test to see how this behaves </p>
       </div>
       {% endblock %}

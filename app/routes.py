@@ -6,6 +6,7 @@ from classes.user_class import User
 from classes.marriagecertificate_class import MarriageCertificate
 from classes.deedpoll_class import DeedPoll
 from classes.accesscode_class import AccessCode
+from classes.enums import VerifiedStates
 
 # user = {"username": "",
 #        "logged_in": False,
@@ -37,6 +38,7 @@ def test(test_conditions):
         doc1 = MarriageCertificate()
         doc1.document_id = 100
         doc1.change_of_name_date = datetime.date(2020, 2, 1)
+        doc1.document_verified_state = VerifiedStates.VERIFIED
         user.docs = doc1
     elif test_conditions == "2":
         user.email = "testemail2@testing.com"
@@ -44,10 +46,15 @@ def test(test_conditions):
         doc2 = DeedPoll()
         doc2.document_id = 200
         doc2.change_of_name_date = datetime.date(2019, 7, 4)
+        doc2.document_verified_state = VerifiedStates.VERIFIED
         doc3 = MarriageCertificate()
         doc3.document_id = 201
         doc3.change_of_name_date = datetime.date(2018, 12, 25)
+        doc3.document_verified_state = VerifiedStates.AWAITING_VERIFICATION
         code1 = AccessCode()
+        code1.generated_code = "987654"
+        code1.expiry = datetime.datetime(2020, 9, 1, 12, 35, 12)
+        code1.uploaded_document = doc2
         user.docs = doc2
         user.docs = doc3
         user.access_codes = code1
@@ -101,16 +108,18 @@ def new_account_click_link():
 
 @app.route('/account')
 def account_home():
-    # TEMP CODE
-    global user
-    user.logged_in = True
-    # END TEMP CODE
-    return render_template('account_home.html', user=user)
+    if not user.logged_in:
+        return redirect(url_for('index'))
+    else:
+        return render_template('account_home.html', user=user)
 
 
 @app.route('/edit_profile')
 def edit_profile():
-    return render_template('profile/edit_profile.html', user=user)
+    if not user.logged_in:
+        return redirect(url_for('index'))
+    else:
+        return render_template('profile/edit_profile.html', user=user)
 
 
 @app.route('/logout')
@@ -125,42 +134,66 @@ def logout():
 
 @app.route('/new_document_1')
 def new_document_selection():
-    return render_template('add_document/add_doc_1_selection.html', user=user)
+    if not user.logged_in:
+        return redirect(url_for('index'))
+    else:
+        return render_template('add_document/add_doc_1_selection.html', user=user)
 
 
 @app.route('/new_document_2')
 def new_document_upload_image():
-    return render_template('add_document/add_doc_2_upload_image.html', user=user, doc=doc)
+    if not user.logged_in:
+        return redirect(url_for('index'))
+    else:
+        return render_template('add_document/add_doc_2_upload_image.html', user=user, doc=doc)
 
 
 @app.route('/new_document_3')
 def new_document_confirm_image():
-    return render_template('add_document/add_doc_3_confirm_image.html', user=user, doc=doc)
+    if not user.logged_in:
+        return redirect(url_for('index'))
+    else:
+        return render_template('add_document/add_doc_3_confirm_image.html', user=user, doc=doc)
 
 
 @app.route('/new_document_4')
 def new_document_add_personal_details():
-    return render_template('add_document/add_doc_4_add_personal_details.html', user=user, doc=doc)
+    if not user.logged_in:
+        return redirect(url_for('index'))
+    else:
+        return render_template('add_document/add_doc_4_add_personal_details.html', user=user, doc=doc)
 
 
 @app.route('/new_document_5')
 def new_document_confirm_personal_details():
-    return render_template('add_document/add_doc_5_confirm_personal_details.html', user=user, doc=doc)
+    if not user.logged_in:
+        return redirect(url_for('index'))
+    else:
+        return render_template('add_document/add_doc_5_confirm_personal_details.html', user=user, doc=doc)
 
 
 @app.route('/new_document_6')
 def new_document_add_document_details():
-    return render_template('add_document/add_doc_6_add_document_details.html', user=user, doc=doc)
+    if not user.logged_in:
+        return redirect(url_for('index'))
+    else:
+        return render_template('add_document/add_doc_6_add_document_details.html', user=user, doc=doc)
 
 
 @app.route('/new_document_7')
 def new_document_confirm_document_details():
-    return render_template('add_document/add_doc_7_confirm_document_details.html', user=user, doc=doc)
+    if not user.logged_in:
+        return redirect(url_for('index'))
+    else:
+        return render_template('add_document/add_doc_7_confirm_document_details.html', user=user, doc=doc)
 
 
 @app.route('/new_document_8')
 def new_document_finish():
-    return render_template('add_document/add_doc_8_finish.html', user=user, doc=doc)
+    if not user.logged_in:
+        return redirect(url_for('index'))
+    else:
+        return render_template('add_document/add_doc_8_finish.html', user=user, doc=doc)
 
 
 # New Document Processes
@@ -168,12 +201,18 @@ def new_document_finish():
 
 @app.route('/manage_all_documents')
 def manage_all_documents():
-    return render_template('manage_documents/manage_all_documents.html', user=user)
+    if not user.logged_in:
+        return redirect(url_for('index'))
+    else:
+        return render_template('manage_documents/manage_all_documents.html', user=user)
 
 
 @app.route('/manage_document')
 def manage_document():
-    return render_template('manage_documents/manage_document.html', user=user)
+    if not user.logged_in:
+        return redirect(url_for('index'))
+    else:
+        return render_template('manage_documents/manage_document.html', user=user)
 
 
 # Generate New Access Code Processes
@@ -181,17 +220,26 @@ def manage_document():
 
 @app.route('/generate_access_code_1')
 def generate_code_document_selection():
-    return render_template('generate_access_code/generate_code_1_selection.html', user=user)
+    if not user.logged_in:
+        return redirect(url_for('index'))
+    else:
+        return render_template('generate_access_code/generate_code_1_selection.html', user=user)
 
 
 @app.route('/generate_access_code_2')
 def generate_code_access_details():
-    return render_template('generate_access_code/generate_code_2_details.html', user=user)
+    if not user.logged_in:
+        return redirect(url_for('index'))
+    else:
+        return render_template('generate_access_code/generate_code_2_details.html', user=user)
 
 
 @app.route('/generate_access_code_3')
 def generate_code_confirm_access_details():
-    return render_template('generate_access_code/generate_code_3_confirm_details.html', user=user)
+    if not user.logged_in:
+        return redirect(url_for('index'))
+    else:
+        return render_template('generate_access_code/generate_code_3_confirm_details.html', user=user)
 
 
 # Manage Access Codes Processes
@@ -199,12 +247,18 @@ def generate_code_confirm_access_details():
 
 @app.route('/manage_code')
 def manage_access_code():
-    return render_template('manage_access_code/manage_code.html', user=user)
+    if not user.logged_in:
+        return redirect(url_for('index'))
+    else:
+        return render_template('manage_access_code/manage_code.html', user=user)
 
 
 @app.route('/manage_all_codes')
 def manage_all_access_codes():
-    return render_template('manage_access_code/manage_all_codes.html', user=user)
+    if not user.logged_in:
+        return redirect(url_for('index'))
+    else:
+        return render_template('manage_access_code/manage_all_codes.html', user=user)
 
 
 # Errors

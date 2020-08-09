@@ -1,5 +1,6 @@
 import json
 import datetime
+from classes.enums import VerifiedStates
 
 
 class Document:
@@ -20,7 +21,7 @@ class Document:
         self._new_surname = None
         self._address_id = None
         self._change_of_name_date = None
-        self._document_verified_state = None
+        self._document_verified_state = VerifiedStates.NOT_VERIFIED
         self._document_verified_id = None
         self._added_datetime = None
         self._last_modified_datetime = None
@@ -148,16 +149,20 @@ class Document:
             raise ValueError("Added Datetime value provided ({0}) is not date or None".format(date_val))
 
     @property
-    def document_verified_state(self) -> int:
+    def change_of_name_date_as_string(self) -> str:
+        return self._change_of_name_date.strftime("%d/%m/%Y")
+
+    @property
+    def document_verified_state(self) -> VerifiedStates:
         return self._document_verified_state
 
     @document_verified_state.setter
-    def document_verified_state(self, document_verified_state_val: bool) -> None:
-        if document_verified_state_val not in (1, 0, False, True, None):
-            raise ValueError("Document Verified State value provided ({0}) is not boolean or None"
-                             .format(document_verified_state_val))
-        else:
+    def document_verified_state(self, document_verified_state_val: VerifiedStates) -> None:
+        if isinstance(document_verified_state_val, VerifiedStates):
             self._document_verified_state = document_verified_state_val
+        else:
+            raise ValueError("Document Verified State value provided ({0}) is not a valid Verified State"
+                             .format(document_verified_state_val))
 
     @property
     def document_verified_id(self) -> int:
@@ -200,3 +205,6 @@ class Document:
     @property
     def doc_type_with_date(self) -> str:
         return self._document_type + " (" + self._change_of_name_date.strftime("%d/%m/%Y") + ")"
+
+
+
