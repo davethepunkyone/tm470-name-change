@@ -58,6 +58,9 @@ def test(test_conditions):
         user.docs = doc2
         user.docs = doc3
         user.access_codes = code1
+    elif test_conditions == "3":
+        user.email = "test3@testing.com"
+        user.logged_in = True
     return redirect(url_for('index'))
 
 
@@ -207,12 +210,12 @@ def manage_all_documents():
         return render_template('manage_documents/manage_all_documents.html', user=user)
 
 
-@app.route('/manage_document')
-def manage_document():
+@app.route('/manage_document/<doc_id>')
+def manage_document(doc_id):
     if not user.logged_in:
         return redirect(url_for('index'))
     else:
-        return render_template('manage_documents/manage_document.html', user=user)
+        return render_template('manage_documents/manage_document.html', user=user, doc=doc)
 
 
 # Generate New Access Code Processes

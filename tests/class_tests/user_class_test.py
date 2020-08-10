@@ -1,7 +1,7 @@
 import unittest
-import json
 from classes.user_class import User
-from globals.test_globals import test_user_id, test_forenames, test_surname, test_email, test_state
+from classes.marriagecertificate_class import MarriageCertificate
+from globals.test_globals import test_user_id, test_forenames, test_surname, test_email, test_state, test_doc1
 
 
 class UserClassTest(unittest.TestCase):
@@ -12,6 +12,8 @@ class UserClassTest(unittest.TestCase):
         self.test_user.surname = test_surname
         self.test_user.email = test_email
         self.test_user.verified_state = test_state
+        self.test_user.logged_in = test_state
+        self.test_user.docs = test_doc1
 
     def test_get_id(self) -> None:
         self.assertEqual(self.test_user.user_id, test_user_id)
@@ -66,6 +68,27 @@ class UserClassTest(unittest.TestCase):
             self.test_user.verified_state = different_state
         self.assertEqual(str(err.exception),
                          "Verified State provided ({0}) is not boolean or None".format(different_state))
+
+    def test_get_logged_in(self) -> None:
+        self.assertEqual(self.test_user.logged_in, test_state)
+
+    def test_set_logged_in(self) -> None:
+        different_state = False
+        self.test_user.logged_in = different_state
+        self.assertEqual(self.test_user.logged_in, different_state)
+
+    def test_get_docs(self) -> None:
+        list_test_doc_1 = [test_doc1]
+        self.assertEqual(self.test_user.docs, list_test_doc_1)
+
+    def test_set_docs(self) -> None:
+        self.test_user.docs.remove(test_doc1)
+        different_doc = MarriageCertificate()
+        different_doc2 = MarriageCertificate()
+        self.test_user.docs = different_doc
+        self.test_user.docs = different_doc2
+        list_different_docs = [different_doc, different_doc2]
+        self.assertEqual(self.test_user.docs, list_different_docs)
 
     def test_conversion_to_dict(self) -> None:
         self.assertEqual(self.test_user.return_user_as_dict.get("id"), test_user_id)

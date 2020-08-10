@@ -8,19 +8,10 @@ import globals.global_variables as gv
 class MarriageCertClassTest(unittest.TestCase):
     def setUp(self) -> None:
         self.test_cert = MarriageCertificate()
-        self.test_cert.marriage_date = tg.test_marriage_date
         self.test_cert.age_on_certificate = tg.test_age_on_cert
         self.test_cert.certificate_number = tg.test_cert_number
         self.test_cert.registration_district = tg.test_registration_district
         self.test_cert.marriage_number = tg.test_marriage_no
-
-    def test_get_doc_id(self) -> None:
-        self.assertEqual(self.test_cert.marriage_date, tg.test_marriage_date)
-
-    def test_set_doc_id(self) -> None:
-        different_date = datetime.date(2020, 1, 1)
-        self.test_cert.marriage_date = different_date
-        self.assertEqual(self.test_cert.marriage_date, different_date)
 
     def test_get_age_on_certificate(self) -> None:
         self.assertEqual(self.test_cert.age_on_certificate, tg.test_age_on_cert)

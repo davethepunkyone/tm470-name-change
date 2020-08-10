@@ -10,7 +10,29 @@
       <div class="main_w_nav">
          <h1>Account Home</h1>
          <p>Welcome! You're currently logged in as: {{ user.email }}.</p>
-         <p class="to_remove">This is a test to see how this behaves</p>
+         {% if user.docs|length == 0 %}
+            <div class="darkened_section">
+               <h2>Getting Started</h2>
+               <p>Before you can start using this service, you will need to upload a copy of your name change
+                  documentation.  Click the Add Document option below to get started adding a new document ready
+                  to use!</p>
+               <a href="{{ url_for('new_document_selection') }}">
+                  <div class="recommended_actions_button">Add a new document</div></a>
+            </div>
+         {% else %}
+            <h2>Your Uploaded Documents</h2>
+            <p class="to_remove">Table here</p>
+            <div class="darkened_section">
+               <h2>Recommended Actions</h2>
+               <p>These are the actions we recommend taking next:</p>
+               <a href="{{ url_for('generate_code_document_selection') }}">
+                  <div class="recommended_actions_button">Generate a new access code</div></a>
+               {% if user.access_codes|length > 0 %}
+                  <a href="{{ url_for('manage_all_access_codes') }}">
+                     <div class="recommended_actions_button">Manage existing access codes</div></a>
+               {% endif %}
+            </div>
+         {% endif %}
       </div>
       {% endblock %}
    </body>

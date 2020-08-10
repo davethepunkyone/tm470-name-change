@@ -10,7 +10,6 @@ class DeedPollClassTest(unittest.TestCase):
         self.test_decree = DecreeAbsolute()
         self.test_decree.marriage_certificate_details = MarriageCertificate()
         self.test_decree.marriage_certificate_details.marriage_number = tg.test_marriage_no
-        self.test_decree.decree_absolute_date = tg.test_decree_absolute_date
         self.test_decree.issuing_court = tg.test_issuing_court
         self.test_decree.number_of_matter = tg.test_no_of_matter
 
@@ -22,14 +21,6 @@ class DeedPollClassTest(unittest.TestCase):
         different_certificate.marriage_number = 99
         self.test_decree.marriage_certificate_details = different_certificate
         self.assertEqual(self.test_decree.marriage_certificate_details, different_certificate)
-
-    def test_get_decree_absolute_date(self) -> None:
-        self.assertEqual(self.test_decree.decree_absolute_date, tg.test_decree_absolute_date)
-
-    def test_set_decree_absolute_date(self) -> None:
-        different_date = datetime.date(2018, 11, 17)
-        self.test_decree.decree_absolute_date = different_date
-        self.assertEqual(self.test_decree.decree_absolute_date, different_date)
 
     def test_get_issuing_court(self) -> None:
         self.assertEqual(self.test_decree.issuing_court, tg.test_issuing_court)
