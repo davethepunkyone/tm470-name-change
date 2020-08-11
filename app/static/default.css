@@ -1,5 +1,5 @@
 * {
-  font-family: Calibri sans-serif;
+  font-family: Calibri;
 }
 
 a, a:link, a:visited, a:hover, a:active  {
@@ -167,6 +167,7 @@ th {
   border-color: #2F528F;
   width: 700px;
   height: 400px;
+  overflow: hidden;
 }
 
 .upload_reference_image {
@@ -174,6 +175,8 @@ th {
   border-color: #2F528F;
   width: 250px;
   height: 175px;
+  overflow: hidden;
+  float: left;
 }
 
 .links, .field_values {
@@ -306,6 +309,28 @@ th {
 }
 
 .recommended_actions_button:hover {
+  background-color: #5D5C5C;
+  box-shadow: 0 0;
+}
+
+.general_actions_button {
+  background-color: #7F7F7F;
+  border-color: #2F528F;
+  border-style: solid;
+  text-align: center;
+  padding: 5px 10px;
+  font-weight: bold;
+  color: white;
+  text-decoration: none;
+  margin-right: 10px;
+  margin-bottom: 10px;
+  border-radius: 10px;
+  box-shadow: 2px 2px #888888;
+  width: 200px;
+  overflow: hidden;
+}
+
+.general_actions_button:hover {
   background-color: #5D5C5C;
   box-shadow: 0 0;
 }

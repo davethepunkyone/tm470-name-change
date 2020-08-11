@@ -212,10 +212,20 @@ def manage_all_documents():
 
 @app.route('/manage_document/<doc_id>')
 def manage_document(doc_id):
-    if not user.logged_in:
-        return redirect(url_for('index'))
+    if user.logged_in:
+        document_found = False
+        for document in user.docs:
+            if document.document_id == int(doc_id):
+                doc_to_manage = document
+                document_found = True
+
+        if document_found:
+            return render_template('manage_documents/manage_document.html', user=user, doc=doc_to_manage)
+        else:
+            return render_template('manage_documents/manage_all_documents.html', user=user)
     else:
-        return render_template('manage_documents/manage_document.html', user=user, doc=doc)
+        return redirect(url_for('index'))
+
 
 
 # Generate New Access Code Processes

@@ -2,14 +2,35 @@
 <html lang="en" dir="ltr">
    <head>
       <meta charset="utf-8">
-      <title>Change Your Name: Manage Document - (Doc ID)</title>
+      <title>Change Your Name: Manage Document ({{ doc.document_type }})</title>
    </head>
    <body>
       {% extends "template_general.html" %}
       {% block content %}
       <div class="main_w_nav">
-         <h1>Manage Document (Doc ID)</h1>
+         <h1>Manage Document: {{ doc.document_type }}</h1>
+         <h2>Document Details</h2>
+         <table>
+            <tr>
+               <th>Document ID</th>
+               <td>{{ doc.document_id }}</td>
+            </tr>
+            <tr>
+               <th>Change of Name Date</th>
+               <td>{{ doc.change_of_name_date_as_string }}</td>
+            </tr>
+            <tr>
+               <th>Verified Status</th>
+               <td>{{ doc.document_verified_state.name|replace("_", " ")|capitalize }}</td>
+            </tr>
+         </table>
          <p class="to_remove"> This is a test to see how this behaves </p>
+         <h2>Document Image</h2>
+         <p class="to_remove"> Add image in here </p>
+         <!--<img class="upload_reference_image" src={{url_for('static', filename='placeholder_doc.png')}} /></div>-->
+         <h2>Actions</h2>
+         <a href=""><div class="general_actions_button">Remove Document</div></a>
+         <a href=""><div class="general_actions_button">Return to Manage Documents</div></a>
       </div>
       {% endblock %}
    </body>
