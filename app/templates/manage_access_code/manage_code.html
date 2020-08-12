@@ -2,15 +2,46 @@
 <html lang="en" dir="ltr">
    <head>
       <meta charset="utf-8">
-      <title>Change Your Name: Manage Access Code - (Code ID)</title>
+      <title>Change Your Name: Manage Access Code ({{ code_to_use.code_id }})</title>
    </head>
    <body>
       {% extends "template_general.html" %}
       {% block content %}
       <div class="main_w_nav">
-         <h1>Manage Access Code (Code ID)</h1>
+         <h1>Manage Access Code: {{ code_to_use.uploaded_document.document_type }} for
+            {{ code_to_use.access_for_org.org_name }}</h1>
          <h2>Access Code</h2>
+         <p>The access code to provide to {{ code_to_use.access_for_org.org_name }} is:</p>
+         <div class="access_code_display">{{ code_to_use.generated_code }}</div>
+
+         <h2>Access Details</h2>
+         <table>
+            <tr>
+               <th>Document</th>
+               <td>{{ code_to_use.uploaded_document.document_type }}
+                  ({{code_to_use.uploaded_document.change_of_name_date_as_string}})</td>
+            </tr>
+            <tr>
+               <th>Organisation</th>
+               <td>{{ code_to_use.access_for_org.org_name }}</td>
+            </tr>
+            <tr>
+               <th>Expiry Time</th>
+               <td>{{ code_to_use.expiry_to_string }}</td>
+            </tr>
+            <tr>
+               <th>Access Status</th>
+               <td>{{ code_to_use.accessed_state.name }}</td>
+            </tr>
+         </table>
+
+         <h2>Activity</h2>
          <p class="to_remove"> This is a test to see how this behaves </p>
+
+         <h2>Actions</h2>
+         <a href=""><div class="general_actions_button">Extend Code Duration</div></a>
+         <a href=""><div class="general_actions_button">Revoke Access Code</div></a>
+         <a href=""><div class="general_actions_button">Return to Manage Access Codes</div></a>
       </div>
       {% endblock %}
    </body>

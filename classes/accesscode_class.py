@@ -1,5 +1,7 @@
 import datetime
 from classes.document_class import Document
+from classes.organisation_class import Organisation
+from classes.enums import AccessStates
 
 
 class AccessCode:
@@ -15,6 +17,7 @@ class AccessCode:
         self._generated_code = None
         self._expiry = None
         self._accessed_state = None
+        self._access_for_org = None
         self._added_datetime = None
         self._last_modified_datetime = None
 
@@ -63,12 +66,26 @@ class AccessCode:
         return self._expiry.strftime("%d/%m/%Y %H:%M")
 
     @property
-    def accessed_state(self) -> bool:
+    def accessed_state(self) -> AccessStates:
         return self._accessed_state
 
     @accessed_state.setter
-    def accessed_state(self, access_state: bool) -> None:
-        self._accessed_state = access_state
+    def accessed_state(self, access_state: AccessStates) -> None:
+        if isinstance(access_state, AccessStates):
+            self._accessed_state = access_state
+        else:
+            raise ValueError("Access State value provided is not a valid AccessState")
+
+    @property
+    def access_for_org(self) -> str:
+        return self._access_for_org
+
+    @access_for_org.setter
+    def access_for_org(self, org: Organisation) -> None:
+        if isinstance(org, Organisation):
+            self._access_for_org = org
+        else:
+            raise ValueError("Organisation value provided is not a valid Organisation")
 
     @property
     def added_datetime(self) -> datetime.datetime:

@@ -326,7 +326,7 @@ th {
   margin-bottom: 10px;
   border-radius: 10px;
   box-shadow: 2px 2px #888888;
-  width: 200px;
+  width: 250px;
   overflow: hidden;
 }
 
@@ -348,6 +348,18 @@ th {
 .general_link {
   text-decoration: underline;
   font-weight: bold;
+}
+
+.access_code_display {
+  border: solid #2F528F;
+  background-color: lightgoldenrodyellow;
+  font-size: 30px;
+  font-weight: bold;
+  text-align: center;
+  width: 100px;
+  margin-bottom: 20px;
+  margin-top: -5px;
+  padding: 5px 10px;
 }
 
 .to_remove {

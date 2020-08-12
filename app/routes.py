@@ -1,19 +1,16 @@
 from flask import render_template, redirect, url_for
 from app import app
 import datetime
+import globals.mock_variables as mock
 
 from classes.user_class import User
 from classes.marriagecertificate_class import MarriageCertificate
 from classes.deedpoll_class import DeedPoll
 from classes.accesscode_class import AccessCode
-from classes.enums import VerifiedStates
-
-# user = {"username": "",
-#        "logged_in": False,
-#        "docs": "",
-#        "access_codes": ""}
+from classes.enums import VerifiedStates, AccessStates
 
 user = User()
+orgs = mock.mock_list_of_organisations()
 
 doc = {"type": "Marriage Certificate"}
 # Marriage Certificate | Deed Poll | Decree Absolute
@@ -51,10 +48,14 @@ def test(test_conditions):
         doc3.document_id = 201
         doc3.change_of_name_date = datetime.date(2018, 12, 25)
         doc3.document_verified_state = VerifiedStates.AWAITING_VERIFICATION
+        org1 = orgs.__getitem__(0)
         code1 = AccessCode()
+        code1.code_id = 1474
         code1.generated_code = "987654"
         code1.expiry = datetime.datetime(2020, 9, 1, 12, 35, 12)
         code1.uploaded_document = doc2
+        code1.access_for_org = org1
+        code1.accessed_state = AccessStates.ACTIVE
         user.docs = doc2
         user.docs = doc3
         user.access_codes = code1
@@ -218,14 +219,14 @@ def manage_document(doc_id):
             if document.document_id == int(doc_id):
                 doc_to_manage = document
                 document_found = True
+                break
 
         if document_found:
             return render_template('manage_documents/manage_document.html', user=user, doc=doc_to_manage)
         else:
-            return render_template('manage_documents/manage_all_documents.html', user=user)
+            return redirect(url_for('manage_all_documents'))
     else:
         return redirect(url_for('index'))
-
 
 
 # Generate New Access Code Processes
@@ -258,12 +259,22 @@ def generate_code_confirm_access_details():
 # Manage Access Codes Processes
 
 
-@app.route('/manage_code')
-def manage_access_code():
-    if not user.logged_in:
-        return redirect(url_for('index'))
+@app.route('/manage_code/<code_to_retrieve>')
+def manage_access_code(code_to_retrieve):
+    if user.logged_in:
+        code_found = False
+        for code in user.access_codes:
+            if code.code_id == int(code_to_retrieve):
+                code_to_manage = code
+                code_found = True
+                break
+
+        if code_found:
+            return render_template('manage_access_code/manage_code.html', user=user, code_to_use=code_to_manage)
+        else:
+            return redirect(url_for('manage_all_access_codes'))
     else:
-        return render_template('manage_access_code/manage_code.html', user=user)
+        return redirect(url_for('index'))
 
 
 @app.route('/manage_all_codes')
