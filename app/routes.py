@@ -1,4 +1,4 @@
-from flask import render_template, redirect, url_for
+from flask import render_template, redirect, url_for, request
 from app import app
 import datetime
 import globals.mock_variables as mock
@@ -14,6 +14,7 @@ orgs = mock.mock_list_of_organisations()
 
 doc = {"type": "Marriage Certificate"}
 # Marriage Certificate | Deed Poll | Decree Absolute
+access_code = AccessCode()
 
 
 @app.route('/')
@@ -55,7 +56,7 @@ def test(test_conditions):
         code1.expiry = datetime.datetime(2020, 9, 1, 12, 35, 12)
         code1.uploaded_document = doc2
         code1.access_for_org = org1
-        code1.accessed_state = AccessStates.ACTIVE
+        code1.accessed_state = AccessStates.EXPIRED
         user.docs = doc2
         user.docs = doc3
         user.access_codes = code1
@@ -138,66 +139,66 @@ def logout():
 
 @app.route('/new_document_1')
 def new_document_selection():
-    if not user.logged_in:
-        return redirect(url_for('index'))
-    else:
+    if user.logged_in:
         return render_template('add_document/add_doc_1_selection.html', user=user)
+    else:
+        return redirect(url_for('index'))
 
 
 @app.route('/new_document_2')
 def new_document_upload_image():
-    if not user.logged_in:
-        return redirect(url_for('index'))
-    else:
+    if user.logged_in:
         return render_template('add_document/add_doc_2_upload_image.html', user=user, doc=doc)
+    else:
+        return redirect(url_for('index'))
 
 
 @app.route('/new_document_3')
 def new_document_confirm_image():
-    if not user.logged_in:
-        return redirect(url_for('index'))
-    else:
+    if user.logged_in:
         return render_template('add_document/add_doc_3_confirm_image.html', user=user, doc=doc)
+    else:
+        return redirect(url_for('index'))
 
 
 @app.route('/new_document_4')
 def new_document_add_personal_details():
-    if not user.logged_in:
-        return redirect(url_for('index'))
-    else:
+    if user.logged_in:
         return render_template('add_document/add_doc_4_add_personal_details.html', user=user, doc=doc)
+    else:
+        return redirect(url_for('index'))
 
 
 @app.route('/new_document_5')
 def new_document_confirm_personal_details():
-    if not user.logged_in:
-        return redirect(url_for('index'))
-    else:
+    if user.logged_in:
         return render_template('add_document/add_doc_5_confirm_personal_details.html', user=user, doc=doc)
+    else:
+        return redirect(url_for('index'))
 
 
 @app.route('/new_document_6')
 def new_document_add_document_details():
-    if not user.logged_in:
-        return redirect(url_for('index'))
-    else:
+    if user.logged_in:
         return render_template('add_document/add_doc_6_add_document_details.html', user=user, doc=doc)
+    else:
+        return redirect(url_for('index'))
 
 
 @app.route('/new_document_7')
 def new_document_confirm_document_details():
-    if not user.logged_in:
-        return redirect(url_for('index'))
-    else:
+    if user.logged_in:
         return render_template('add_document/add_doc_7_confirm_document_details.html', user=user, doc=doc)
+    else:
+        return redirect(url_for('index'))
 
 
 @app.route('/new_document_8')
 def new_document_finish():
-    if not user.logged_in:
-        return redirect(url_for('index'))
-    else:
+    if user.logged_in:
         return render_template('add_document/add_doc_8_finish.html', user=user, doc=doc)
+    else:
+        return redirect(url_for('index'))
 
 
 # New Document Processes
@@ -205,10 +206,10 @@ def new_document_finish():
 
 @app.route('/manage_all_documents')
 def manage_all_documents():
-    if not user.logged_in:
-        return redirect(url_for('index'))
-    else:
+    if user.logged_in:
         return render_template('manage_documents/manage_all_documents.html', user=user)
+    else:
+        return redirect(url_for('index'))
 
 
 @app.route('/manage_document/<doc_id>')
@@ -232,28 +233,41 @@ def manage_document(doc_id):
 # Generate New Access Code Processes
 
 
-@app.route('/generate_access_code_1')
+@app.route('/generate_access_code_1', methods=['GET', 'POST'])
 def generate_code_document_selection():
-    if not user.logged_in:
-        return redirect(url_for('index'))
+    global access_code, user
+
+    if user.logged_in:
+        if request.method == 'GET':
+            access_code = AccessCode()
+            return render_template('generate_access_code/generate_code_1_selection.html', user=user)
+        elif request.method == 'POST':
+            if len(request.form) > 0:
+                access_code_id_doc = request.form["user_doc"]
+                access_code.uploaded_document = user.get_specific_listed_doc(int(access_code_id_doc))
+                return redirect(url_for('generate_code_access_details'))
+            else:
+                feedback = "You need to select at least one option."
+                return render_template('generate_access_code/generate_code_1_selection.html', user=user,
+                                       feedback=feedback)
     else:
-        return render_template('generate_access_code/generate_code_1_selection.html', user=user)
+        return redirect(url_for('index'))
 
 
 @app.route('/generate_access_code_2')
 def generate_code_access_details():
-    if not user.logged_in:
-        return redirect(url_for('index'))
+    if user.logged_in:
+        return render_template('generate_access_code/generate_code_2_details.html', user=user, code_to_use=access_code)
     else:
-        return render_template('generate_access_code/generate_code_2_details.html', user=user)
+        return redirect(url_for('index'))
 
 
 @app.route('/generate_access_code_3')
 def generate_code_confirm_access_details():
-    if not user.logged_in:
-        return redirect(url_for('index'))
-    else:
+    if user.logged_in:
         return render_template('generate_access_code/generate_code_3_confirm_details.html', user=user)
+    else:
+        return redirect(url_for('index'))
 
 
 # Manage Access Codes Processes
@@ -279,10 +293,10 @@ def manage_access_code(code_to_retrieve):
 
 @app.route('/manage_all_codes')
 def manage_all_access_codes():
-    if not user.logged_in:
-        return redirect(url_for('index'))
-    else:
+    if user.logged_in:
         return render_template('manage_access_code/manage_all_codes.html', user=user)
+    else:
+        return redirect(url_for('index'))
 
 
 # Errors

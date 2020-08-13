@@ -1,4 +1,5 @@
 from classes.user_class import User
+from classes.marriagecertificate_class import MarriageCertificate
 from random import randint
 from datetime import datetime, timedelta
 import logging_functions as logger
@@ -25,6 +26,14 @@ def generate_email(user: User):
 x = User()
 x.first_name = "Testy"
 x.email = "test@123.com"
+y = MarriageCertificate()
+y.document_id = 1
+z = MarriageCertificate()
+z.document_id = 5
+x.docs = y
+x.docs = z
+a = x.get_specific_listed_doc(5)
+print("doc id: " + a.document_id.__str__())
 generate_email(x)
 print("---")
 print(str(x.return_user_as_json))

@@ -13,5 +13,6 @@ class AccessStates(Enum):
     FAILED_WRONG_ORG = 1
     FAILED_WRONG_USER_DETAILS = 2
     FAILED_TECHNICAL_ERROR = 3
+    REVOKED = 7
     EXPIRED = 8
     RETRIEVED = 9

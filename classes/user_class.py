@@ -95,6 +95,13 @@ class User:
         else:
             raise ValueError("Item provided is not a valid document")
 
+    def get_specific_listed_doc(self, doc_id: int) -> Document:
+        for doc in self.docs:
+            if doc.document_id == doc_id:
+                return doc
+        else:
+            raise ValueError("Document ID provided (doc_id) is not in the list of documents")
+
     @property
     def access_codes(self) -> list:
         return self._access_codes
