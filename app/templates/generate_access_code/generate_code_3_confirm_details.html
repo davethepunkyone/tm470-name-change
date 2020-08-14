@@ -24,11 +24,11 @@
             </div>
          </div>
          <h2>Confirm Access Code Details</h2>
-         <p>Please provide the details for accessing your (value)</p>
+         <p>Please confirm the details for accessing your {{ code_to_use.uploaded_document.document_type }}:</p>
             <label for="org">Who requires access: </label>
-            <div id="org">(data here)</div><br />
+            <div id="org">{{ code_to_use.access_for_org.org_name }}</div><br />
             <label for="code_duration">Duration of access: </label>
-            <div id="code_duration">(data here)</div><br />
+            <div id="code_duration">{{ code_to_use.duration_time }} {{ code_to_use.duration_denominator }}</div><br />
          <p class="to_remove"> This is a test to see how this behaves </p>
          <p class="to_remove">END PROCESS - MANAGE CODE</p>
       </div>

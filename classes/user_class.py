@@ -100,7 +100,7 @@ class User:
             if doc.document_id == doc_id:
                 return doc
         else:
-            raise ValueError("Document ID provided (doc_id) is not in the list of documents")
+            raise ValueError("Document ID provided ({}) is not in the list of documents".format(doc_id))
 
     @property
     def access_codes(self) -> list:

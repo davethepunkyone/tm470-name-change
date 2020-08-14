@@ -25,12 +25,28 @@
          </div>
          <h2>Access Code Details</h2>
          <p>Please provide the details for accessing your {{ code_to_use.uploaded_document.document_type }}:</p>
-         <form id="generate_code_for">
+
+         {% if feedback %}
+            <p class="to_remove">{{ feedback }}</p>
+         {% endif %}
+
+         <form id="generate_code_for" action="{{ url_for('generate_code_access_details') }}" method="post">
             <label for="org">Who requires access: </label>
-            <input type="text" id="org" name="org"><br />
+            <select id="org" name="org">
+               <option></option>
+               {% for org in orgs %}
+                  <option value="{{ org.org_id }}">{{ org.org_name }}</option>
+               {% endfor %}
+            </select><br />
+
             <label for="code_duration_number">Duration of access: </label>
             <input type="text" id="code_duration_number" name="code_duration_number">
-            <input type="text" id="code_duration_type" name="code_duration_type"><br />
+            <select id="code_duration_type" name="code_duration_type">
+               <option></option>
+               <option value="hours">Hours</option>
+               <option value="days">Days</option>
+            </select><br />
+            <input type="submit" />
          </form>
          <p class="to_remove"> This is a test to see how this behaves </p>
          <p class="to_remove"> <a class="general_link" href="{{ url_for('generate_code_confirm_access_details') }}">Navigate to Step 3</a> </p>

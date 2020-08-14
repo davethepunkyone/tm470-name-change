@@ -8,6 +8,7 @@ from classes.marriagecertificate_class import MarriageCertificate
 from classes.deedpoll_class import DeedPoll
 from classes.accesscode_class import AccessCode
 from classes.enums import VerifiedStates, AccessStates
+from functions.org_functions import return_specific_org_from_list
 
 user = User()
 orgs = mock.mock_list_of_organisations()
@@ -254,10 +255,34 @@ def generate_code_document_selection():
         return redirect(url_for('index'))
 
 
-@app.route('/generate_access_code_2')
+@app.route('/generate_access_code_2', methods=['GET', 'POST'])
 def generate_code_access_details():
     if user.logged_in:
-        return render_template('generate_access_code/generate_code_2_details.html', user=user, code_to_use=access_code)
+        feedback = ""
+        if request.method == 'GET':
+            return render_template('generate_access_code/generate_code_2_details.html', user=user,
+                                   code_to_use=access_code, orgs=orgs)
+        elif request.method == 'POST':
+            if len(request.form) > 0:
+                if request.form["org"] == "":
+                    feedback = "You need to select an organisation."
+                elif request.form["code_duration_number"] == "":
+                    feedback = "You need to specify a duration value"
+                elif request.form["code_duration_type"] == "":
+                    feedback = "You need to specify a duration denomination"
+
+                if len(feedback) > 0:
+                    return render_template('generate_access_code/generate_code_2_details.html', user=user,
+                                           code_to_use=access_code, orgs=orgs, feedback=feedback)
+                else:
+                    access_code.access_for_org = return_specific_org_from_list(orgs, int(request.form["org"]))
+                    access_code.duration_time = int(request.form["code_duration_number"])
+                    access_code.duration_denominator = request.form["code_duration_type"]
+                    return redirect(url_for('generate_code_confirm_access_details'))
+            else:
+                feedback = "You need to select the organisation and duration."
+                return render_template('generate_access_code/generate_code_2_details.html', user=user,
+                                       code_to_use=access_code, orgs=orgs, feedback=feedback)
     else:
         return redirect(url_for('index'))
 
@@ -265,7 +290,8 @@ def generate_code_access_details():
 @app.route('/generate_access_code_3')
 def generate_code_confirm_access_details():
     if user.logged_in:
-        return render_template('generate_access_code/generate_code_3_confirm_details.html', user=user)
+        return render_template('generate_access_code/generate_code_3_confirm_details.html', user=user,
+                               code_to_use=access_code)
     else:
         return redirect(url_for('index'))
 
