@@ -48,11 +48,11 @@ class AccessCode:
         self._uploaded_document = doc
 
     @property
-    def generated_code(self) -> int:
+    def generated_code(self) -> str:
         return self._generated_code
 
     @generated_code.setter
-    def generated_code(self, code_id: int) -> None:
+    def generated_code(self, code_id: str) -> None:
         self._generated_code = code_id
 
     @property
@@ -73,6 +73,16 @@ class AccessCode:
             self._duration_denominator = dur_den
         else:
             raise ValueError("The denominator provided ({}) is not valid".format(dur_den))
+
+    def generate_expiry_from_duration(self) -> None:
+        if self._duration_time is not None and self._duration_denominator is not None:
+            current_time = datetime.datetime.now()
+            if self._duration_denominator == "hours":
+                self.expiry = current_time + datetime.timedelta(hours=self._duration_time)
+            elif self._duration_denominator == "days":
+                self.expiry = current_time + datetime.timedelta(days=self._duration_time)
+        else:
+            raise LookupError("The duration time and denominator are not set.")
 
     @property
     def expiry(self) -> datetime.datetime:

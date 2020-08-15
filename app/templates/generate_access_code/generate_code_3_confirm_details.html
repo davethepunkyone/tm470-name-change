@@ -29,8 +29,22 @@
             <div id="org">{{ code_to_use.access_for_org.org_name }}</div><br />
             <label for="code_duration">Duration of access: </label>
             <div id="code_duration">{{ code_to_use.duration_time }} {{ code_to_use.duration_denominator }}</div><br />
-         <p class="to_remove"> This is a test to see how this behaves </p>
-         <p class="to_remove">END PROCESS - MANAGE CODE</p>
+
+         {% if feedback %}
+            <p class="to_remove">{{ feedback }}</p>
+         {% endif %}
+
+         <form id="confirm_code_details" action="{{ url_for('generate_code_confirm_access_details') }}" method="post">
+            <input type="checkbox" id="code_agreement" name="code_agreement">
+               <label for="code_agreement">I confirm the details above are correct.</label><br /><br />
+         </form>
+
+         <p>
+            <form action="{{ url_for('generate_code_access_details') }}">
+               <button class="process_back_button" type="submit">Back</button>
+            </form>
+            <button form="confirm_code_details" class="process_continue_button">Generate</button>
+         </p>
       </div>
       {% endblock %}
    </body>

@@ -1,8 +1,9 @@
 from classes.user_class import User
 from classes.marriagecertificate_class import MarriageCertificate
+from classes.accesscode_class import AccessCode
 from random import randint
 from datetime import datetime, timedelta
-import logging_functions as logger
+from functions import logging_functions as logger
 
 
 def generate_new_account_code(user: User) -> int:
@@ -37,3 +38,8 @@ print("doc id: " + a.document_id.__str__())
 generate_email(x)
 print("---")
 print(str(x.return_user_as_json))
+ac = AccessCode()
+ac.duration_time = 3
+ac.duration_denominator = "days"
+ac.generate_expiry_from_duration()
+print(ac.expiry_to_string)

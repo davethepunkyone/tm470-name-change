@@ -33,16 +33,21 @@
          </div>
          <h2>Document Selection</h2>
          <p>Please select the type of document you wish to upload:</p>
-         <p><input type="radio" id="marriage_certificate" name="doc_type" value="male">
-         <label for="marriage_certificate">Marriage Certificate</label><br />
-         <input type="radio" id="deed_poll" name="doc_type" value="female">
-         <label for="deed_poll">Deed Poll</label><br />
-         <input type="radio" id="decree_absolute" name="doc_type" value="other">
-            <label for="decree_absolute">Decree Absolute</label></p>
+         <form id="document_type">
+            <input type="radio" id="marriage_certificate" name="doc_type" value="male">
+            <label for="marriage_certificate">Marriage Certificate</label><br />
+            <input type="radio" id="deed_poll" name="doc_type" value="female">
+            <label for="deed_poll">Deed Poll</label><br />
+            <input type="radio" id="decree_absolute" name="doc_type" value="other">
+               <label for="decree_absolute">Decree Absolute</label>
+         </form>
          <p>
-            <a href="{{ url_for('account_home') }}"><div class="process_back_button">Back</div></a>
-            <a href="{{ url_for('new_document_upload_image') }}"><div class="process_continue_button">Next</div></a>
+            <form action="{{ url_for('account_home') }}">
+               <button class="process_back_button" type="submit">Back</button>
+            </form>
+            <button form="document_type" class="process_continue_button">Next</button>
          </p>
+
       </div>
       {% endblock %}
    </body>

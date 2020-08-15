@@ -9,13 +9,20 @@ from classes.deedpoll_class import DeedPoll
 from classes.accesscode_class import AccessCode
 from classes.enums import VerifiedStates, AccessStates
 from functions.org_functions import return_specific_org_from_list
+from functions.access_code_functions import generate_unique_access_code
+from functions import logging_functions as logger
 
 user = User()
 orgs = mock.mock_list_of_organisations()
 
 doc = {"type": "Marriage Certificate"}
 # Marriage Certificate | Deed Poll | Decree Absolute
+incrementer_document = 8000
+
 access_code = AccessCode()
+incrementer_access_code = 5000
+
+success_message = None
 
 
 @app.route('/')
@@ -216,14 +223,13 @@ def manage_all_documents():
 @app.route('/manage_document/<doc_id>')
 def manage_document(doc_id):
     if user.logged_in:
-        document_found = False
+        doc_to_manage = None
         for document in user.docs:
             if document.document_id == int(doc_id):
                 doc_to_manage = document
-                document_found = True
                 break
 
-        if document_found:
+        if doc_to_manage is not None:
             return render_template('manage_documents/manage_document.html', user=user, doc=doc_to_manage)
         else:
             return redirect(url_for('manage_all_documents'))
@@ -240,6 +246,7 @@ def generate_code_document_selection():
 
     if user.logged_in:
         if request.method == 'GET':
+            logger.log_benchmark("Generate Access Code (Start - Document Selection)")
             access_code = AccessCode()
             return render_template('generate_access_code/generate_code_1_selection.html', user=user)
         elif request.method == 'POST':
@@ -257,9 +264,12 @@ def generate_code_document_selection():
 
 @app.route('/generate_access_code_2', methods=['GET', 'POST'])
 def generate_code_access_details():
+    global access_code, user
+
     if user.logged_in:
         feedback = ""
         if request.method == 'GET':
+            logger.log_benchmark("Generate Access Code (Page 2 - Access Details)")
             return render_template('generate_access_code/generate_code_2_details.html', user=user,
                                    code_to_use=access_code, orgs=orgs)
         elif request.method == 'POST':
@@ -287,11 +297,37 @@ def generate_code_access_details():
         return redirect(url_for('index'))
 
 
-@app.route('/generate_access_code_3')
+@app.route('/generate_access_code_3', methods=['GET', 'POST'])
 def generate_code_confirm_access_details():
+    global access_code, user, incrementer_access_code, success_message
+
     if user.logged_in:
-        return render_template('generate_access_code/generate_code_3_confirm_details.html', user=user,
-                               code_to_use=access_code)
+        if request.method == 'GET':
+            logger.log_benchmark("Generate Access Code (Page 3 - Confirm Details)")
+            return render_template('generate_access_code/generate_code_3_confirm_details.html', user=user,
+                                   code_to_use=access_code)
+        elif request.method == 'POST':
+            if len(request.form) > 0:
+                if request.form["code_agreement"] == "on":
+                    incrementer_access_code += 1
+                    access_code.code_id = incrementer_access_code
+                    access_code.generate_expiry_from_duration()
+                    access_code.generated_code = generate_unique_access_code()
+                    access_code.accessed_state = AccessStates.ACTIVE
+                    access_code.added_datetime = datetime.datetime.now()
+                    user.access_codes.append(access_code)
+                    success_message = "The code was successfully generated!"
+                    # access_code = AccessCode()
+                    logger.log_benchmark("Generate Access Code (Finish)")
+                    return redirect(url_for('manage_access_code', code_to_retrieve=access_code.code_id))
+                else:
+                    feedback = "You need to confirm the access code details to generate."
+                    return render_template('generate_access_code/generate_code_3_confirm_details.html', user=user,
+                                           code_to_use=access_code, feedback=feedback)
+            else:
+                feedback = "You need to confirm the access code details to generate."
+                return render_template('generate_access_code/generate_code_3_confirm_details.html', user=user,
+                                       code_to_use=access_code, feedback=feedback)
     else:
         return redirect(url_for('index'))
 
@@ -301,16 +337,22 @@ def generate_code_confirm_access_details():
 
 @app.route('/manage_code/<code_to_retrieve>')
 def manage_access_code(code_to_retrieve):
+    global user, success_message
+
     if user.logged_in:
-        code_found = False
+        code_to_manage = None
+        success_to_display = success_message
+        if success_message is not None:
+            success_message = None
+
         for code in user.access_codes:
             if code.code_id == int(code_to_retrieve):
                 code_to_manage = code
-                code_found = True
                 break
 
-        if code_found:
-            return render_template('manage_access_code/manage_code.html', user=user, code_to_use=code_to_manage)
+        if code_to_manage is not None:
+            return render_template('manage_access_code/manage_code.html', user=user, code_to_use=code_to_manage,
+                                   success=success_to_display)
         else:
             return redirect(url_for('manage_all_access_codes'))
     else:

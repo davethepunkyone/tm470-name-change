@@ -362,6 +362,15 @@ th {
   padding: 5px 10px;
 }
 
+.success_message {
+  background-color: #cafca9;
+  border-color: #548235;
+  border-style: solid;
+  padding: 5px 10px;
+  font-weight: bold;
+  border-radius: 4px;
+}
+
 .to_remove {
   background-color: yellow;
   border-color: red;

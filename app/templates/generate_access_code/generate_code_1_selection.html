@@ -28,17 +28,20 @@
          {% if feedback %}
             <p class="to_remove">{{ feedback }}</p>
          {% endif %}
-         <form action="{{ url_for('generate_code_document_selection') }}" method="post">
+         <form id="doc_to_select" action="{{ url_for('generate_code_document_selection') }}" method="post">
             {% for doc in user.docs %}
                <input type="radio" id="{{  doc.document_type|replace(" ", "")  }}" name="user_doc"
                   value="{{ doc.document_id }}">
                <label for="{{  doc.document_type|replace(" ", "")  }}">{{ doc.doc_type_with_date }}</label><br />
             {% endfor %}
-            <input type="submit" />
          </form>
 
-         <p class="to_remove"> This is a test to see how this behaves </p>
-         <p class="to_remove"> <a class="general_link" href="{{ url_for('generate_code_access_details') }}">Navigate to Step 2</a> </p>
+         <p>
+            <form action="{{ url_for('account_home') }}">
+               <button class="process_back_button" type="submit">Back</button>
+            </form>
+            <button form="doc_to_select" class="process_continue_button">Next</button>
+         </p>
       </div>
       {% endblock %}
    </body>
