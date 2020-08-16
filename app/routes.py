@@ -12,26 +12,65 @@ from functions.org_functions import return_specific_org_from_list
 from functions.access_code_functions import generate_unique_access_code
 from functions import logging_functions as logger
 
-user = User()
+# Global Lists
+users_list = mock.mock_list_of_users()
 orgs = mock.mock_list_of_organisations()
 
+# Global Instances
+user = User()
 doc = {"type": "Marriage Certificate"}
 # Marriage Certificate | Deed Poll | Decree Absolute
-incrementer_document = 8000
-
 access_code = AccessCode()
+
+# Incrementer
+incrementer_document = 8000
 incrementer_access_code = 5000
 
+# Other Globals
 success_message = None
+failure_message = None
 
 
 @app.route('/')
-@app.route('/index')
+@app.route('/index', methods=['GET', 'POST'])
 def index():
+    global user
     if user.logged_in:
         return redirect(url_for('account_home'))
     else:
-        return render_template('index.html', user=user)
+        if request.method == 'GET':
+            logger.log_benchmark("Load Homepage")
+            return render_template('index.html', user=user)
+        elif request.method == 'POST':
+            logger.log_benchmark("Homepage - Attempt Login")
+            if len(request.form) > 0:
+                email = request.form["email_address"]
+                pwd = request.form["password"]
+                if email == "" or pwd == "":
+                    feedback = "You need to provide your email and password to log in."
+                    return render_template('index.html', user=user, feedback=feedback)
+                else:
+                    try:
+                        user = return_logged_in_user(email, pwd)
+                        user.logged_in = True
+                        return redirect(url_for('account_home'))
+                    except LookupError as err:
+                        feedback = err
+                        return render_template('index.html', user=user, feedback=feedback)
+            else:
+                feedback = "You need to provide your email and password to log in."
+                return render_template('index.html', user=user, feedback=feedback)
+
+
+def return_logged_in_user(email: str, pwd: str) -> User:
+    for user_check in users_list:
+        if user_check.email == email:
+            if user_check.prototype_password == pwd:
+                return user_check
+            else:
+                raise LookupError("The password for the user is not correct.")
+    else:
+        raise LookupError("The email address specified is not registered with this service.")
 
 
 @app.route('/test/<test_conditions>')
@@ -39,37 +78,13 @@ def test(test_conditions):
     global user
     user = User()
     if test_conditions == "1":
-        user.email = "testemail1@testing.com"
+        user = users_list.__getitem__(0)
         user.logged_in = True
-        doc1 = MarriageCertificate()
-        doc1.document_id = 100
-        doc1.change_of_name_date = datetime.date(2020, 2, 1)
-        doc1.document_verified_state = VerifiedStates.VERIFIED
-        user.docs = doc1
     elif test_conditions == "2":
-        user.email = "testemail2@testing.com"
+        user = users_list.__getitem__(1)
         user.logged_in = True
-        doc2 = DeedPoll()
-        doc2.document_id = 200
-        doc2.change_of_name_date = datetime.date(2019, 7, 4)
-        doc2.document_verified_state = VerifiedStates.VERIFIED
-        doc3 = MarriageCertificate()
-        doc3.document_id = 201
-        doc3.change_of_name_date = datetime.date(2018, 12, 25)
-        doc3.document_verified_state = VerifiedStates.AWAITING_VERIFICATION
-        org1 = orgs.__getitem__(0)
-        code1 = AccessCode()
-        code1.code_id = 1474
-        code1.generated_code = "987654"
-        code1.expiry = datetime.datetime(2020, 9, 1, 12, 35, 12)
-        code1.uploaded_document = doc2
-        code1.access_for_org = org1
-        code1.accessed_state = AccessStates.EXPIRED
-        user.docs = doc2
-        user.docs = doc3
-        user.access_codes = code1
     elif test_conditions == "3":
-        user.email = "test3@testing.com"
+        user = users_list.__getitem__(2)
         user.logged_in = True
     return redirect(url_for('index'))
 

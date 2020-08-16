@@ -18,10 +18,42 @@ class User:
         self._forenames = None
         self._surname = None
         self._email = None
+        self._prototype_password = None
         self._verified_state = None
         self._logged_in = False
         self._docs = []
         self._access_codes = []
+        if len(kwargs) > 0:
+            self.sort_kwargs(**kwargs)
+
+    def sort_kwargs(self, **kwargs):
+        for key, value in kwargs.items():
+            if key == "user_id":
+                self.user_id = value
+            elif key == "forenames":
+                self.forenames = value
+            elif key == "surname":
+                self.surname = value
+            elif key == "email":
+                self.email = value
+            elif key == "prototype_password":
+                self.prototype_password = value
+            elif key == "verified_state":
+                self.verified_state = value
+            elif key == "docs":
+                if isinstance(value, list):
+                    for item in value:
+                        self.docs = item
+                else:
+                    self.docs = value
+            elif key == "access_codes":
+                if isinstance(value, list):
+                    for item in value:
+                        self.access_codes = item
+                else:
+                    self.access_codes = value
+            else:
+                raise KeyError("Keyword ({}) provided is not a valid property".format(key))
 
     @property
     def user_id(self) -> int:
@@ -61,6 +93,14 @@ class User:
     @email.setter
     def email(self, email: str) -> None:
         self._email = email
+
+    @property
+    def prototype_password(self) -> str:
+        return self._prototype_password
+
+    @prototype_password.setter
+    def prototype_password(self, pw: str) -> None:
+        self._prototype_password = pw
 
     @property
     def verified_state(self) -> bool:

@@ -1,4 +1,3 @@
-import datetime
 from classes.document_class import Document
 
 
@@ -12,9 +11,17 @@ class DeedPoll(Document):
     This class also inherits all properties from Document class."""
 
     def __init__(self, **kwargs):
-        super().__init__(**kwargs)
+        super().__init__()
         self.document_type = "Deed Poll"
         self._registered_with_courts = None
+        if len(kwargs) > 0:
+            self.sort_kwargs_doc(**kwargs)
+            self.sort_kwargs(**kwargs)
+
+    def sort_kwargs(self, **kwargs):
+        for key, value in kwargs.items():
+            if key == "registered_with_courts":
+                self.registered_with_courts = value
 
     @property
     def registered_with_courts(self) -> bool:

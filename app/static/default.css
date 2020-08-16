@@ -134,12 +134,12 @@ th {
 }
 
 .darkened_section {
-  margin: auto;
   background-color: #D0CECE;
   padding-left: 10px;
   padding-right: 10px;
   border-color: #2F528F;
   border-style: solid;
+  display: inline-block;
 }
 
 .header_text {
@@ -365,6 +365,15 @@ th {
 .success_message {
   background-color: #cafca9;
   border-color: #548235;
+  border-style: solid;
+  padding: 5px 10px;
+  font-weight: bold;
+  border-radius: 4px;
+}
+
+.failure_message {
+  background-color: #fabcbc;
+  border-color: #983535;
   border-style: solid;
   padding: 5px 10px;
   font-weight: bold;

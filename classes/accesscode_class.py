@@ -22,6 +22,33 @@ class AccessCode:
         self._access_for_org = None
         self._added_datetime = None
         self._last_modified_datetime = None
+        if len(kwargs) > 0:
+            self.sort_kwargs(**kwargs)
+
+    def sort_kwargs(self, **kwargs):
+        for key, value in kwargs.items():
+            if key == "code_id":
+                self.code_id = value
+            elif key == "user_id":
+                self.user_id = value
+            elif key == "uploaded_document":
+                self.uploaded_document = value
+            elif key == "generated_code":
+                self.generated_code = value
+            elif key == "duration_time":
+                self.duration_time = value
+            elif key == "duration_denominator":
+                self.duration_denominator = value
+            elif key == "expiry":
+                self.expiry = value
+            elif key == "accessed_state":
+                self.accessed_state = value
+            elif key == "access_for_org":
+                self.access_for_org = value
+            elif key == "added_datetime":
+                self.added_datetime = value
+            elif key == "last_modified_datetime":
+                self.last_modified_datetime = value
 
     @property
     def code_id(self) -> int:

@@ -1,4 +1,3 @@
-import datetime
 from classes.document_class import Document
 from globals.global_variables import minimum_age_marriage, maximum_age_marriage
 
@@ -16,12 +15,26 @@ class MarriageCertificate(Document):
     This class also inherits all properties from Document class."""
 
     def __init__(self, **kwargs):
-        super().__init__(**kwargs)
+        super().__init__()
         self.document_type = "Marriage Certificate"
         self._age_on_certificate = None
         self._certificate_number = None
         self._registration_district = None
         self._marriage_number = None
+        if len(kwargs) > 0:
+            self.sort_kwargs_doc(**kwargs)
+            self.sort_kwargs(**kwargs)
+
+    def sort_kwargs(self, **kwargs):
+        for key, value in kwargs.items():
+            if key == "age_on_certificate":
+                self.age_on_certificate = value
+            elif key == "certificate_number":
+                self.certificate_number = value
+            elif key == "registration_district":
+                self.registration_district = value
+            elif key == "marriage_number":
+                self.marriage_number = value
 
     @property
     def age_on_certificate(self) -> int:
@@ -32,11 +45,11 @@ class MarriageCertificate(Document):
         try:
             age_to_use = int(age)
             if age <= minimum_age_marriage:
-                raise AttributeError("The age provided ({0}) is too young (minimum = {1}).".format(age_to_use,
-                                                                                                   minimum_age_marriage))
+                raise AttributeError("The age provided ({0}) is too young (minimum = {1})."
+                                     .format(age_to_use, minimum_age_marriage))
             elif age >= maximum_age_marriage:
-                raise AttributeError("The age provided ({0}) is too old (maximum = {1}).".format(age_to_use,
-                                                                                                 maximum_age_marriage))
+                raise AttributeError("The age provided ({0}) is too old (maximum = {1})."
+                                     .format(age_to_use, maximum_age_marriage))
             else:
                 self._age_on_certificate = age_to_use
         except ValueError:

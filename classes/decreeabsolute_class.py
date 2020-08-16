@@ -1,4 +1,3 @@
-import datetime
 from classes.document_class import Document
 from classes.marriagecertificate_class import MarriageCertificate
 
@@ -15,6 +14,18 @@ class DecreeAbsolute(Document):
         self._marriage_certificate_details = None  # Use MarriageCertificate object
         self._issuing_court = None
         self._number_of_matter = None
+        if len(kwargs) > 0:
+            self.sort_kwargs_doc(**kwargs)
+            self.sort_kwargs(**kwargs)
+
+    def sort_kwargs(self, **kwargs):
+        for key, value in kwargs.items():
+            if key == "marriage_certificate_details":
+                self.marriage_certificate_details = value
+            elif key == "issuing_court":
+                self.issuing_court = value
+            elif key == "number_of_matter":
+                self.number_of_matter = value
 
     @property
     def marriage_certificate_details(self) -> MarriageCertificate:

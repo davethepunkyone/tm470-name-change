@@ -15,6 +15,7 @@
             <tr>
                <th>Access Code</th>
                <th>Document</th>
+               <th>Status</th>
                <th>Expiry Time</th>
             </tr>
 
@@ -23,6 +24,7 @@
                <td><a href="{{ url_for('manage_access_code', code_to_retrieve=code.code_id) }}">
                   {{ code.generated_code }}</a></td>
                <td>{{ code.uploaded_document.document_type }}</td>
+               <td>{{ code.accessed_state.name|replace("_", " ")|capitalize }}</td>
                <td>{{ code.expiry_to_string }}</td>
             </tr>
             {% endfor %}

@@ -13,20 +13,33 @@
          <div class="darkened_section">
             <h2>Returning Users</h2>
             <p>If you already have an account, please enter your details below to log in.</p>
-            <form id="login">
+
+            {% if feedback %}
+               <p class="failure_message">{{ feedback }}</p>
+            {% endif %}
+
+            <form id="login" action="{{ url_for('index') }}" method="post">
                <label for="email_address">Email Address: </label>
                <input type="text" id="email_address" name="email_address"><br />
                <label for="pwd">Password: </label>
                <input type="password" id="pwd" name="password"><br />
             </form>
-            <p><button type="submit" form="login" value="Submit">Submit</button></p>
-            <p><a>Forgotten Password?</a></p>
+
+            <p>
+               <button form="login" class="process_continue_button">Login</button>
+               <form action="">
+                  <button class="process_back_button" type="submit">Forgotten Password?</button>
+               </form>
+            </p>
+
+         </div>
+
             <p class="to_remove">
                <a class="general_link" href="{{ url_for('test', test_conditions=1) }}">Login as test user 1</a><br />
                <a class="general_link" href="{{ url_for('test', test_conditions=2) }}">Login as test user 2</a><br />
                <a class="general_link" href="{{ url_for('test', test_conditions=3) }}">Login as test user 3</a><br />
             </p>
-         </div>
+
 
          <h2>What is Change Your Name?</h2>
          <p>Change your name is a service that allows people who have legally changed their name to easily communicate

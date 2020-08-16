@@ -25,6 +25,39 @@ class Document:
         self._document_verified_id = None
         self._added_datetime = None
         self._last_modified_datetime = None
+        if len(kwargs) > 0:
+            self.sort_kwargs_doc(**kwargs)
+
+    def sort_kwargs_doc(self, **kwargs):
+        for key, value in kwargs.items():
+            if key == "document_id":
+                self.document_id = value
+            elif key == "user_id":
+                self.user_id = value
+            elif key == "complete":
+                self.complete = value
+            elif key == "uploaded_file_id":
+                self.uploaded_file_id = value
+            elif key == "old_forenames":
+                self.old_forenames = value
+            elif key == "old_surname":
+                self.old_surname = value
+            elif key == "new_forenames":
+                self.new_forenames = value
+            elif key == "new_surname":
+                self.new_surname = value
+            elif key == "address_id":
+                self.address_id = value
+            elif key == "change_of_name_date":
+                self.change_of_name_date = value
+            elif key == "document_verified_state":
+                self.document_verified_state = value
+            elif key == "document_verified_id":
+                self.document_verified_id = value
+            elif key == "added_datetime":
+                self.added_datetime = value
+            elif key == "last_modified_datetime":
+                self.last_modified_datetime = value
 
     @property
     def document_id(self) -> int:
