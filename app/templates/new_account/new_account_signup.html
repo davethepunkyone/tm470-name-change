@@ -11,7 +11,11 @@
          <h1>New Account Creation</h1>
          <p>Please enter your details below to create a new account.</p>
 
-         <form id="login">
+         {% if feedback %}
+            <p class="failure_message">{{ feedback }}</p>
+         {% endif %}
+
+         <form id="signup" action="{{ url_for('new_account_signup') }}" method="post">
             <label for="forenames">Forename(s): </label>
             <input type="text" id="forenames" name="forenames"><br />
             <label for="surname">Surname: </label>
@@ -24,13 +28,15 @@
             <input type="password" id="pwd" name="password"><br />
             <label for="pwd_confirm">Confirm Password: </label>
             <input type="password" id="pwd_confirm" name="password_confirm"><br />
-            <label for="capcha">CAPCHA: </label>
+            <label for="capcha">CAPCHA: </label><div id="capcha_code"></div>
             <input type="text" id="capcha" name="capcha"><br /><br />
             <input type="checkbox" id="agreement" name="agreement">
                <label for="agreement">I confirm I have read and agree to the Terms & Conditions.</label><br /><br />
          </form>
-         <p><button type="submit" form="login" value="Submit">Submit</button></p>
-         <p class="to_remove"><a class="general_link" href="{{ url_for('new_account_click_link') }}">Click to see link page</a></p>
+
+         <p>
+            <button form="signup" class="process_continue_button">Create Account</button>
+         </p>
       </div>
       {% endblock %}
    </body>

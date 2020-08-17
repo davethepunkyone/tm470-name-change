@@ -4,17 +4,22 @@ import datetime
 import globals.mock_variables as mock
 
 from classes.user_class import User
+from classes.signup_verification_class import SignupVerification
 from classes.marriagecertificate_class import MarriageCertificate
 from classes.deedpoll_class import DeedPoll
 from classes.accesscode_class import AccessCode
 from classes.enums import VerifiedStates, AccessStates
 from functions.org_functions import return_specific_org_from_list
 from functions.access_code_functions import generate_unique_access_code
+from functions.signup_functions import generate_signup_code
+
 from functions import logging_functions as logger
+
 
 # Global Lists
 users_list = mock.mock_list_of_users()
 orgs = mock.mock_list_of_organisations()
+signup_verification_list = []
 
 # Global Instances
 user = User()
@@ -23,6 +28,7 @@ doc = {"type": "Marriage Certificate"}
 access_code = AccessCode()
 
 # Incrementer
+incrementer_user = 1000
 incrementer_document = 8000
 incrementer_access_code = 5000
 
@@ -34,13 +40,15 @@ failure_message = None
 @app.route('/')
 @app.route('/index', methods=['GET', 'POST'])
 def index():
-    global user
+    global user, failure_message
     if user.logged_in:
         return redirect(url_for('account_home'))
     else:
         if request.method == 'GET':
             logger.log_benchmark("Load Homepage")
-            return render_template('index.html', user=user)
+            feedback = failure_message
+            failure_message = None
+            return render_template('index.html', user=user, feedback=feedback)
         elif request.method == 'POST':
             logger.log_benchmark("Homepage - Attempt Login")
             if len(request.form) > 0:
@@ -52,11 +60,14 @@ def index():
                 else:
                     try:
                         user = return_logged_in_user(email, pwd)
-                        user.logged_in = True
-                        return redirect(url_for('account_home'))
                     except LookupError as err:
                         feedback = err
                         return render_template('index.html', user=user, feedback=feedback)
+                    if not user.verified_state:
+                        return redirect(url_for('new_account_click_link'))
+                    else:
+                        user.logged_in = True
+                        return redirect(url_for('account_home'))
             else:
                 feedback = "You need to provide your email and password to log in."
                 return render_template('index.html', user=user, feedback=feedback)
@@ -115,21 +126,100 @@ def contact():
 # New Account Processes
 
 
-@app.route('/new_account_signup')
+@app.route('/new_account_signup', methods=['GET', 'POST'])
 def new_account_signup():
+    global user, incrementer_user
+
     if user.logged_in:
         return redirect(url_for('account_home'))
     else:
-        return render_template('new_account/new_account_signup.html', user=user)
+        if request.method == 'GET':
+            logger.log_benchmark("Load New Account Signup")
+            return render_template('new_account/new_account_signup.html', user=user)
+        elif request.method == 'POST':
+            logger.log_benchmark("New Account Signup - Submit Form")
+            if len(request.form) > 0:
+                forenames = request.form["forenames"]
+                surname = request.form["surname"]
+                email = request.form["email"]
+                email_confirm = request.form["email_confirm"]
+                pwd = request.form["password"]
+                pwd_confirm = request.form["password_confirm"]
+                capcha = request.form["capcha"]
+                if forenames == "" or surname == "" or email == "" or email_confirm == "" or pwd == "" or \
+                        pwd_confirm == "" or capcha == "":
+                    feedback = "You need to complete all the fields to create a new account."
+                    return render_template('new_account/new_account_signup.html', user=user, feedback=feedback)
+                elif email != email_confirm:
+                    feedback = "The email address and confirm email address do not match."
+                    return render_template('new_account/new_account_signup.html', user=user, feedback=feedback)
+                elif pwd != pwd_confirm:
+                    feedback = "The password and confirm password do not match."
+                    return render_template('new_account/new_account_signup.html', user=user, feedback=feedback)
+                elif not request.form.__contains__("agreement"):
+                    feedback = "You must agree to the terms and conditions to proceed."
+                    return render_template('new_account/new_account_signup.html', user=user, feedback=feedback)
+                elif check_user_already_exists(email):
+                    feedback = "The email address provided is already registered on this service."
+                    return render_template('new_account/new_account_signup.html', user=user, feedback=feedback)
+                else:
+                    user = User(user_id=incrementer_user, forenames=forenames, surname=surname, email=email,
+                                prototype_password=pwd, verified_state=False)
+                    users_list.append(user)
+                    incrementer_user += 1
+                    signup_verification_list.append(SignupVerification(signup_code=generate_signup_code(),
+                                                                       user_id=user.user_id))
+                    return redirect(url_for('new_account_click_link'))
+            else:
+                feedback = "You need to complete all the fields to create a new account."
+                return render_template('new_account/new_account_signup.html', user=user, feedback=feedback)
+
+
+def check_user_already_exists(email: str) -> bool:
+    email_present = False
+    for user_check in users_list:
+        if user_check.email == email:
+            email_present = True
+            break
+    return email_present
 
 
 @app.route('/new_account_click_link')
 def new_account_click_link():
+    global failure_message
+
     if user.logged_in:
         return redirect(url_for('account_home'))
     else:
-        return render_template('new_account/new_account_signup_clicklink.html', user=user)
+        feedback = failure_message
+        failure_message = None
+        return render_template('new_account/new_account_signup_clicklink.html', user=user, feedback=feedback)
 
+
+@app.route('/new_account_confirm/<confirm_code>')
+def new_account_confirm_code(confirm_code):
+    global user, signup_verification_list, failure_message
+
+    for signup_user in signup_verification_list:
+        if signup_user.signup_code == confirm_code:
+            user = retrieve_user_from_list(signup_user.user_id)
+            user.verified_state = True
+            user.logged_in = True
+            signup_verification_list.remove(signup_user)
+            return redirect(url_for('account_home'))
+    else:
+        failure_message = "The code provided in the link clicked is not valid."
+        return redirect(url_for('index'))
+
+
+def retrieve_user_from_list(user_id: int):
+    global users_list
+
+    for user_in_list in users_list:
+        if user_in_list.user_id == user_id:
+            return user_in_list
+    else:
+        raise LookupError("The user being queried is not in the list.")
 
 # Existing Account Processes
 

@@ -135,7 +135,7 @@ class AccessCode:
             raise ValueError("Access State value provided is not a valid AccessState")
 
     @property
-    def access_for_org(self) -> str:
+    def access_for_org(self) -> Organisation:
         return self._access_for_org
 
     @access_for_org.setter
