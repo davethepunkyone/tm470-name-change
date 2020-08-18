@@ -1,5 +1,11 @@
 import random
 import string
+import webbrowser
+import datetime
+from globals.global_variables import live_url
+from classes.user_class import User
+from classes.signup_verification_class import SignupVerification
+from functions.logging_functions import get_logging_directory
 
 
 def generate_signup_code() -> str:
@@ -11,3 +17,25 @@ def generate_signup_code() -> str:
         code = code + characters[character_to_use:character_to_use+1]
         i += 1
     return code
+
+
+def generate_link(signup_verification: SignupVerification) -> str:
+    return live_url + "/new_account_confirm/" + signup_verification.signup_code
+
+
+def email_user_notepad_version(user: User, signup_verification: SignupVerification) -> None:
+    # For now use logging directory to store this as it is in gitignore, final app wouldn't use this anyway
+    filepath = get_logging_directory() + "/email_to_user.txt"
+    email_string = "TO: \t\t" + user.email + "\n" + \
+                   "SUBJECT: \tChange Your Name - Verify Email Address" + "\n" + \
+                   "DATE: \t\t" + datetime.datetime.strftime(datetime.datetime.now(), "%d/%m/%Y %H:%M") + "\n" + \
+                   "-------------------------------------------------------------" + "\n" + \
+                   "Hi " + user.forenames + ", \n\n" + \
+                   "To verify your email address with Change Your Name, please click on the link below. \n\n" + \
+                   generate_link(signup_verification) + "\n\n" + \
+                   "Regards, \n Change Your Name Support"
+
+    eml = open(filepath, "w")
+    eml.write(email_string)
+    eml.close()
+    webbrowser.open(filepath)

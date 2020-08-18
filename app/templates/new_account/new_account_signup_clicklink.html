@@ -11,7 +11,7 @@
          <h1>New Account Creation</h1>
          <p>An email has been sent to the provided email address.</p>
          <p>Please click the link provided within the email to finish registering your account.</p>
-         <p>If you've not received the email, click here to resend.</p>
+         <p>If you've not received the email, <a href="{{ url_for('resend_new_account_email') }}">click here</a> to resend.</p>
       </div>
       {% endblock %}
    </body>

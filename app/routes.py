@@ -11,10 +11,9 @@ from classes.accesscode_class import AccessCode
 from classes.enums import VerifiedStates, AccessStates
 from functions.org_functions import return_specific_org_from_list
 from functions.access_code_functions import generate_unique_access_code
-from functions.signup_functions import generate_signup_code
+from functions.signup_functions import generate_signup_code, email_user_notepad_version
 
 from functions import logging_functions as logger
-
 
 # Global Lists
 users_list = mock.mock_list_of_users()
@@ -146,33 +145,41 @@ def new_account_signup():
                 pwd = request.form["password"]
                 pwd_confirm = request.form["password_confirm"]
                 capcha = request.form["capcha"]
-                if forenames == "" or surname == "" or email == "" or email_confirm == "" or pwd == "" or \
-                        pwd_confirm == "" or capcha == "":
-                    feedback = "You need to complete all the fields to create a new account."
+                initial_feedback = check_new_user_form_values(forenames, surname, email, email_confirm, pwd,
+                                                              pwd_confirm, capcha)
+                if initial_feedback is not None:
+                    feedback = initial_feedback
                     return render_template('new_account/new_account_signup.html', user=user, feedback=feedback)
-                elif email != email_confirm:
-                    feedback = "The email address and confirm email address do not match."
-                    return render_template('new_account/new_account_signup.html', user=user, feedback=feedback)
-                elif pwd != pwd_confirm:
-                    feedback = "The password and confirm password do not match."
-                    return render_template('new_account/new_account_signup.html', user=user, feedback=feedback)
-                elif not request.form.__contains__("agreement"):
+                if not request.form.__contains__("agreement"):
                     feedback = "You must agree to the terms and conditions to proceed."
-                    return render_template('new_account/new_account_signup.html', user=user, feedback=feedback)
-                elif check_user_already_exists(email):
-                    feedback = "The email address provided is already registered on this service."
                     return render_template('new_account/new_account_signup.html', user=user, feedback=feedback)
                 else:
                     user = User(user_id=incrementer_user, forenames=forenames, surname=surname, email=email,
                                 prototype_password=pwd, verified_state=False)
                     users_list.append(user)
                     incrementer_user += 1
-                    signup_verification_list.append(SignupVerification(signup_code=generate_signup_code(),
-                                                                       user_id=user.user_id))
+                    signup_details = SignupVerification(signup_code=generate_signup_code(), user_id=user.user_id)
+                    signup_verification_list.append(signup_details)
+                    email_user_notepad_version(user, signup_details)
                     return redirect(url_for('new_account_click_link'))
             else:
                 feedback = "You need to complete all the fields to create a new account."
                 return render_template('new_account/new_account_signup.html', user=user, feedback=feedback)
+
+
+def check_new_user_form_values(forenames: str, surname: str, email: str, email_confirm: str, pwd: str,
+                               pwd_confirm: str, capcha: str):
+    if forenames == "" or surname == "" or email == "" or email_confirm == "" or pwd == "" or \
+            pwd_confirm == "" or capcha == "":
+        feedback = "You need to complete all the fields to create a new account."
+    elif email != email_confirm:
+        return "The email address and confirm email address do not match."
+    elif pwd != pwd_confirm:
+        return "The password and confirm password do not match."
+    elif check_user_already_exists(email):
+        return "The email address provided is already registered on this service."
+    else:
+        return None
 
 
 def check_user_already_exists(email: str) -> bool:
@@ -186,14 +193,31 @@ def check_user_already_exists(email: str) -> bool:
 
 @app.route('/new_account_click_link')
 def new_account_click_link():
-    global failure_message
+    global success_message
 
     if user.logged_in:
         return redirect(url_for('account_home'))
     else:
-        feedback = failure_message
-        failure_message = None
+        feedback = success_message
+        success_message = None
         return render_template('new_account/new_account_signup_clicklink.html', user=user, feedback=feedback)
+
+
+@app.route('/resend_account_email')
+def resend_new_account_email():
+    global success_message
+
+    if user.logged_in:
+        return redirect(url_for('account_home'))
+    else:
+        for signup_user in signup_verification_list:
+            if signup_user.user_id == user.user_id:
+                signup_details = signup_user
+                email_user_notepad_version(user, signup_details)
+                success_message = "Email has been resent."
+                return redirect(url_for('new_account_click_link'))
+        else:
+            return redirect(url_for('index'))
 
 
 @app.route('/new_account_confirm/<confirm_code>')
@@ -220,6 +244,7 @@ def retrieve_user_from_list(user_id: int):
             return user_in_list
     else:
         raise LookupError("The user being queried is not in the list.")
+
 
 # Existing Account Processes
 
