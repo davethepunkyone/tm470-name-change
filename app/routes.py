@@ -5,8 +5,10 @@ import globals.mock_variables as mock
 
 from classes.user_class import User
 from classes.signup_verification_class import SignupVerification
+from classes.document_class import Document
 from classes.marriagecertificate_class import MarriageCertificate
 from classes.deedpoll_class import DeedPoll
+from classes.decreeabsolute_class import DecreeAbsolute
 from classes.accesscode_class import AccessCode
 from classes.enums import VerifiedStates, AccessStates
 from functions.org_functions import return_specific_org_from_list
@@ -22,8 +24,7 @@ signup_verification_list = []
 
 # Global Instances
 user = User()
-doc = {"type": "Marriage Certificate"}
-# Marriage Certificate | Deed Poll | Decree Absolute
+document = Document()
 access_code = AccessCode()
 
 # Incrementer
@@ -275,10 +276,50 @@ def logout():
 # New Document Processes
 
 
-@app.route('/new_document_1')
+@app.route('/new_document_1', methods=['GET', 'POST'])
 def new_document_selection():
+    global document, incrementer_document
+
     if user.logged_in:
-        return render_template('add_document/add_doc_1_selection.html', user=user)
+        marriage_cert_present = False
+        for user_doc in user.docs:
+            if user_doc.document_type == "Marriage Certificate":
+                marriage_cert_present = True
+
+        if request.method == 'GET':
+            return render_template('add_document/add_doc_1_selection.html', user=user, divorce_on=marriage_cert_present)
+        elif request.method == 'POST':
+            if len(request.form) > 0:
+                access_code_id_doc = request.form["doc_type"]
+                if access_code_id_doc == "marriage_cert":
+                    document = MarriageCertificate(document_id=incrementer_document, user_id=user.user_id,
+                                                   complete=False)
+                    incrementer_document += 1
+                    return redirect(url_for('new_document_upload_image'))
+                elif access_code_id_doc == "deed_poll":
+                    document = DeedPoll(document_id=incrementer_document, user_id=user.user_id, complete=False)
+                    incrementer_document += 1
+                    return redirect(url_for('new_document_upload_image'))
+                elif access_code_id_doc == "decree_absolute":
+                    document = DecreeAbsolute(document_id=incrementer_document, user_id=user.user_id, complete=False)
+                    incrementer_document += 1
+                    return redirect(url_for('new_document_upload_image'))  # TODO - Extra Page for decree absolute
+                else:
+                    feedback = "You need to select a valid option to proceed."
+                    return render_template('add_document/add_doc_1_selection.html', user=user,
+                                           divorce_on=marriage_cert_present, feedback=feedback)
+            else:
+                feedback = "You need to select an option to proceed."
+                return render_template('add_document/add_doc_1_selection.html', user=user,
+                                       divorce_on=marriage_cert_present, feedback=feedback)
+    else:
+        return redirect(url_for('index'))
+
+
+@app.route('/new_document_1a')
+def new_document_decree_absolute_certificate():
+    if user.logged_in:
+        return render_template('add_document/add_doc_1_selection.html', user=user, doc=document)
     else:
         return redirect(url_for('index'))
 
@@ -286,7 +327,7 @@ def new_document_selection():
 @app.route('/new_document_2')
 def new_document_upload_image():
     if user.logged_in:
-        return render_template('add_document/add_doc_2_upload_image.html', user=user, doc=doc)
+        return render_template('add_document/add_doc_2_upload_image.html', user=user, doc=document)
     else:
         return redirect(url_for('index'))
 
@@ -294,7 +335,7 @@ def new_document_upload_image():
 @app.route('/new_document_3')
 def new_document_confirm_image():
     if user.logged_in:
-        return render_template('add_document/add_doc_3_confirm_image.html', user=user, doc=doc)
+        return render_template('add_document/add_doc_3_confirm_image.html', user=user, doc=document)
     else:
         return redirect(url_for('index'))
 
@@ -302,7 +343,7 @@ def new_document_confirm_image():
 @app.route('/new_document_4')
 def new_document_add_personal_details():
     if user.logged_in:
-        return render_template('add_document/add_doc_4_add_personal_details.html', user=user, doc=doc)
+        return render_template('add_document/add_doc_4_add_personal_details.html', user=user, doc=document)
     else:
         return redirect(url_for('index'))
 
@@ -310,7 +351,7 @@ def new_document_add_personal_details():
 @app.route('/new_document_5')
 def new_document_confirm_personal_details():
     if user.logged_in:
-        return render_template('add_document/add_doc_5_confirm_personal_details.html', user=user, doc=doc)
+        return render_template('add_document/add_doc_5_confirm_personal_details.html', user=user, doc=document)
     else:
         return redirect(url_for('index'))
 
@@ -318,7 +359,7 @@ def new_document_confirm_personal_details():
 @app.route('/new_document_6')
 def new_document_add_document_details():
     if user.logged_in:
-        return render_template('add_document/add_doc_6_add_document_details.html', user=user, doc=doc)
+        return render_template('add_document/add_doc_6_add_document_details.html', user=user, doc=document)
     else:
         return redirect(url_for('index'))
 
@@ -326,7 +367,7 @@ def new_document_add_document_details():
 @app.route('/new_document_7')
 def new_document_confirm_document_details():
     if user.logged_in:
-        return render_template('add_document/add_doc_7_confirm_document_details.html', user=user, doc=doc)
+        return render_template('add_document/add_doc_7_confirm_document_details.html', user=user, doc=document)
     else:
         return redirect(url_for('index'))
 
@@ -334,7 +375,7 @@ def new_document_confirm_document_details():
 @app.route('/new_document_8')
 def new_document_finish():
     if user.logged_in:
-        return render_template('add_document/add_doc_8_finish.html', user=user, doc=doc)
+        return render_template('add_document/add_doc_8_finish.html', user=user, doc=document)
     else:
         return redirect(url_for('index'))
 

@@ -36,27 +36,20 @@
             <p class="failure_message">{{ feedback }}</p>
          {% endif %}
          <p>Please select the type of document you wish to upload:</p>
-         <form id="document_type" action="{{ url_for('new_document_selection') }}" method="post">
-            <input type="radio" id="marriage_certificate" name="doc_type" value="marriage_cert">
-            <label for="marriage_certificate">Marriage Certificate</label><br />
-            <input type="radio" id="deed_poll" name="doc_type" value="deed_poll">
-            <label for="deed_poll">Deed Poll</label><br />
-
-            {% if divorce_on %}
-               <input type="radio" id="decree_absolute" name="doc_type" value="decree_absolute">
-               <label for="decree_absolute">Decree Absolute</label>
-            {% else %}
-               <input type="radio" id="decree_absolute_off" name="doc_type" value="invalid" disabled="true">
-               <label for="decree_absolute_off">Decree Absolute</label>
-               <div class="failure_message">If you need to upload a decree absolute, you will need to upload your
-                  marriage certificate first.</div>
-            {% endif %}
+         <form id="cert_details" action="{{ url_for('new_document_decree_absolute_certificate') }}" method="post">
+            {% for doc in user.docs %}
+               {% if doc.document_type == "Marriage Certificate" %}
+                  <input type="radio" id="{{  doc.document_type|replace(" ", "")  }}" name="user_doc"
+                     value="{{ doc.document_id }}">
+                  <label for="{{  doc.document_type|replace(" ", "")  }}">{{ doc.doc_type_with_date }}</label><br />
+               {% endif %}
+            {% endfor %}
          </form>
          <p>
-            <form action="{{ url_for('account_home') }}">
+            <form action="{{ url_for('new_document_selection') }}">
                <button class="process_back_button" type="submit">Back</button>
             </form>
-            <button form="document_type" class="process_continue_button">Next</button>
+            <button form="cert_details" class="process_continue_button">Next</button>
          </p>
 
       </div>

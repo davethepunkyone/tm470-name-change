@@ -31,7 +31,7 @@
             <div id="code_duration">{{ code_to_use.duration_time }} {{ code_to_use.duration_denominator }}</div><br />
 
          {% if feedback %}
-            <p class="to_remove">{{ feedback }}</p>
+            <p class="failure_message">{{ feedback }}</p>
          {% endif %}
 
          <form id="confirm_code_details" action="{{ url_for('generate_code_confirm_access_details') }}" method="post">

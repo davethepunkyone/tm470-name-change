@@ -26,7 +26,7 @@
          <h2>Document Selection</h2>
          <p>Please select the document you wish to generate an access code for:</p>
          {% if feedback %}
-            <p class="to_remove">{{ feedback }}</p>
+            <p class="failure_message">{{ feedback }}</p>
          {% endif %}
          <form id="doc_to_select" action="{{ url_for('generate_code_document_selection') }}" method="post">
             {% for doc in user.docs %}

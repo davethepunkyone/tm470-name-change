@@ -139,7 +139,6 @@ th {
   padding-right: 10px;
   border-color: #2F528F;
   border-style: solid;
-  display: inline-block;
 }
 
 .header_text {
@@ -275,6 +274,8 @@ th {
   border-radius: 10px;
   box-shadow: 2px 2px #888888;
   float: left;
+  display: inline;
+  overflow: hidden;
 }
 
 .process_back_button:hover {
@@ -378,6 +379,10 @@ th {
   padding: 5px 10px;
   font-weight: bold;
   border-radius: 4px;
+}
+
+.spacer {
+  clear: both;
 }
 
 .to_remove {

@@ -27,7 +27,7 @@
          <p>Please provide the details for accessing your {{ code_to_use.uploaded_document.document_type }}:</p>
 
          {% if feedback %}
-            <p class="to_remove">{{ feedback }}</p>
+            <p class="failure_message">{{ feedback }}</p>
          {% endif %}
 
          <form id="generate_code_for" action="{{ url_for('generate_code_access_details') }}" method="post">
