@@ -8,15 +8,23 @@ from classes.signup_verification_class import SignupVerification
 from functions.logging_functions import get_logging_directory
 
 
-def generate_signup_code() -> str:
+def generate_code(no_of_chars: int) -> str:
     code = ""
     characters = string.ascii_letters + string.digits
     i = 1
-    while i <= 16:
+    while i <= no_of_chars:
         character_to_use = random.randint(0, len(characters))
         code = code + characters[character_to_use:character_to_use+1]
         i += 1
     return code
+
+
+def generate_capcha_code() -> str:
+    return generate_code(5)
+
+
+def generate_signup_code() -> str:
+    return generate_code(20)
 
 
 def generate_link(signup_verification: SignupVerification) -> str:

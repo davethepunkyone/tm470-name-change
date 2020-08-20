@@ -381,6 +381,15 @@ th {
   border-radius: 4px;
 }
 
+#capcha_code {
+  font-weight: bold;
+  text-align: center;
+  border-color: #5D5C5C;
+  border-style: solid;
+  width: 100px;
+  padding: 2px;
+}
+
 .spacer {
   clear: both;
 }

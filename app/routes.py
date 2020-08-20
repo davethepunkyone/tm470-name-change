@@ -1,6 +1,10 @@
+import os
+
 from flask import render_template, redirect, url_for, request
 from app import app
 import datetime
+from werkzeug.utils import secure_filename
+
 import globals.mock_variables as mock
 
 from classes.user_class import User
@@ -13,9 +17,13 @@ from classes.accesscode_class import AccessCode
 from classes.enums import VerifiedStates, AccessStates
 from functions.org_functions import return_specific_org_from_list
 from functions.access_code_functions import generate_unique_access_code
-from functions.signup_functions import generate_signup_code, email_user_notepad_version
+from functions.signup_functions import generate_signup_code, email_user_notepad_version, generate_capcha_code
+from functions.file_upload_functions import check_filetype_valid, get_upload_directory, return_filename
 
 from functions import logging_functions as logger
+
+# App Config
+app.config['UPLOAD_DIRECTORY'] = get_upload_directory()
 
 # Global Lists
 users_list = mock.mock_list_of_users()
@@ -26,6 +34,7 @@ signup_verification_list = []
 user = User()
 document = Document()
 access_code = AccessCode()
+capcha_on_page = None
 
 # Incrementer
 incrementer_user = 1000
@@ -128,14 +137,15 @@ def contact():
 
 @app.route('/new_account_signup', methods=['GET', 'POST'])
 def new_account_signup():
-    global user, incrementer_user
+    global user, incrementer_user, capcha_on_page
 
     if user.logged_in:
         return redirect(url_for('account_home'))
     else:
         if request.method == 'GET':
             logger.log_benchmark("Load New Account Signup")
-            return render_template('new_account/new_account_signup.html', user=user)
+            capcha_on_page = generate_capcha_code()
+            return render_template('new_account/new_account_signup.html', user=user, capcha=capcha_on_page)
         elif request.method == 'POST':
             logger.log_benchmark("New Account Signup - Submit Form")
             if len(request.form) > 0:
@@ -148,12 +158,15 @@ def new_account_signup():
                 capcha = request.form["capcha"]
                 initial_feedback = check_new_user_form_values(forenames, surname, email, email_confirm, pwd,
                                                               pwd_confirm, capcha)
+                capcha_on_page = generate_capcha_code()  # Regenerates CAPCHA in event of any type of fail
                 if initial_feedback is not None:
                     feedback = initial_feedback
-                    return render_template('new_account/new_account_signup.html', user=user, feedback=feedback)
+                    return render_template('new_account/new_account_signup.html', user=user, capcha=capcha_on_page,
+                                           feedback=feedback)
                 if not request.form.__contains__("agreement"):
                     feedback = "You must agree to the terms and conditions to proceed."
-                    return render_template('new_account/new_account_signup.html', user=user, feedback=feedback)
+                    return render_template('new_account/new_account_signup.html', user=user, capcha=capcha_on_page,
+                                           feedback=feedback)
                 else:
                     user = User(user_id=incrementer_user, forenames=forenames, surname=surname, email=email,
                                 prototype_password=pwd, verified_state=False)
@@ -165,20 +178,26 @@ def new_account_signup():
                     return redirect(url_for('new_account_click_link'))
             else:
                 feedback = "You need to complete all the fields to create a new account."
-                return render_template('new_account/new_account_signup.html', user=user, feedback=feedback)
+                capcha_on_page = generate_capcha_code()
+                return render_template('new_account/new_account_signup.html', user=user, capcha=capcha_on_page,
+                                       feedback=feedback)
 
 
 def check_new_user_form_values(forenames: str, surname: str, email: str, email_confirm: str, pwd: str,
                                pwd_confirm: str, capcha: str):
     if forenames == "" or surname == "" or email == "" or email_confirm == "" or pwd == "" or \
             pwd_confirm == "" or capcha == "":
-        feedback = "You need to complete all the fields to create a new account."
+        return "You need to complete all the fields to create a new account."
+    elif check_user_already_exists(email):
+        return "The email address provided is already registered on this service."
     elif email != email_confirm:
         return "The email address and confirm email address do not match."
     elif pwd != pwd_confirm:
         return "The password and confirm password do not match."
-    elif check_user_already_exists(email):
-        return "The email address provided is already registered on this service."
+    elif len(pwd) < 8:
+        return "The password provided is too short, it must be at least 8 characters."
+    elif capcha_on_page != capcha:
+        return "The CAPCHA verification failed, please try again."
     else:
         return None
 
@@ -303,7 +322,7 @@ def new_document_selection():
                 elif access_code_id_doc == "decree_absolute":
                     document = DecreeAbsolute(document_id=incrementer_document, user_id=user.user_id, complete=False)
                     incrementer_document += 1
-                    return redirect(url_for('new_document_upload_image'))  # TODO - Extra Page for decree absolute
+                    return redirect(url_for('new_document_decree_absolute_certificate'))
                 else:
                     feedback = "You need to select a valid option to proceed."
                     return render_template('add_document/add_doc_1_selection.html', user=user,
@@ -316,18 +335,50 @@ def new_document_selection():
         return redirect(url_for('index'))
 
 
-@app.route('/new_document_1a')
+@app.route('/new_document_1a', methods=['GET', 'POST'])
 def new_document_decree_absolute_certificate():
+    global document
+
     if user.logged_in:
-        return render_template('add_document/add_doc_1_selection.html', user=user, doc=document)
+        if request.method == 'GET':
+            return render_template('add_document/add_doc_1a_decree_absolute_selection.html', user=user,
+                                   doc=document)
+        elif request.method == 'POST':
+            if len(request.form) > 0:
+                marriage_cert_details = request.form["marriage_cert"]
+                document.marriage_certificate_details = user.get_specific_listed_doc(int(marriage_cert_details))
+                return redirect(url_for('new_document_upload_image'))
+            else:
+                feedback = "You need to select at least one option."
+                return render_template('add_document/add_doc_1a_decree_absolute_selection.html', user=user,
+                                       doc=document, feedback=feedback)
     else:
         return redirect(url_for('index'))
 
 
-@app.route('/new_document_2')
+@app.route('/new_document_2', methods=['GET', 'POST'])
 def new_document_upload_image():
+    global document
+
     if user.logged_in:
-        return render_template('add_document/add_doc_2_upload_image.html', user=user, doc=document)
+        if request.method == 'GET':
+            return render_template('add_document/add_doc_2_upload_image.html', user=user, doc=document)
+        if request.method == 'POST':
+            if 'user_file' not in request.files:
+                feedback = "No file was uploaded."
+                return render_template('add_document/add_doc_2_upload_image.html', user=user, doc=document,
+                                       feedback=feedback)
+            else:
+                file_to_use = request.files["user_file"]
+                if check_filetype_valid(file_to_use.filename):
+                    filename = return_filename(document, file_to_use.filename)
+                    filepath = os.path.join(app.config['UPLOAD_DIRECTORY'], filename)
+                    file_to_use.save(filepath)
+                    return redirect(url_for('new_document_confirm_image'))
+                else:
+                    feedback = "The filetype provided is invalid."
+                    return render_template('add_document/add_doc_2_upload_image.html', user=user, doc=document,
+                                           feedback=feedback)
     else:
         return redirect(url_for('index'))
 

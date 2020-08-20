@@ -35,11 +35,11 @@
          {% if feedback %}
             <p class="failure_message">{{ feedback }}</p>
          {% endif %}
-         <p>Please select the type of document you wish to upload:</p>
+         <p>Please select the Marriage Certificate to associate with this Decree Absolute:</p>
          <form id="cert_details" action="{{ url_for('new_document_decree_absolute_certificate') }}" method="post">
             {% for doc in user.docs %}
                {% if doc.document_type == "Marriage Certificate" %}
-                  <input type="radio" id="{{  doc.document_type|replace(" ", "")  }}" name="user_doc"
+                  <input type="radio" id="{{  doc.document_type|replace(" ", "")  }}" name="marriage_cert"
                      value="{{ doc.document_id }}">
                   <label for="{{  doc.document_type|replace(" ", "")  }}">{{ doc.doc_type_with_date }}</label><br />
                {% endif %}

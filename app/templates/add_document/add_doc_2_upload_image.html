@@ -32,13 +32,24 @@
             </div>
          </div>
          <h2>Upload Image</h2>
+         {% if feedback %}
+            <p class="failure_message">{{ feedback }}</p>
+         {% endif %}
          <p>Please upload an image of your {{doc.document_type}} using the form below:</p>
-         <form>
-           <input type="file" id="myFile" name="filename">
-           <input type="submit">
+         <form id="file_upload" action="{{ url_for('new_document_upload_image') }}" method="post"
+               enctype=multipart/form-data>
+           <input type="file" id="user_file" name="user_file">
          </form>
-
-         <p class="to_remove"> <a class="general_link" href="{{ url_for('new_document_confirm_image') }}">Navigate to Step 3</a> </p>
+         <p>
+         {% if doc.document_type == "Decree Absolute" %}
+            <form action="{{ url_for('new_document_decree_absolute_certificate') }}">
+         {% else %}
+            <form action="{{ url_for('new_document_selection') }}">
+         {% endif %}
+               <button class="process_back_button" type="submit">Back</button>
+            </form>
+            <button form="file_upload" class="process_continue_button">Next</button>
+         </p>
       </div>
       {% endblock %}
    </body>
