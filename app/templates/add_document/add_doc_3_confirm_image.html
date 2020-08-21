@@ -32,13 +32,21 @@
             </div>
          </div>
          <h2>Confirm Uploaded Image</h2>
+         {% if feedback %}
+            <p class="failure_message">{{ feedback }}</p>
+         {% endif %}
          <p>Your uploaded image should be shown in the box below:</p>
-         <img class="upload_image" src={{url_for('static', filename='placeholder_doc.png')}} />
-         <form id="doc_successful_upload">
+         <img class="upload_image" src={{url_for('static', filename='uploads/' + doc.uploaded_file_path)}} />
+         <form id="doc_successful_upload" action="{{ url_for('new_document_confirm_image') }}" method="post">
             <input type="checkbox" id="image_correct" name="image_correct">
             <label for="image_correct">I confirm all text is viewable in the image above.</label><br /><br />
          </form>
-         <p class="to_remove"> <a class="general_link" href="{{ url_for('new_document_add_personal_details') }}">Navigate to Step 4</a> </p>
+         <p>
+            <form action="{{ url_for('new_document_upload_image') }}">
+               <button class="process_back_button" type="submit">Back</button>
+            </form>
+            <button form="doc_successful_upload" class="process_continue_button">Next</button>
+         </p>
       </div>
       {% endblock %}
    </body>

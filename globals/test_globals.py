@@ -12,7 +12,7 @@ test_state = True
 # Document Class Test
 test_doc_id = 300
 test_doc_type = "Marriage Certificate"
-test_uploaded_file_id = 5871
+test_uploaded_file_path = "/uploads/1_300.jpg"
 test_old_forenames = "Miguel"
 test_old_surname = "El Testo"
 test_address_id = 4511

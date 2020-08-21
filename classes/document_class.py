@@ -14,7 +14,7 @@ class Document:
         self._document_type = None
         self._user_id = None
         self._complete = None
-        self._uploaded_file_id = None
+        self._uploaded_file_path = None
         self._old_forenames = None
         self._old_surname = None
         self._new_forenames = None
@@ -36,8 +36,8 @@ class Document:
                 self.user_id = value
             elif key == "complete":
                 self.complete = value
-            elif key == "uploaded_file_id":
-                self.uploaded_file_id = value
+            elif key == "uploaded_file_path":
+                self.uploaded_file_path = value
             elif key == "old_forenames":
                 self.old_forenames = value
             elif key == "old_surname":
@@ -109,19 +109,12 @@ class Document:
             self._complete = complete_val
 
     @property
-    def uploaded_file_id(self) -> int:
-        return self._uploaded_file_id
+    def uploaded_file_path(self) -> str:
+        return self._uploaded_file_path
 
-    @uploaded_file_id.setter
-    def uploaded_file_id(self, upload_id_val: int) -> None:
-        try:
-            id_to_use = int(upload_id_val)
-            self._uploaded_file_id = id_to_use
-        except ValueError:
-            if upload_id_val is None:
-                self._uploaded_file_id = None
-            else:
-                raise ValueError("Uploaded ID provided ({0}) is not numeric or None".format(upload_id_val))
+    @uploaded_file_path.setter
+    def uploaded_file_path(self, upload_path_val: str) -> None:
+        self._uploaded_file_path = upload_path_val
 
     @property
     def old_forenames(self) -> str:
@@ -238,6 +231,3 @@ class Document:
     @property
     def doc_type_with_date(self) -> str:
         return self._document_type + " (" + self._change_of_name_date.strftime("%d/%m/%Y") + ")"
-
-
-

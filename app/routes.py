@@ -374,6 +374,7 @@ def new_document_upload_image():
                     filename = return_filename(document, file_to_use.filename)
                     filepath = os.path.join(app.config['UPLOAD_DIRECTORY'], filename)
                     file_to_use.save(filepath)
+                    document.uploaded_file_path = filename
                     return redirect(url_for('new_document_confirm_image'))
                 else:
                     feedback = "The filetype provided is invalid."
@@ -383,10 +384,23 @@ def new_document_upload_image():
         return redirect(url_for('index'))
 
 
-@app.route('/new_document_3')
+@app.route('/new_document_3', methods=['GET', 'POST'])
 def new_document_confirm_image():
     if user.logged_in:
-        return render_template('add_document/add_doc_3_confirm_image.html', user=user, doc=document)
+        if request.method == 'GET':
+            return render_template('add_document/add_doc_3_confirm_image.html', user=user, doc=document)
+        if request.method == 'POST':
+            if len(request.form) > 0:
+                if request.form["image_correct"] == "on":
+                    return redirect(url_for('new_document_add_personal_details'))
+                else:
+                    feedback = "You need to confirm the image has uploaded correctly."
+                    return render_template('add_document/add_doc_3_confirm_image.html', user=user, doc=document,
+                                           feedback=feedback)
+            else:
+                feedback = "You need to confirm the image has uploaded correctly."
+                return render_template('add_document/add_doc_3_confirm_image.html', user=user, doc=document,
+                                       feedback=feedback)
     else:
         return redirect(url_for('index'))
 

@@ -12,7 +12,7 @@ class DocumentClassTest(unittest.TestCase):
         self.test_doc.document_type = tg.test_doc_type
         self.test_doc.user_id = tg.test_user_id
         self.test_doc.complete = tg.test_state
-        self.test_doc.uploaded_file_id = tg.test_uploaded_file_id
+        self.test_doc.uploaded_file_path = tg.test_uploaded_file_path
         self.test_doc.old_forenames = tg.test_old_forenames
         self.test_doc.old_surname = tg.test_old_surname
         self.test_doc.new_forenames = tg.test_forenames
@@ -56,13 +56,13 @@ class DocumentClassTest(unittest.TestCase):
         self.test_doc.complete = different_state
         self.assertEqual(self.test_doc.complete, different_state)
 
-    def test_get_uploaded_file_id(self) -> None:
-        self.assertEqual(self.test_doc.uploaded_file_id, tg.test_uploaded_file_id)
+    def test_get_uploaded_file_path(self) -> None:
+        self.assertEqual(self.test_doc.uploaded_file_path, tg.test_uploaded_file_path)
 
-    def test_set_uploaded_file_id(self) -> None:
-        different_id = 888888
-        self.test_doc.uploaded_file_id = different_id
-        self.assertEqual(self.test_doc.uploaded_file_id, different_id)
+    def test_set_uploaded_file_path(self) -> None:
+        different_path = "/uploads/11111_99999.png"
+        self.test_doc.uploaded_file_path = different_path
+        self.assertEqual(self.test_doc.uploaded_file_path, different_path)
 
     def test_get_old_first_name(self) -> None:
         self.assertEqual(self.test_doc.old_forenames, tg.test_old_forenames)
