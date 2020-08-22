@@ -32,30 +32,45 @@
             </div>
          </div>
          <h2>Your Details</h2>
+
+         {% if feedback %}
+            <p class="failure_message">{{ feedback }}</p>
+         {% endif %}
+
          <p>Please provide the following details: <div class="to_remove">Help Tooltip Here</div></p>
-         <form id="add_personal_details">
+         <form id="add_personal_details" action="{{ url_for('new_document_add_personal_details') }}" method="post">
+            <p>Note: If your forename or surname has not changed, leave the applicable fields blank.</p>
             <label for="prev_forenames">Previous Forename(s): </label>
             <input type="text" id="prev_forenames" name="prev_forenames"><br />
+            <label for="prev_surname">Previous Surname: </label>
+            <input type="text" id="prev_surname" name="prev_surname"><br /><br />
+
             <label for="forenames">New Forename(s): </label>
             <input type="text" id="forenames" name="forenames"><br />
-            <label for="prev_surname">Previous Surname: </label>
-            <input type="text" id="prev_surname" name="prev_surname"><br />
             <label for="surname">New Surname: </label>
-            <input type="text" id="surname" name="surname"><br />
-            <label for="address_name_no">House Name / Number: </label>
+            <input type="text" id="surname" name="surname"><br /><br />
+
+            <label for="address_name_no">House Name / Number*: </label>
             <input type="text" id="address_name_no" name="address_name_no"><br />
-            <label for="address_line_1">Address Line 1: </label>
+            <label for="address_line_1">Address Line 1*: </label>
             <input type="text" id="address_line_1" name="address_line_1"><br />
             <label for="address_line_2">Address Line 2: </label>
-            <input type="text" id="address_line_2" name="address_line_1"><br />
-            <label for="address_town_city">Town / City: </label>
+            <input type="text" id="address_line_2" name="address_line_2"><br />
+            <label for="address_town_city">Town / City*: </label>
             <input type="text" id="address_town_city" name="address_town_city"><br />
-            <label for="address_postcode">Postcode: </label>
+            <label for="address_postcode">Postcode*: </label>
             <input type="text" id="address_postcode" name="address_postcode"><br />
+            <p>* = Fields are mandatory</p>
          </form>
-         <div>Uploaded Image:<br /><img class="upload_reference_image" src={{url_for('static', filename='placeholder_doc.png')}} /></div>
-         <p class="to_remove"> This is a test to see how this behaves </p>
-         <p class="to_remove"> <a class="general_link" href="{{ url_for('new_document_confirm_personal_details') }}">Navigate to Step 5</a> </p>
+         <!--<div>Uploaded Image:<br /><img class="upload_reference_image"
+         src={{url_for('static', filename='placeholder_doc.png')}} /></div>-->
+
+         <p>
+            <form action="{{ url_for('new_document_confirm_image') }}">
+               <button class="process_back_button" type="submit">Back</button>
+            </form>
+            <button form="add_personal_details" class="process_continue_button">Next</button>
+         </p>
       </div>
       {% endblock %}
    </body>

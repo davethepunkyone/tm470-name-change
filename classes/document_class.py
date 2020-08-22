@@ -1,6 +1,7 @@
 import json
 import datetime
 from classes.enums import VerifiedStates
+from classes.address_class import Address
 
 
 class Document:
@@ -19,7 +20,7 @@ class Document:
         self._old_surname = None
         self._new_forenames = None
         self._new_surname = None
-        self._address_id = None
+        self._address = None
         self._change_of_name_date = None
         self._document_verified_state = VerifiedStates.NOT_VERIFIED
         self._document_verified_id = None
@@ -46,8 +47,8 @@ class Document:
                 self.new_forenames = value
             elif key == "new_surname":
                 self.new_surname = value
-            elif key == "address_id":
-                self.address_id = value
+            elif key == "address":
+                self.address = value
             elif key == "change_of_name_date":
                 self.change_of_name_date = value
             elif key == "document_verified_state":
@@ -149,19 +150,15 @@ class Document:
         self._new_surname = name
 
     @property
-    def address_id(self) -> int:
-        return self._address_id
+    def address(self) -> Address:
+        return self._address
 
-    @address_id.setter
-    def address_id(self, address_id_val: int) -> None:
-        try:
-            id_to_use = int(address_id_val)
-            self._address_id = id_to_use
-        except ValueError:
-            if address_id_val is None:
-                self._address_id = None
-            else:
-                raise ValueError("Address ID provided ({0}) is not numeric or None".format(address_id_val))
+    @address.setter
+    def address(self, address_val: Address) -> None:
+        if isinstance(address_val, Address):
+            self._address = address_val
+        else:
+            raise ValueError("Address provided is not in Address format.")
 
     @property
     def change_of_name_date(self) -> datetime.date:

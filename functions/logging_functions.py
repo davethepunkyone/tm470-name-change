@@ -3,8 +3,7 @@ import os
 
 
 def get_logging_directory() -> str:
-    parent_dir = os.path.dirname(os.getcwd())
-    return os.path.join(parent_dir, 'logging')
+    return os.path.join(os.getcwd(), 'logging')
 
 
 def check_logging_directory() -> None:

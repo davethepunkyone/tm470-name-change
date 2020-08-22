@@ -2,6 +2,7 @@ import unittest
 import datetime
 from classes.document_class import Document
 from classes.enums import VerifiedStates
+from classes.address_class import Address
 import globals.test_globals as tg
 
 
@@ -17,7 +18,7 @@ class DocumentClassTest(unittest.TestCase):
         self.test_doc.old_surname = tg.test_old_surname
         self.test_doc.new_forenames = tg.test_forenames
         self.test_doc.new_surname = tg.test_surname
-        self.test_doc.address_id = tg.test_address_id
+        self.test_doc.address = tg.test_address
         self.test_doc.document_verified_state = tg.test_doc_state
         self.test_doc.document_verified_id = tg.test_doc_verified_id
         self.test_doc.change_of_name_date = tg.test_doc_added_datetime
@@ -97,12 +98,12 @@ class DocumentClassTest(unittest.TestCase):
         self.assertEqual(self.test_doc.new_surname, different_name)
 
     def test_get_address_id(self) -> None:
-        self.assertEqual(self.test_doc.address_id, tg.test_address_id)
+        self.assertEqual(self.test_doc.address, tg.test_address)
 
     def test_set_address_id(self) -> None:
-        different_id = 111111
-        self.test_doc.address_id = different_id
-        self.assertEqual(self.test_doc.address_id, different_id)
+        different_address = Address(house_name_no="1", line_1="test street", postcode="TEST 123")
+        self.test_doc.address = different_address
+        self.assertEqual(self.test_doc.address, different_address)
 
     def test_get_change_of_name_date(self) -> None:
         self.assertEqual(self.test_doc.change_of_name_date, tg.test_doc_added_datetime)

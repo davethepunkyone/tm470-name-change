@@ -14,6 +14,7 @@ from classes.marriagecertificate_class import MarriageCertificate
 from classes.deedpoll_class import DeedPoll
 from classes.decreeabsolute_class import DecreeAbsolute
 from classes.accesscode_class import AccessCode
+from classes.address_class import Address
 from classes.enums import VerifiedStates, AccessStates
 from functions.org_functions import return_specific_org_from_list
 from functions.access_code_functions import generate_unique_access_code
@@ -28,6 +29,7 @@ app.config['UPLOAD_DIRECTORY'] = get_upload_directory()
 # Global Lists
 users_list = mock.mock_list_of_users()
 orgs = mock.mock_list_of_organisations()
+orgs.sort(key=lambda org: org.org_name, reverse=False)
 signup_verification_list = []
 
 # Global Instances
@@ -405,34 +407,106 @@ def new_document_confirm_image():
         return redirect(url_for('index'))
 
 
-@app.route('/new_document_4')
+@app.route('/new_document_4', methods=['GET', 'POST'])
 def new_document_add_personal_details():
+    global document
+
     if user.logged_in:
-        return render_template('add_document/add_doc_4_add_personal_details.html', user=user, doc=document)
+        if request.method == 'GET':
+            return render_template('add_document/add_doc_4_add_personal_details.html', user=user, doc=document)
+        elif request.method == 'POST':
+            if len(request.form) > 0:
+                prev_forenames = request.form["prev_forenames"]
+                prev_surname = request.form["prev_surname"]
+                forenames = request.form["forenames"]
+                surname = request.form["surname"]
+                address_house_name_no = request.form["address_name_no"]
+                address_line_1 = request.form["address_line_1"]
+                address_line_2 = request.form["address_line_2"]
+                address_city = request.form["address_town_city"]
+                address_postcode = request.form["address_postcode"]
+                initial_feedback = check_personal_details(prev_forenames, prev_surname, forenames, surname,
+                                                          address_house_name_no, address_line_1, address_line_2,
+                                                          address_city, address_postcode)
+                if initial_feedback is not None:
+                    feedback = initial_feedback
+                    return render_template('add_document/add_doc_4_add_personal_details.html', user=user, doc=document,
+                                           feedback=feedback)
+                else:
+                    document.old_forenames = prev_forenames
+                    document.old_surname = prev_surname
+                    document.new_forenames = forenames
+                    document.new_surname = surname
+                    document.address = Address(house_name_no=address_house_name_no, line_1=address_line_1,
+                                               line_2=address_line_2, town_city=address_city, postcode=address_postcode)
+                    return redirect(url_for('new_document_confirm_personal_details'))
+            else:
+                feedback = "You need to complete the mandatory fields to proceed."
+                return render_template('add_document/add_doc_4_add_personal_details.html', user=user, doc=document,
+                                       feedback=feedback)
     else:
         return redirect(url_for('index'))
 
 
-@app.route('/new_document_5')
+def check_personal_details(prev_forenames: str, prev_surname: str, forenames: str, surname: str, address_house_no: str,
+                           address_line_1: str, address_line_2: str, address_city: str, address_postcode: str):
+    if address_house_no == "" or address_line_1 == "" or address_city == "" or address_postcode == "":
+        return "The mandatory address fields have not been populated."
+    elif prev_forenames != "" and prev_forenames == forenames:
+        return "The previous forename and new forename cannot be the same."
+    elif prev_surname != "" and prev_surname == surname:
+        return "The previous surname and new surname cannot be the same."
+    elif prev_forenames == "" and forenames != "":
+        return "You cannot specify a new forename(s) value without providing the previous forename(s)."
+    elif prev_surname == "" and surname != "":
+        return "You cannot specify a new surname value without providing the previous surname."
+    elif forenames == "" and prev_forenames != "":
+        return "You cannot specify a previous forename(s) value without providing the new forename(s)."
+    elif surname == "" and prev_surname != "":
+        return "You cannot specify a previous surname value without providing the new surname."
+    else:
+        return None
+
+
+@app.route('/new_document_5', methods=['GET', 'POST'])
 def new_document_confirm_personal_details():
     if user.logged_in:
-        return render_template('add_document/add_doc_5_confirm_personal_details.html', user=user, doc=document)
+        if request.method == 'GET':
+            return render_template('add_document/add_doc_5_confirm_personal_details.html', user=user, doc=document)
+        elif request.method == 'POST':
+            if len(request.form) > 0:
+                if request.form["personal_details_correct"] == "on":
+                    return redirect(url_for('new_document_add_document_details'))
+                else:
+                    feedback = "You need to confirm the details provided are correct."
+                    return render_template('add_document/add_doc_5_confirm_personal_details.html', user=user,
+                                           doc=document, feedback=feedback)
+            else:
+                feedback = "You need to confirm the details provided are correct."
+                return render_template('add_document/add_doc_5_confirm_personal_details.html', user=user, doc=document,
+                                       feedback=feedback)
     else:
         return redirect(url_for('index'))
 
 
-@app.route('/new_document_6')
+@app.route('/new_document_6', methods=['GET', 'POST'])
 def new_document_add_document_details():
     if user.logged_in:
-        return render_template('add_document/add_doc_6_add_document_details.html', user=user, doc=document)
+        if request.method == 'GET':
+            return render_template('add_document/add_doc_6_add_document_details.html', user=user, doc=document)
+        elif request.method == 'POST':
+            return redirect(url_for('new_document_confirm_document_details'))
     else:
         return redirect(url_for('index'))
 
 
-@app.route('/new_document_7')
+@app.route('/new_document_7', methods=['GET', 'POST'])
 def new_document_confirm_document_details():
     if user.logged_in:
-        return render_template('add_document/add_doc_7_confirm_document_details.html', user=user, doc=document)
+        if request.method == 'GET':
+            return render_template('add_document/add_doc_7_confirm_document_details.html', user=user, doc=document)
+        elif request.method == 'POST':
+            return redirect(url_for('new_document_finish'))
     else:
         return redirect(url_for('index'))
 
@@ -440,7 +514,7 @@ def new_document_confirm_document_details():
 @app.route('/new_document_8')
 def new_document_finish():
     if user.logged_in:
-        return render_template('add_document/add_doc_8_finish.html', user=user, doc=document)
+        return render_template('add_document/add_doc_8_finish.html', user=user, doc=document, orgs=orgs)
     else:
         return redirect(url_for('index'))
 
@@ -460,9 +534,9 @@ def manage_all_documents():
 def manage_document(doc_id):
     if user.logged_in:
         doc_to_manage = None
-        for document in user.docs:
-            if document.document_id == int(doc_id):
-                doc_to_manage = document
+        for doc_to_check in user.docs:
+            if doc_to_check.document_id == int(doc_id):
+                doc_to_manage = doc_to_check
                 break
 
         if doc_to_manage is not None:

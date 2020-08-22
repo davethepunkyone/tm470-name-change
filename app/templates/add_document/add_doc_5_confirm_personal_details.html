@@ -32,32 +32,68 @@
             </div>
          </div>
          <h2>Confirm Your Details</h2>
+
+         {% if feedback %}
+            <p class="failure_message">{{ feedback }}</p>
+         {% endif %}
+
          <p>Please confirm the following details are correct:</p>
          <p>
             <label for="prev_forenames" class="label_float">Previous Forename(s): </label>
-            <div id="prev_forenames">(data here)</div><br />
-            <label for="forenames" class="label_float">New Forename(s): </label>
-            <div id="forenames">(data here)</div><br />
+            <div id="prev_forenames">
+               {% if doc.old_forenames == "" %}
+                  Not Changed
+               {% else %}
+                  {{ doc.old_forenames }}
+               {% endif %}
+            </div><br />
             <label for="prev_surname" class="label_float">Previous Surname: </label>
-            <div id="prev_surname">(data here)</div><br />
+            <div id="prev_surname">
+               {% if doc.old_surname == "" %}
+                  Not Changed
+               {% else %}
+                  {{ doc.old_surname }}
+               {% endif %}
+            </div><br /><br />
+
+            <label for="forenames" class="label_float">New Forename(s): </label>
+            <div id="forenames">
+               {% if doc.new_forenames == "" %}
+                  Not Changed
+               {% else %}
+                  {{ doc.new_forenames }}
+               {% endif %}
+            </div><br />
             <label for="surname" class="label_float">New Surname: </label>
-            <div id="surname">(data here)</div><br />
+            <div id="surname">
+               {% if doc.new_surname == "" %}
+                  Not Changed
+               {% else %}
+                  {{ doc.new_surname }}
+               {% endif %}
+            </div><br /><br />
+
             <label for="address_name_no" class="label_float">House Name / Number: </label>
-            <div id="address_name_no">(data here)</div><br />
+            <div id="address_name_no">{{ doc.address.house_name_no }}</div><br />
             <label for="address_line_1" class="label_float">Address Line 1: </label>
-            <div id="address_line_1">(data here)</div><br />
+            <div id="address_line_1">{{ doc.address.line_1 }}</div><br />
             <label for="address_line_2" class="label_float">Address Line 2: </label>
-            <div id="address_line_2">(data here)</div><br />
+            <div id="address_line_2">{{ doc.address.line_2 }}</div><br />
             <label for="address_town_city" class="label_float">Town / City: </label>
-            <div id="address_town_city">(data here)</div><br />
+            <div id="address_town_city">{{ doc.address.town_city }}</div><br />
             <label for="address_postcode" class="label_float">Postcode: </label>
-            <div id="address_postcode">(data here)</div><br /></p>
-         <form id="personal_details_confirm">
+            <div id="address_postcode">{{ doc.address.postcode }}</div><br /></p>
+         <form id="personal_details_confirm" action="{{ url_for('new_document_confirm_personal_details') }}"
+               method="post">
             <input type="checkbox" id="personal_details_correct" name="personal_details_correct">
             <label for="personal_details_correct">I confirm all the details listed above are correct.</label><br /><br />
          </form>
-         <p class="to_remove"> This is a test to see how this behaves </p>
-         <p class="to_remove"> <a class="general_link" href="{{ url_for('new_document_add_document_details') }}">Navigate to Step 6</a> </p>
+         <p>
+            <form action="{{ url_for('new_document_add_personal_details') }}">
+               <button class="process_back_button" type="submit">Back</button>
+            </form>
+            <button form="personal_details_confirm" class="process_continue_button">Next</button>
+         </p>
       </div>
       {% endblock %}
    </body>

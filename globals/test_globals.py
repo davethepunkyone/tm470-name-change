@@ -1,6 +1,8 @@
 import datetime
 from classes.marriagecertificate_class import MarriageCertificate
+from classes.address_class import Address
 import classes.enums as enums
+
 
 # User Class Test
 test_user_id = 100
@@ -9,13 +11,16 @@ test_surname = "McTesterson"
 test_email = "testymctesterson@test.com"
 test_state = True
 
+# Test Address
+test_address = Address(house_name_no=742, line_1="Address Line 1", line_2="Address Line 2", town_city="Testtown",
+                       postcode="AB12 3CD")
+
 # Document Class Test
 test_doc_id = 300
 test_doc_type = "Marriage Certificate"
 test_uploaded_file_path = "/uploads/1_300.jpg"
 test_old_forenames = "Miguel"
 test_old_surname = "El Testo"
-test_address_id = 4511
 test_doc_state = enums.VerifiedStates.VERIFIED
 test_doc_verified_id = 17221
 test_doc_added_datetime = datetime.date(2018, 4, 15)
