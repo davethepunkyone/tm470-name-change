@@ -32,7 +32,12 @@
             </div>
          </div>
          <h2>Add Document Details</h2>
-         <p>Please provide the following details for the {{ doc.type }}: <div class="to_remove">Help Tooltip Here</div></p>
+
+         {% if feedback %}
+            <p class="failure_message">{{ feedback }}</p>
+         {% endif %}
+
+         <p>Please provide the following details for the {{ doc.document_type }}: <div class="to_remove">Help Tooltip Here</div></p>
 
          {% if doc.document_type == "Marriage Certificate" %}
          <form id="add_marriage_cert_details" action="{{ url_for('new_document_add_document_details') }}"
@@ -46,7 +51,7 @@
             <label for="marriage_reg_district">Registration District: </label>
             <input type="text" id="marriage_reg_district" name="marriage_reg_district"><br />
             <label for="marriage_no">Marriage Number: </label>
-            <input type="text" id="marriage_no" name="reg_district"><br />
+            <input type="text" id="marriage_no" name="marriage_no"><br />
          </form>
 
          <p>

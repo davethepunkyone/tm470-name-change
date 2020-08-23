@@ -32,18 +32,23 @@
             </div>
          </div>
          <h2>Confirm Document Details</h2>
-         <p>Please confirm the following details are correct for the {{ doc.type }}:</p>
+
+         {% if feedback %}
+            <p class="failure_message">{{ feedback }}</p>
+         {% endif %}
+
+         <p>Please confirm the following details are correct for the {{ doc.document_type }}:</p>
 
          {% if doc.document_type == "Marriage Certificate" %}
          <p>
             <label for="marriage_date" class="label_float">Marriage Date: </label>
-            <div id="marriage_date">(data here)</div><br />
+            <div id="marriage_date"> {{ doc.change_of_name_date_as_string }} </div><br />
             <label for="marriage_age_cert" class="label_float">Age On Certificate: </label>
-            <div id="marriage_age_cert">(data here)</div><br />
+            <div id="marriage_age_cert">{{ doc.age_on_certificate }}</div><br />
             <label for="marriage_reg_district" class="label_float">Registration District: </label>
-            <div id="marriage_reg_district">(data here)</div><br />
+            <div id="marriage_reg_district">{{ doc.registration_district }}</div><br />
             <label for="marriage_no" class="label_float">Marriage Number: </label>
-            <div id="marriage_no">(data here)</div><br />
+            <div id="marriage_no">{{ doc.marriage_number }}</div><br />
          </p>
          {% endif %}
 

@@ -6,6 +6,7 @@ import datetime
 from werkzeug.utils import secure_filename
 
 import globals.mock_variables as mock
+import globals.global_variables as gv
 
 from classes.user_class import User
 from classes.signup_verification_class import SignupVerification
@@ -276,6 +277,7 @@ def account_home():
     if not user.logged_in:
         return redirect(url_for('index'))
     else:
+        logger.log_benchmark("Account Homepage")
         return render_template('account_home.html', user=user)
 
 
@@ -291,6 +293,7 @@ def edit_profile():
 def logout():
     global user
     user = User()
+    logger.log_benchmark("User Logout")
     return redirect(url_for('index'))
 
 
@@ -308,6 +311,7 @@ def new_document_selection():
                 marriage_cert_present = True
 
         if request.method == 'GET':
+            logger.log_benchmark("Add New Document: Start")
             return render_template('add_document/add_doc_1_selection.html', user=user, divorce_on=marriage_cert_present)
         elif request.method == 'POST':
             if len(request.form) > 0:
@@ -316,14 +320,17 @@ def new_document_selection():
                     document = MarriageCertificate(document_id=incrementer_document, user_id=user.user_id,
                                                    complete=False)
                     incrementer_document += 1
+                    logger.log_benchmark("Add New Document: Select Document (Marriage Certificate)")
                     return redirect(url_for('new_document_upload_image'))
                 elif access_code_id_doc == "deed_poll":
                     document = DeedPoll(document_id=incrementer_document, user_id=user.user_id, complete=False)
                     incrementer_document += 1
+                    logger.log_benchmark("Add New Document: Select Document (Deed Poll)")
                     return redirect(url_for('new_document_upload_image'))
                 elif access_code_id_doc == "decree_absolute":
                     document = DecreeAbsolute(document_id=incrementer_document, user_id=user.user_id, complete=False)
                     incrementer_document += 1
+                    logger.log_benchmark("Add New Document: Select Document (Decree Absolute)")
                     return redirect(url_for('new_document_decree_absolute_certificate'))
                 else:
                     feedback = "You need to select a valid option to proceed."
@@ -349,6 +356,7 @@ def new_document_decree_absolute_certificate():
             if len(request.form) > 0:
                 marriage_cert_details = request.form["marriage_cert"]
                 document.marriage_certificate_details = user.get_specific_listed_doc(int(marriage_cert_details))
+                logger.log_benchmark("Add New Document: Decree Absolute - Select Marriage Certificate")
                 return redirect(url_for('new_document_upload_image'))
             else:
                 feedback = "You need to select at least one option."
@@ -377,6 +385,7 @@ def new_document_upload_image():
                     filepath = os.path.join(app.config['UPLOAD_DIRECTORY'], filename)
                     file_to_use.save(filepath)
                     document.uploaded_file_path = filename
+                    logger.log_benchmark("Add New Document: Upload File")
                     return redirect(url_for('new_document_confirm_image'))
                 else:
                     feedback = "The filetype provided is invalid."
@@ -394,6 +403,7 @@ def new_document_confirm_image():
         if request.method == 'POST':
             if len(request.form) > 0:
                 if request.form["image_correct"] == "on":
+                    logger.log_benchmark("Add New Document: Confirm Image Upload")
                     return redirect(url_for('new_document_add_personal_details'))
                 else:
                     feedback = "You need to confirm the image has uploaded correctly."
@@ -429,9 +439,8 @@ def new_document_add_personal_details():
                                                           address_house_name_no, address_line_1, address_line_2,
                                                           address_city, address_postcode)
                 if initial_feedback is not None:
-                    feedback = initial_feedback
                     return render_template('add_document/add_doc_4_add_personal_details.html', user=user, doc=document,
-                                           feedback=feedback)
+                                           feedback=initial_feedback)
                 else:
                     document.old_forenames = prev_forenames
                     document.old_surname = prev_surname
@@ -439,6 +448,7 @@ def new_document_add_personal_details():
                     document.new_surname = surname
                     document.address = Address(house_name_no=address_house_name_no, line_1=address_line_1,
                                                line_2=address_line_2, town_city=address_city, postcode=address_postcode)
+                    logger.log_benchmark("Add New Document: Add Personal Details")
                     return redirect(url_for('new_document_confirm_personal_details'))
             else:
                 feedback = "You need to complete the mandatory fields to proceed."
@@ -476,6 +486,7 @@ def new_document_confirm_personal_details():
         elif request.method == 'POST':
             if len(request.form) > 0:
                 if request.form["personal_details_correct"] == "on":
+                    logger.log_benchmark("Add New Document: Confirm Personal Details")
                     return redirect(url_for('new_document_add_document_details'))
                 else:
                     feedback = "You need to confirm the details provided are correct."
@@ -491,22 +502,109 @@ def new_document_confirm_personal_details():
 
 @app.route('/new_document_6', methods=['GET', 'POST'])
 def new_document_add_document_details():
+    global document
+
     if user.logged_in:
         if request.method == 'GET':
             return render_template('add_document/add_doc_6_add_document_details.html', user=user, doc=document)
         elif request.method == 'POST':
-            return redirect(url_for('new_document_confirm_document_details'))
+            if len(request.form) > 0:
+                if document.document_type == "Marriage Certificate":
+                    marriage_obj = {"marriage_day": request.form["marriage_date_day"],
+                                    "marriage_month": request.form["marriage_date_month"],
+                                    "marriage_year": request.form["marriage_date_year"],
+                                    "marriage_age": request.form["marriage_age_cert"],
+                                    "marriage_reg_district": request.form["marriage_reg_district"],
+                                    "marriage_no": request.form["marriage_no"]}
+                    initial_feedback = check_doc_details_mandatory_fields(marriage_obj)
+                    if initial_feedback is not None:
+                        return render_template('add_document/add_doc_6_add_document_details.html', user=user,
+                                               doc=document, feedback=initial_feedback)
+                    else:
+                        document.change_of_name_date = datetime.date(int(marriage_obj["marriage_year"]),
+                                                                     int(marriage_obj["marriage_month"]),
+                                                                     int(marriage_obj["marriage_day"]))
+                        document.age_on_certificate = int(marriage_obj["marriage_age"])
+                        document.registration_district = marriage_obj["marriage_reg_district"]
+                        document.marriage_number = int(marriage_obj["marriage_no"])
+                        logger.log_benchmark("Add New Document: Add Document Details")
+                        return redirect(url_for('new_document_confirm_document_details'))
+                elif document.document_type == "Deed Poll":
+                    logger.log_benchmark("Add New Document: Add Document Details")
+                    return redirect(url_for('new_document_confirm_document_details'))
+                elif document.document_type == "Decree Absolute":
+                    logger.log_benchmark("Add New Document: Add Document Details")
+                    return redirect(url_for('new_document_confirm_document_details'))
+            else:
+                feedback = "You need to complete the mandatory fields to proceed."
+                return render_template('add_document/add_doc_6_add_document_details.html', user=user, doc=document,
+                                       feedback=feedback)
     else:
         return redirect(url_for('index'))
 
 
+def check_doc_details_mandatory_fields(fields_to_check: dict):
+    if document.document_type == "Marriage Certificate":
+        if fields_to_check["marriage_day"] == "" or fields_to_check["marriage_month"] == "" or \
+                fields_to_check["marriage_year"] == "" or fields_to_check["marriage_age"] == "" or \
+                fields_to_check["marriage_reg_district"] == "" or fields_to_check["marriage_no"] == "":
+            return "All mandatory fields need to be completed to proceed."
+        elif not fields_to_check["marriage_day"].isnumeric():
+            return "The marriage day value must be a number."
+        elif int(fields_to_check["marriage_day"]) > 31 or \
+                int(fields_to_check["marriage_day"].isnumeric()) < 1:
+            return "The marriage day value is not valid."
+        elif not fields_to_check["marriage_month"].isnumeric():
+            return "The marriage month value must be a number."
+        elif int(fields_to_check["marriage_month"]) > 12 or \
+                int(fields_to_check["marriage_month"]) < 1:
+            return "The marriage month value is not valid."
+        elif not fields_to_check["marriage_year"].isnumeric():
+            return "The marriage year value must be a number."
+        elif int(fields_to_check["marriage_year"]) > (datetime.datetime.now().year + 1) or \
+                int(fields_to_check["marriage_year"]) < 1900:
+            return "The marriage year value is not valid."
+        elif not fields_to_check["marriage_age"].isnumeric():
+            return "The marriage age value must be a number."
+        elif int(fields_to_check["marriage_age"]) > gv.maximum_age_marriage or \
+                int(fields_to_check["marriage_age"]) < gv.minimum_age_marriage:
+            return "The marriage age value is not valid."
+        elif not fields_to_check["marriage_no"].isnumeric():
+            return "The marriage number value must be a number."
+        elif int(fields_to_check["marriage_no"]) < 1:
+            return "The marriage number value is not valid."
+        else:
+            return None
+    elif document.document_type == "Deed Poll":
+        return None
+    elif document.document_type == "Decree Absolute":
+        return None
+    else:
+        return "The document type wasn't recognized, this error shouldn't occur."
+
+
 @app.route('/new_document_7', methods=['GET', 'POST'])
 def new_document_confirm_document_details():
+    global document, user
+
     if user.logged_in:
         if request.method == 'GET':
             return render_template('add_document/add_doc_7_confirm_document_details.html', user=user, doc=document)
         elif request.method == 'POST':
-            return redirect(url_for('new_document_finish'))
+            if len(request.form) > 0:
+                if request.form["doc_details_correct"] == "on":
+                    document.complete = True
+                    user.docs.append(document)
+                    logger.log_benchmark("Add New Document: Confirm Document Details")
+                    return redirect(url_for('new_document_finish'))
+                else:
+                    feedback = "You need to confirm the details provided are correct."
+                    return render_template('add_document/add_doc_7_confirm_document_details.html', user=user,
+                                           doc=document, feedback=feedback)
+            else:
+                feedback = "You need to confirm the details provided are correct."
+                return render_template('add_document/add_doc_7_confirm_document_details.html', user=user, doc=document,
+                                       feedback=feedback)
     else:
         return redirect(url_for('index'))
 
@@ -514,6 +612,7 @@ def new_document_confirm_document_details():
 @app.route('/new_document_8')
 def new_document_finish():
     if user.logged_in:
+        logger.log_benchmark("Add New Document: Reached Finish Page")
         return render_template('add_document/add_doc_8_finish.html', user=user, doc=document, orgs=orgs)
     else:
         return redirect(url_for('index'))
@@ -525,6 +624,7 @@ def new_document_finish():
 @app.route('/manage_all_documents')
 def manage_all_documents():
     if user.logged_in:
+        logger.log_benchmark("Manage All Documents")
         return render_template('manage_documents/manage_all_documents.html', user=user)
     else:
         return redirect(url_for('index'))
@@ -540,6 +640,7 @@ def manage_document(doc_id):
                 break
 
         if doc_to_manage is not None:
+            logger.log_benchmark("Manage Document")
             return render_template('manage_documents/manage_document.html', user=user, doc=doc_to_manage)
         else:
             return redirect(url_for('manage_all_documents'))
@@ -556,13 +657,14 @@ def generate_code_document_selection():
 
     if user.logged_in:
         if request.method == 'GET':
-            logger.log_benchmark("Generate Access Code (Start - Document Selection)")
+            logger.log_benchmark("Generate Access Code: Start")
             access_code = AccessCode()
             return render_template('generate_access_code/generate_code_1_selection.html', user=user)
         elif request.method == 'POST':
             if len(request.form) > 0:
                 access_code_id_doc = request.form["user_doc"]
                 access_code.uploaded_document = user.get_specific_listed_doc(int(access_code_id_doc))
+                logger.log_benchmark("Generate Access Code: Document Selection")
                 return redirect(url_for('generate_code_access_details'))
             else:
                 feedback = "You need to select at least one option."
@@ -598,6 +700,7 @@ def generate_code_access_details():
                     access_code.access_for_org = return_specific_org_from_list(orgs, int(request.form["org"]))
                     access_code.duration_time = int(request.form["code_duration_number"])
                     access_code.duration_denominator = request.form["code_duration_type"]
+                    logger.log_benchmark("Generate Access Code: Access Code Details (Submit)")
                     return redirect(url_for('generate_code_confirm_access_details'))
             else:
                 feedback = "You need to select the organisation and duration."
@@ -613,7 +716,7 @@ def generate_code_confirm_access_details():
 
     if user.logged_in:
         if request.method == 'GET':
-            logger.log_benchmark("Generate Access Code (Page 3 - Confirm Details)")
+            logger.log_benchmark("Generate Access Code: Confirm Details")
             return render_template('generate_access_code/generate_code_3_confirm_details.html', user=user,
                                    code_to_use=access_code)
         elif request.method == 'POST':
@@ -628,7 +731,7 @@ def generate_code_confirm_access_details():
                     user.access_codes.append(access_code)
                     success_message = "The code was successfully generated!"
                     # access_code = AccessCode()
-                    logger.log_benchmark("Generate Access Code (Finish)")
+                    logger.log_benchmark("Generate Access Code: Finish")
                     return redirect(url_for('manage_access_code', code_to_retrieve=access_code.code_id))
                 else:
                     feedback = "You need to confirm the access code details to generate."
