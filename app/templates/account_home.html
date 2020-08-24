@@ -9,7 +9,7 @@
       {% block content %}
       <div class="main_w_nav">
          <h1>Account Home</h1>
-         <p>Welcome! You're currently logged in as: {{ user.email }}.</p>
+         <p>Welcome! You're currently logged in as: {{ user.forenames }} {{ user.surname }} ({{ user.email }}).</p>
          {% if user.docs|length == 0 %}
             <div class="darkened_section">
                <h2>Getting Started</h2>

@@ -9,22 +9,69 @@
       {% block content %}
       <div class="main_w_nav">
          <h1>Manage Document: {{ doc.document_type }}</h1>
-         <h2>Document Details</h2>
+         <h2>Document Summary</h2>
          <table>
             <tr>
                <th>Document ID</th>
                <td>{{ doc.document_id }}</td>
             </tr>
             <tr>
-               <th>Change of Name Date</th>
-               <td>{{ doc.change_of_name_date_as_string }}</td>
-            </tr>
-            <tr>
                <th>Verified Status</th>
                <td>{{ doc.document_verified_state.name|replace("_", " ")|capitalize }}</td>
             </tr>
          </table>
-         <p class="to_remove"> This is a test to see how this behaves </p>
+         <h2>Document Details</h2>
+         <table>
+            <tr>
+               <th>Change of Name Date</th>
+               <td>{{ doc.change_of_name_date_as_string }}</td>
+            </tr>
+
+            {% if doc.document_type == "Marriage Certificate" %}
+            <tr>
+               <th>Age On Certificate</th>
+               <td>{{ doc.age_on_certificate }}</td>
+            </tr>
+            <tr>
+               <th>Registration District</th>
+               <td>{{ doc.registration_district }}</td>
+            </tr>
+            <tr>
+               <th>Marriage Number</th>
+               <td>{{ doc.marriage_number }}</td>
+            </tr>
+            {% endif %}
+
+            {% if doc.document_type == "Deed Poll" %}
+            <tr>
+               <th>Registered With Courts</th>
+               <td>
+                  {% if doc.registered_with_courts %}
+                  Yes
+                  {% else %}
+                  No
+                  {% endif %}</td>
+            </tr>
+            {% endif %}
+
+            {% if doc.document_type == "Decree Absolute" %}
+            <tr>
+               <th>Issuing Court</th>
+               <td>{{ doc.issuing_court }}</td>
+            </tr>
+            <tr>
+               <th>No. of Matter</th>
+               <td>{{ doc.number_of_matter }}</td>
+            </tr>
+            <tr>
+               <th>Associated Document</th>
+               <td>
+                  <a href="{{ url_for('manage_document', doc_id=doc.marriage_certificate_details.document_id) }}">
+                  {{ doc.marriage_certificate_details.doc_type_with_date }}
+                  </a></td>
+            </tr>
+            {% endif %}
+         </table>
          <h2>Document Image</h2>
          <p class="to_remove"> Add image in here </p>
          <!--<img class="upload_reference_image" src={{url_for('static', filename='placeholder_doc.png')}} /></div>-->

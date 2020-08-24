@@ -42,15 +42,15 @@
          {% if doc.document_type == "Marriage Certificate" %}
          <form id="add_marriage_cert_details" action="{{ url_for('new_document_add_document_details') }}"
                method="post">
-            <label for="marriage_date_day">Marriage Date (dd / mm / yyyy): </label>
+            <label for="marriage_date_day" class="form_evener">Marriage Date (dd / mm / yyyy): </label>
             <input type="text" id="marriage_date_day" name="marriage_date_day">
             <input type="text" id="marriage_date_month" name="marriage_date_month">
             <input type="text" id="marriage_date_year" name="marriage_date_year"><br />
-            <label for="marriage_age_cert">Age On Certificate: </label>
+            <label for="marriage_age_cert" class="form_evener">Age On Certificate: </label>
             <input type="text" id="marriage_age_cert" name="marriage_age_cert"><br />
-            <label for="marriage_reg_district">Registration District: </label>
+            <label for="marriage_reg_district" class="form_evener">Registration District: </label>
             <input type="text" id="marriage_reg_district" name="marriage_reg_district"><br />
-            <label for="marriage_no">Marriage Number: </label>
+            <label for="marriage_no" class="form_evener">Marriage Number: </label>
             <input type="text" id="marriage_no" name="marriage_no"><br />
          </form>
 
@@ -65,7 +65,7 @@
          {% if doc.document_type == "Deed Poll" %}
          <form id="add_deed_poll_details" action="{{ url_for('new_document_add_document_details') }}"
                method="post">
-            <label for="deed_date_day">Date on Deed Poll: </label>
+            <label for="deed_date_day" class="form_evener">Date on Deed Poll: </label>
             <input type="text" id="deed_date_day" name="deed_date_day">
             <input type="text" id="deed_date_month" name="deed_date_month">
             <input type="text" id="deed_date_year" name="deed_date_year"><br /><br />
@@ -87,13 +87,13 @@
          {% if doc.document_type == "Decree Absolute" %}
          <form id="add_decree_absolute_details" action="{{ url_for('new_document_add_document_details') }}"
                method="post">
-            <label for="decree_date_day">Decree Date: </label>
+            <label for="decree_date_day" class="form_evener">Decree Date: </label>
             <input type="text" id="decree_date_day" name="decree_date_day">
             <input type="text" id="decree_date_month" name="decree_date_month">
             <input type="text" id="decree_date_year" name="decree_date_year"><br />
-            <label for="decree_issuing_court">Issuing Court: </label>
+            <label for="decree_issuing_court" class="form_evener">Issuing Court: </label>
             <input type="text" id="decree_issuing_court" name="decree_issuing_court"><br />
-            <label for="decree_no_of_matter">Number of Matter: </label>
+            <label for="decree_no_of_matter" class="form_evener">Number of Matter: </label>
             <input type="text" id="decree_no_of_matter" name="decree_no_of_matter"><br />
          </form>
 

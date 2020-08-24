@@ -31,7 +31,7 @@
          {% endif %}
 
          <form id="generate_code_for" action="{{ url_for('generate_code_access_details') }}" method="post">
-            <label for="org">Who requires access: </label>
+            <label for="org" class="form_evener">Who requires access: </label>
             <select id="org" name="org">
                <option></option>
                {% for org in orgs %}
@@ -39,7 +39,7 @@
                {% endfor %}
             </select><br />
 
-            <label for="code_duration_number">Duration of access: </label>
+            <label for="code_duration_number" class="form_evener">Duration of access: </label>
             <input type="text" id="code_duration_number" name="code_duration_number">
             <select id="code_duration_type" name="code_duration_type">
                <option></option>

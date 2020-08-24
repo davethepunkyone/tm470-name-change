@@ -55,20 +55,26 @@
          {% if doc.document_type == "Deed Poll" %}
          <p>
             <label for="deed_date" class="label_float">Date on Deed Poll: </label>
-            <div id="deed_date">(data here)</div><br />
+            <div id="deed_date"> {{ doc.change_of_name_date_as_string }} </div><br />
             <label for="deed_poll_reg" class="label_float">Has this been registered with the courts:</label>
-            <div id="deed_poll_reg">(data here)</div><br />
+            <div id="deed_poll_reg">
+               {% if doc.registered_with_courts %}
+               Yes
+               {% else %}
+               No
+               {% endif %}
+            </div><br />
          </p>
          {% endif %}
 
          {% if doc.document_type == "Decree Absolute" %}
          <p>
             <label for="decree_date" class="label_float">Decree Date: </label>
-            <div id="decree_date">(data here)</div><br />
+            <div id="decree_date"> {{ doc.change_of_name_date_as_string }} </div><br />
             <label for="decree_issuing_court" class="label_float">Issuing Court: </label>
-            <div id="decree_issuing_court">(data here)</div><br />
+            <div id="decree_issuing_court"> {{ doc.issuing_court }} </div><br />
             <label for="decree_no_of_matter" class="label_float">Number of Matter: </label>
-            <div id="decree_no_of_matter">(data here)</div><br />
+            <div id="decree_no_of_matter"> {{ doc.number_of_matter }} </div><br />
          </p>
          {% endif %}
 

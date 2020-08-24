@@ -7,6 +7,7 @@ from werkzeug.utils import secure_filename
 
 import globals.mock_variables as mock
 import globals.global_variables as gv
+import functions.general_functions as gen_functions
 
 from classes.user_class import User
 from classes.signup_verification_class import SignupVerification
@@ -517,6 +518,7 @@ def new_document_add_document_details():
                                     "marriage_reg_district": request.form["marriage_reg_district"],
                                     "marriage_no": request.form["marriage_no"]}
                     initial_feedback = check_doc_details_mandatory_fields(marriage_obj)
+
                     if initial_feedback is not None:
                         return render_template('add_document/add_doc_6_add_document_details.html', user=user,
                                                doc=document, feedback=initial_feedback)
@@ -527,12 +529,45 @@ def new_document_add_document_details():
                         document.age_on_certificate = int(marriage_obj["marriage_age"])
                         document.registration_district = marriage_obj["marriage_reg_district"]
                         document.marriage_number = int(marriage_obj["marriage_no"])
+
                         logger.log_benchmark("Add New Document: Add Document Details")
                         return redirect(url_for('new_document_confirm_document_details'))
                 elif document.document_type == "Deed Poll":
-                    logger.log_benchmark("Add New Document: Add Document Details")
-                    return redirect(url_for('new_document_confirm_document_details'))
+                    deed_poll_obj = {"deed_date_day": request.form["deed_date_day"],
+                                     "deed_date_month": request.form["deed_date_month"],
+                                     "deed_date_year": request.form["deed_date_year"],
+                                     "deed_registered": request.form["deed_registered"]}
+                    initial_feedback = check_doc_details_mandatory_fields(deed_poll_obj)
+
+                    if initial_feedback is not None:
+                        return render_template('add_document/add_doc_6_add_document_details.html', user=user,
+                                               doc=document, feedback=initial_feedback)
+                    else:
+                        document.change_of_name_date = datetime.date(int(deed_poll_obj["deed_date_year"]),
+                                                                     int(deed_poll_obj["deed_date_month"]),
+                                                                     int(deed_poll_obj["deed_date_day"]))
+                        document.registered_with_courts = gen_functions.yesno_to_bool(request.form["deed_registered"])
+
+                        logger.log_benchmark("Add New Document: Add Document Details")
+                        return redirect(url_for('new_document_confirm_document_details'))
                 elif document.document_type == "Decree Absolute":
+                    decree_absolute_obj = {"decree_date_day": request.form["decree_date_day"],
+                                           "decree_date_month": request.form["decree_date_month"],
+                                           "decree_date_year": request.form["decree_date_year"],
+                                           "decree_issuing_court": request.form["decree_issuing_court"],
+                                           "decree_no_of_matter": request.form["decree_no_of_matter"]}
+                    initial_feedback = check_doc_details_mandatory_fields(decree_absolute_obj)
+
+                    if initial_feedback is not None:
+                        return render_template('add_document/add_doc_6_add_document_details.html', user=user,
+                                               doc=document, feedback=initial_feedback)
+                    else:
+                        document.change_of_name_date = datetime.date(int(decree_absolute_obj["decree_date_year"]),
+                                                                     int(decree_absolute_obj["decree_date_month"]),
+                                                                     int(decree_absolute_obj["decree_date_day"]))
+                        document.issuing_court = request.form["decree_issuing_court"]
+                        document.number_of_matter = request.form["decree_no_of_matter"]
+
                     logger.log_benchmark("Add New Document: Add Document Details")
                     return redirect(url_for('new_document_confirm_document_details'))
             else:
@@ -561,7 +596,7 @@ def check_doc_details_mandatory_fields(fields_to_check: dict):
             return "The marriage month value is not valid."
         elif not fields_to_check["marriage_year"].isnumeric():
             return "The marriage year value must be a number."
-        elif int(fields_to_check["marriage_year"]) > (datetime.datetime.now().year + 1) or \
+        elif int(fields_to_check["marriage_year"]) > datetime.datetime.now().year or \
                 int(fields_to_check["marriage_year"]) < 1900:
             return "The marriage year value is not valid."
         elif not fields_to_check["marriage_age"].isnumeric():
@@ -576,9 +611,52 @@ def check_doc_details_mandatory_fields(fields_to_check: dict):
         else:
             return None
     elif document.document_type == "Deed Poll":
-        return None
+        if fields_to_check["deed_date_day"] == "" or fields_to_check["deed_date_month"] == "" or \
+                fields_to_check["deed_date_year"] == "" or fields_to_check["deed_registered"] == "":
+            return "All mandatory fields need to be completed to proceed."
+        elif not fields_to_check["deed_date_day"].isnumeric():
+            return "The deed poll day value must be a number."
+        elif int(fields_to_check["deed_date_day"]) > 31 or \
+                int(fields_to_check["deed_date_day"].isnumeric()) < 1:
+            return "The deed poll day value is not valid."
+        elif not fields_to_check["deed_date_month"].isnumeric():
+            return "The deed poll month value must be a number."
+        elif int(fields_to_check["deed_date_month"]) > 12 or \
+                int(fields_to_check["deed_date_month"]) < 1:
+            return "The deed poll month value is not valid."
+        elif not fields_to_check["deed_date_year"].isnumeric():
+            return "The deed poll year value must be a number."
+        elif int(fields_to_check["deed_date_year"]) > datetime.datetime.now().year or \
+                int(fields_to_check["deed_date_year"]) < 1900:
+            return "The deed poll year value is not valid."
+        else:
+            return None
     elif document.document_type == "Decree Absolute":
-        return None
+        if fields_to_check["decree_date_day"] == "" or fields_to_check["decree_date_month"] == "" or \
+                fields_to_check["decree_date_year"] == "" or fields_to_check["decree_issuing_court"] == "" or \
+                fields_to_check["decree_no_of_matter"] == "":
+            return "All mandatory fields need to be completed to proceed."
+        elif not fields_to_check["decree_date_day"].isnumeric():
+            return "The decree absolute day value must be a number."
+        elif int(fields_to_check["decree_date_day"]) > 31 or \
+                int(fields_to_check["decree_date_day"].isnumeric()) < 1:
+            return "The decree absolute day value is not valid."
+        elif not fields_to_check["decree_date_month"].isnumeric():
+            return "The decree absolute month value must be a number."
+        elif int(fields_to_check["decree_date_month"]) > 12 or \
+                int(fields_to_check["decree_date_month"]) < 1:
+            return "The decree absolute month value is not valid."
+        elif not fields_to_check["decree_date_year"].isnumeric():
+            return "The decree absolute year value must be a number."
+        elif int(fields_to_check["decree_date_year"]) > datetime.datetime.now().year or \
+                int(fields_to_check["decree_date_year"]) < 1900:
+            return "The decree absolute year value is not valid."
+        elif not fields_to_check["decree_no_of_matter"].isnumeric():
+            return "The number of matter value must be a number."
+        elif int(fields_to_check["decree_no_of_matter"]) < 1:
+            return "The number of matter value is not valid."
+        else:
+            return None
     else:
         return "The document type wasn't recognized, this error shouldn't occur."
 

@@ -396,6 +396,12 @@ th {
   clear: both;
 }
 
+.form_evener {
+  display: inline-block;
+  width: 200px;
+  margin-bottom: 10px;
+}
+
 .to_remove {
   background-color: yellow;
   border-color: red;

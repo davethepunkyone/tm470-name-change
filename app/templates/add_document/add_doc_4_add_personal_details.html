@@ -40,25 +40,25 @@
          <p>Please provide the following details: <div class="to_remove">Help Tooltip Here</div></p>
          <form id="add_personal_details" action="{{ url_for('new_document_add_personal_details') }}" method="post">
             <p>Note: If your forename or surname has not changed, leave the applicable fields blank.</p>
-            <label for="prev_forenames">Previous Forename(s): </label>
+            <label for="prev_forenames" class="form_evener">Previous Forename(s): </label>
             <input type="text" id="prev_forenames" name="prev_forenames"><br />
-            <label for="prev_surname">Previous Surname: </label>
+            <label for="prev_surname" class="form_evener">Previous Surname: </label>
             <input type="text" id="prev_surname" name="prev_surname"><br /><br />
 
-            <label for="forenames">New Forename(s): </label>
+            <label for="forenames" class="form_evener">New Forename(s): </label>
             <input type="text" id="forenames" name="forenames"><br />
-            <label for="surname">New Surname: </label>
+            <label for="surname" class="form_evener">New Surname: </label>
             <input type="text" id="surname" name="surname"><br /><br />
 
-            <label for="address_name_no">House Name / Number*: </label>
+            <label for="address_name_no" class="form_evener">House Name / Number*: </label>
             <input type="text" id="address_name_no" name="address_name_no"><br />
-            <label for="address_line_1">Address Line 1*: </label>
+            <label for="address_line_1" class="form_evener">Address Line 1*: </label>
             <input type="text" id="address_line_1" name="address_line_1"><br />
-            <label for="address_line_2">Address Line 2: </label>
+            <label for="address_line_2" class="form_evener">Address Line 2: </label>
             <input type="text" id="address_line_2" name="address_line_2"><br />
-            <label for="address_town_city">Town / City*: </label>
+            <label for="address_town_city" class="form_evener">Town / City*: </label>
             <input type="text" id="address_town_city" name="address_town_city"><br />
-            <label for="address_postcode">Postcode*: </label>
+            <label for="address_postcode" class="form_evener">Postcode*: </label>
             <input type="text" id="address_postcode" name="address_postcode"><br />
             <p>* = Fields are mandatory</p>
          </form>
