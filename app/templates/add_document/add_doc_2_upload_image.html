@@ -40,6 +40,10 @@
                enctype=multipart/form-data>
            <input type="file" id="user_file" name="user_file">
          </form>
+         {% if doc.uploaded_file_path != None %}
+            <p class="to_remove">A file has been uploaded, so there is no need to add another file unless you need to
+               replace the originally uploaded document.</p>
+         {% endif %}
          <p>
          {% if doc.document_type == "Decree Absolute" %}
             <form action="{{ url_for('new_document_decree_absolute_certificate') }}">

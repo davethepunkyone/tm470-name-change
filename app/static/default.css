@@ -93,6 +93,14 @@ th {
   background-color: #D0CECE;
 }
 
+td {
+  background-color: #FFFFFF;
+}
+
+td.active {
+  background-color: #CCFFCC;
+}
+
 .main {
   /*margin: auto;*/
   position: fixed;
@@ -390,6 +398,7 @@ th {
   border-style: solid;
   width: 100px;
   padding: 2px;
+  display: inline-block;
 }
 
 .spacer {
@@ -399,6 +408,12 @@ th {
 .form_evener {
   display: inline-block;
   width: 200px;
+  margin-bottom: 10px;
+}
+
+.form_evener_index {
+  display: inline-block;
+  width: 100px;
   margin-bottom: 10px;
 }
 

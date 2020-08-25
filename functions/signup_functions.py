@@ -2,10 +2,19 @@ import random
 import string
 import webbrowser
 import datetime
+import re
 from globals.global_variables import live_url
 from classes.user_class import User
 from classes.signup_verification_class import SignupVerification
 from functions.logging_functions import get_logging_directory
+
+
+def confirm_email_address_value(email: str) -> bool:
+    email_regex = re.compile('[0-9A-Za-z.\']+@([0-9A-Za-z.])+([0-9A-Za-z])', re.UNICODE)
+    if email_regex.match(email):
+        return True
+    else:
+        return False
 
 
 def generate_code(no_of_chars: int) -> str:
@@ -14,7 +23,7 @@ def generate_code(no_of_chars: int) -> str:
     i = 1
     while i <= no_of_chars:
         character_to_use = random.randint(0, len(characters))
-        code = code + characters[character_to_use:character_to_use+1]
+        code = code + characters[character_to_use:character_to_use + 1]
         i += 1
     return code
 

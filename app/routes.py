@@ -20,7 +20,8 @@ from classes.address_class import Address
 from classes.enums import VerifiedStates, AccessStates
 from functions.org_functions import return_specific_org_from_list
 from functions.access_code_functions import generate_unique_access_code
-from functions.signup_functions import generate_signup_code, email_user_notepad_version, generate_capcha_code
+from functions.signup_functions import generate_signup_code, email_user_notepad_version, generate_capcha_code, \
+    confirm_email_address_value
 from functions.file_upload_functions import check_filetype_valid, get_upload_directory, return_filename
 
 from functions import logging_functions as logger
@@ -153,27 +154,29 @@ def new_account_signup():
         elif request.method == 'POST':
             logger.log_benchmark("New Account Signup - Submit Form")
             if len(request.form) > 0:
-                forenames = request.form["forenames"]
-                surname = request.form["surname"]
-                email = request.form["email"]
-                email_confirm = request.form["email_confirm"]
-                pwd = request.form["password"]
-                pwd_confirm = request.form["password_confirm"]
-                capcha = request.form["capcha"]
-                initial_feedback = check_new_user_form_values(forenames, surname, email, email_confirm, pwd,
-                                                              pwd_confirm, capcha)
+                # Form data we may want to pass back in event of error
+                form_data = {"forenames": request.form["forenames"],
+                             "surname": request.form["surname"],
+                             "email": request.form["email"],
+                             "email_confirm": request.form["email_confirm"]}
+                # Form data we do not want to pass back due to security concerns
+                secure_form_data = {"pwd": request.form["password"],
+                                    "pwd_confirm": request.form["password_confirm"],
+                                    "capcha": request.form["capcha"]}
+                initial_feedback = check_new_user_form_values(form_data, secure_form_data)
                 capcha_on_page = generate_capcha_code()  # Regenerates CAPCHA in event of any type of fail
                 if initial_feedback is not None:
                     feedback = initial_feedback
                     return render_template('new_account/new_account_signup.html', user=user, capcha=capcha_on_page,
-                                           feedback=feedback)
+                                           feedback=feedback, form_data=form_data)
                 if not request.form.__contains__("agreement"):
                     feedback = "You must agree to the terms and conditions to proceed."
                     return render_template('new_account/new_account_signup.html', user=user, capcha=capcha_on_page,
-                                           feedback=feedback)
+                                           feedback=feedback, form_data=form_data)
                 else:
-                    user = User(user_id=incrementer_user, forenames=forenames, surname=surname, email=email,
-                                prototype_password=pwd, verified_state=False)
+                    user = User(user_id=incrementer_user, forenames=form_data["forenames"],
+                                surname=form_data["surname"], email=form_data["email"],
+                                prototype_password=secure_form_data["pwd"], verified_state=False)
                     users_list.append(user)
                     incrementer_user += 1
                     signup_details = SignupVerification(signup_code=generate_signup_code(), user_id=user.user_id)
@@ -187,20 +190,22 @@ def new_account_signup():
                                        feedback=feedback)
 
 
-def check_new_user_form_values(forenames: str, surname: str, email: str, email_confirm: str, pwd: str,
-                               pwd_confirm: str, capcha: str):
-    if forenames == "" or surname == "" or email == "" or email_confirm == "" or pwd == "" or \
-            pwd_confirm == "" or capcha == "":
+def check_new_user_form_values(form_data: dict, secure_form_data: dict):
+    if form_data["forenames"] == "" or form_data["surname"] == "" or form_data["email"] == "" or \
+            form_data["email_confirm"] == "" or secure_form_data["pwd"] == "" or \
+            secure_form_data["pwd_confirm"] == "" or secure_form_data["capcha"] == "":
         return "You need to complete all the fields to create a new account."
-    elif check_user_already_exists(email):
+    elif check_user_already_exists(form_data["email"]):
         return "The email address provided is already registered on this service."
-    elif email != email_confirm:
+    elif form_data["email"] != form_data["email_confirm"]:
         return "The email address and confirm email address do not match."
-    elif pwd != pwd_confirm:
+    elif not confirm_email_address_value(form_data["email"]):
+        return "The email address is not in a valid format."
+    elif secure_form_data["pwd"] != secure_form_data["pwd_confirm"]:
         return "The password and confirm password do not match."
-    elif len(pwd) < 8:
+    elif len(secure_form_data["pwd"]) < 8:
         return "The password provided is too short, it must be at least 8 characters."
-    elif capcha_on_page != capcha:
+    elif capcha_on_page != secure_form_data["capcha"]:
         return "The CAPCHA verification failed, please try again."
     else:
         return None
@@ -376,11 +381,23 @@ def new_document_upload_image():
             return render_template('add_document/add_doc_2_upload_image.html', user=user, doc=document)
         if request.method == 'POST':
             if 'user_file' not in request.files:
-                feedback = "No file was uploaded."
-                return render_template('add_document/add_doc_2_upload_image.html', user=user, doc=document,
-                                       feedback=feedback)
+                # Control has not been initialized
+                if document.uploaded_file_path is not None:
+                    return redirect(url_for('new_document_confirm_image'))
+                else:
+                    feedback = "No file was uploaded."
+                    return render_template('add_document/add_doc_2_upload_image.html', user=user, doc=document,
+                                           feedback=feedback)
             else:
+                # Control has been initialized
                 file_to_use = request.files["user_file"]
+                if file_to_use.filename == "" and document.uploaded_file_path is not None:
+                    return redirect(url_for('new_document_confirm_image'))
+                elif file_to_use.filename == "" and document.uploaded_file_path is None:
+                    feedback = "No file was uploaded."
+                    return render_template('add_document/add_doc_2_upload_image.html', user=user, doc=document,
+                                           feedback=feedback)
+
                 if check_filetype_valid(file_to_use.filename):
                     filename = return_filename(document, file_to_use.filename)
                     filepath = os.path.join(app.config['UPLOAD_DIRECTORY'], filename)
@@ -427,28 +444,29 @@ def new_document_add_personal_details():
             return render_template('add_document/add_doc_4_add_personal_details.html', user=user, doc=document)
         elif request.method == 'POST':
             if len(request.form) > 0:
-                prev_forenames = request.form["prev_forenames"]
-                prev_surname = request.form["prev_surname"]
-                forenames = request.form["forenames"]
-                surname = request.form["surname"]
-                address_house_name_no = request.form["address_name_no"]
-                address_line_1 = request.form["address_line_1"]
-                address_line_2 = request.form["address_line_2"]
-                address_city = request.form["address_town_city"]
-                address_postcode = request.form["address_postcode"]
-                initial_feedback = check_personal_details(prev_forenames, prev_surname, forenames, surname,
-                                                          address_house_name_no, address_line_1, address_line_2,
-                                                          address_city, address_postcode)
+                form_data = {"prev_forenames": request.form["prev_forenames"],
+                             "prev_surname": request.form["prev_surname"],
+                             "forenames": request.form["forenames"],
+                             "surname": request.form["surname"],
+                             "address_house_name_no": request.form["address_name_no"],
+                             "address_line_1": request.form["address_line_1"],
+                             "address_line_2": request.form["address_line_2"],
+                             "address_city": request.form["address_town_city"],
+                             "address_postcode": request.form["address_postcode"]}
+
+                initial_feedback = check_personal_details(form_data)
                 if initial_feedback is not None:
                     return render_template('add_document/add_doc_4_add_personal_details.html', user=user, doc=document,
-                                           feedback=initial_feedback)
+                                           feedback=initial_feedback, form_data=form_data)
                 else:
-                    document.old_forenames = prev_forenames
-                    document.old_surname = prev_surname
-                    document.new_forenames = forenames
-                    document.new_surname = surname
-                    document.address = Address(house_name_no=address_house_name_no, line_1=address_line_1,
-                                               line_2=address_line_2, town_city=address_city, postcode=address_postcode)
+                    document.old_forenames = form_data["prev_forenames"]
+                    document.old_surname = form_data["prev_surname"]
+                    document.new_forenames = form_data["forenames"]
+                    document.new_surname = form_data["surname"]
+                    document.address = Address(house_name_no=form_data["address_house_name_no"],
+                                               line_1=form_data["address_line_1"], line_2=form_data["address_line_2"],
+                                               town_city=form_data["address_city"],
+                                               postcode=form_data["address_postcode"])
                     logger.log_benchmark("Add New Document: Add Personal Details")
                     return redirect(url_for('new_document_confirm_personal_details'))
             else:
@@ -459,21 +477,21 @@ def new_document_add_personal_details():
         return redirect(url_for('index'))
 
 
-def check_personal_details(prev_forenames: str, prev_surname: str, forenames: str, surname: str, address_house_no: str,
-                           address_line_1: str, address_line_2: str, address_city: str, address_postcode: str):
-    if address_house_no == "" or address_line_1 == "" or address_city == "" or address_postcode == "":
+def check_personal_details(form_data: dict) -> str or None:
+    if form_data["address_house_name_no"] == "" or form_data["address_line_1"] == "" or \
+            form_data["address_city"] == "" or form_data["address_postcode"] == "":
         return "The mandatory address fields have not been populated."
-    elif prev_forenames != "" and prev_forenames == forenames:
+    elif form_data["prev_forenames"] != "" and form_data["prev_forenames"] == form_data["forenames"]:
         return "The previous forename and new forename cannot be the same."
-    elif prev_surname != "" and prev_surname == surname:
+    elif form_data["prev_surname"] != "" and form_data["prev_surname"] == form_data["surname"]:
         return "The previous surname and new surname cannot be the same."
-    elif prev_forenames == "" and forenames != "":
+    elif form_data["prev_forenames"] == "" and form_data["forenames"] != "":
         return "You cannot specify a new forename(s) value without providing the previous forename(s)."
-    elif prev_surname == "" and surname != "":
+    elif form_data["prev_surname"] == "" and form_data["surname"] != "":
         return "You cannot specify a new surname value without providing the previous surname."
-    elif forenames == "" and prev_forenames != "":
+    elif form_data["forenames"] == "" and form_data["prev_forenames"] != "":
         return "You cannot specify a previous forename(s) value without providing the new forename(s)."
-    elif surname == "" and prev_surname != "":
+    elif form_data["surname"] == "" and form_data["prev_surname"] != "":
         return "You cannot specify a previous surname value without providing the new surname."
     else:
         return None

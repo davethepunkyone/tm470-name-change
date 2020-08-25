@@ -16,19 +16,23 @@
          {% endif %}
 
          <form id="signup" action="{{ url_for('new_account_signup') }}" method="post">
-            <label for="forenames">Forename(s): </label>
-            <input type="text" id="forenames" name="forenames"><br />
-            <label for="surname">Surname: </label>
-            <input type="text" id="surname" name="surname"><br />
-            <label for="email">Email Address: </label>
-            <input type="text" id="email" name="email"><br />
-            <label for="email_confirm">Confirm Email Address: </label>
-            <input type="text" id="email_confirm" name="email_confirm"><br />
-            <label for="pwd">Password: </label>
+            <label for="forenames" class="form_evener">Forename(s): </label>
+            <input type="text" id="forenames" name="forenames"
+                   {% if form_data %}value="{{ form_data.forenames}}"{% endif %}}><br />
+            <label for="surname" class="form_evener">Surname: </label>
+            <input type="text" id="surname" name="surname"
+                   {% if form_data %}value="{{ form_data.surname}}"{% endif %}}><br />
+            <label for="email" class="form_evener">Email Address: </label>
+            <input type="text" id="email" name="email"
+                   {% if form_data %}value="{{ form_data.email}}"{% endif %}}><br />
+            <label for="email_confirm" class="form_evener">Confirm Email Address: </label>
+            <input type="text" id="email_confirm" name="email_confirm"
+                   {% if form_data %}value="{{ form_data.email_confirm}}"{% endif %}}><br />
+            <label for="pwd" class="form_evener">Password: </label>
             <input type="password" id="pwd" name="password"><br />
-            <label for="pwd_confirm">Confirm Password: </label>
+            <label for="pwd_confirm" class="form_evener">Confirm Password: </label>
             <input type="password" id="pwd_confirm" name="password_confirm"><br />
-            <label for="capcha">CAPCHA: </label><div id="capcha_code">{{ capcha }}</div>
+            <label for="capcha" class="form_evener">CAPCHA: </label><div id="capcha_code">{{ capcha }}</div>
             <input type="text" id="capcha" name="capcha"><br /><br />
             <input type="checkbox" id="agreement" name="agreement">
                <label for="agreement">I confirm I have read and agree to the Terms & Conditions.</label><br /><br />
