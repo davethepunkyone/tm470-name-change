@@ -20,7 +20,7 @@ class DocumentClassTest(unittest.TestCase):
         self.test_doc.new_surname = tg.test_surname
         self.test_doc.address = tg.test_address
         self.test_doc.document_verified_state = tg.test_doc_state
-        self.test_doc.document_verified_id = tg.test_doc_verified_id
+        self.test_doc.document_verified_org = tg.test_doc_verified_id
         self.test_doc.change_of_name_date = tg.test_doc_added_datetime
         self.test_doc.added_datetime = tg.test_added_datetime
         self.test_doc.last_modified_datetime = tg.test_modified_datetime
@@ -122,12 +122,12 @@ class DocumentClassTest(unittest.TestCase):
         self.assertEqual(self.test_doc.document_verified_state, different_state)
 
     def test_get_document_verified_id(self) -> None:
-        self.assertEqual(self.test_doc.document_verified_id, tg.test_doc_verified_id)
+        self.assertEqual(self.test_doc.document_verified_org, tg.test_doc_verified_id)
 
     def test_set_document_verified_id(self) -> None:
         different_id = 111111
-        self.test_doc.document_verified_id = different_id
-        self.assertEqual(self.test_doc.document_verified_id, different_id)
+        self.test_doc.document_verified_org = different_id
+        self.assertEqual(self.test_doc.document_verified_org, different_id)
 
     def test_get_added_datetime(self) -> None:
         self.assertEqual(self.test_doc.added_datetime, tg.test_added_datetime)

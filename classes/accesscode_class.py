@@ -103,7 +103,10 @@ class AccessCode:
 
     def generate_expiry_from_duration(self) -> None:
         if self._duration_time is not None and self._duration_denominator is not None:
-            current_time = datetime.datetime.now()
+            if self.expiry is None:
+                current_time = datetime.datetime.now()
+            else:
+                current_time = self.expiry
             if self._duration_denominator == "hours":
                 self.expiry = current_time + datetime.timedelta(hours=self._duration_time)
             elif self._duration_denominator == "days":

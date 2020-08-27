@@ -34,22 +34,41 @@
          <h2>Finish</h2>
          <p>Your {{ doc.document_type }} has been successfully uploaded.</p>
          <h2>Next Steps</h2>
-         <p class="to_remove"> OPTION TO GET DOCUMENT VALIDATED </p>
-         <p class="to_remove"> OPTION TO RETURN TO MAIN MENU </p>
-         <h2>Organisation Validation Checker</h2>
-         <p>You can use the dropdown below to check if any of the organisations you need to notify requires your
-            {{ doc.document_type }} to be validated first.</p>
-            <select id="org" name="org">
-               <option></option>
-               {% for org in orgs %}
-                  <option value="{{ org.org_id }}">{{ org.org_name }} -
-                     {% if org.requires_verified %}
-                        Requires Verified Document
-                     {% else %}
-                        No Requirements
-                     {% endif %}</option>
-               {% endfor %}
-            </select>
+         {% if doc.document_verified_state.name != 'NOT_APPLICABLE' %}
+            <div class="darkened_section">
+               You now have the option of getting your document verified by an appropriate organisation.  By getting your
+               document verified, organisations receiving this data will have the peace of mind to know that it is a
+               genuine document.  Getting the document verified is not required to use this service, however some organisations
+               may not accept documents if they have not been verified first.
+               <a href="{{ url_for('verify_document', code=0) }}">
+                     <div class="recommended_actions_button">Validate Document Now</div></a>
+            </div>
+            <p></p>
+            <div class="darkened_section">
+               Alternatively you can start using your document now, and choose to get it validated at a later time if needed.
+               <a href="{{ url_for('account_home') }}">
+                     <div class="recommended_actions_button">Return to Account Home</div></a>
+            </div>
+            <p class="to_remove"> OPTION TO RETURN TO MAIN MENU </p>
+            <h2>Organisation Validation Checker</h2>
+            <p>You can use the dropdown below to check if any of the organisations you need to notify requires your
+               {{ doc.document_type }} to be validated first.</p>
+               <select id="org" name="org">
+                  <option></option>
+                  {% for org in orgs %}
+                     <option value="{{ org.org_id }}">{{ org.org_name }} -
+                        {% if org.requires_verified %}
+                           Requires Verified Document
+                        {% else %}
+                           No Requirements
+                        {% endif %}</option>
+                  {% endfor %}
+               </select>
+         {% else %}
+            <p>You can now return to your account home to start using your document.</p>
+            <a href="{{ url_for('account_home') }}">
+               <div class="recommended_actions_button">Return to Account Home</div></a>
+         {% endif %}
       </div>
       {% endblock %}
    </body>

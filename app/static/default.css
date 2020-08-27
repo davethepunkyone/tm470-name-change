@@ -27,11 +27,24 @@ p {
   text-align: left;
 }
 
+p.italics {
+  font-style: italic;
+}
+
+.mini_info_header {
+  font-weight: bold;
+  font-style: italic;
+  display: inline-block;
+}
+
+.mini_info_text {
+  font-style: italic;
+  display: inline-block;
+}
+
 header {
-  /*margin: auto;*/
   position: fixed;
   top: 5px;
-  /*width: 97%;*/
   width: 1000px;
   padding: 10px;
   height: 50px;
@@ -61,23 +74,13 @@ footer {
 }
 
 label {
-/*  width:120px;
-  clear:left;
-  text-align:right;
-  padding-right:10px;
-  float:left;*/
   font-weight: bold;
-/*  margin-bottom: 5px;*/
 }
 
 .label_float {
   float: left;
   padding-right: 10px;
 }
-
-/*input {
-    float:left;
-}*/
 
 table, th, td {
   border: 1px solid black;
@@ -97,14 +100,24 @@ td {
   background-color: #FFFFFF;
 }
 
+td.fixed_extender {
+  width: 200px;
+}
+
+td.bold_text {
+  font-weight: bold;
+}
+
 td.active {
   background-color: #CCFFCC;
 }
 
+td.center_content {
+  text-align: center;
+}
+
 .main {
-  /*margin: auto;*/
   position: fixed;
-  /*alignment: center;*/
   top: 85px;
   width: 1000px;
   height: 870px;
@@ -198,6 +211,10 @@ td.active {
   text-align: right;
 }
 
+.footer_link {
+  color: #FFFFFF;
+}
+
 .footer_link:hover {
   font-weight: bold;
 }
@@ -209,6 +226,7 @@ td.active {
   text-align: center;
   padding: 5px;
   font-weight: bold;
+  color: #000000;
   text-decoration: none;
   margin-bottom: 10px;
   border-radius: 10px;
@@ -415,6 +433,18 @@ td.active {
   display: inline-block;
   width: 100px;
   margin-bottom: 10px;
+}
+
+.placeholder_box {
+  border-style: dashed;
+  border-color: #000000;
+  background-color: #FFFFFF;
+  text-align: center;
+  line-height: 50px;
+  vertical-align: middle;
+  width: 200px;
+  height: 100px;
+  display: inline-block;
 }
 
 .to_remove {

@@ -39,9 +39,10 @@
          <form id="cert_details" action="{{ url_for('new_document_decree_absolute_certificate') }}" method="post">
             {% for doc in user.docs %}
                {% if doc.document_type == "Marriage Certificate" %}
-                  <input type="radio" id="{{  doc.document_type|replace(" ", "")  }}" name="marriage_cert"
-                     value="{{ doc.document_id }}">
-                  <label for="{{  doc.document_type|replace(" ", "")  }}">{{ doc.doc_type_with_date }}</label><br />
+                  <input type="radio" id="{{  doc.doc_type_with_date|replace(" ", "")|replace("/", "")|replace("(", "")|replace(")", "")  }}"
+                     name="marriage_cert" value="{{ doc.document_id }}">
+                  <label for="{{  doc.doc_type_with_date|replace(" ", "")|replace("/", "")|replace("(", "")|replace(")", "")  }}">
+                     {{ doc.doc_type_with_date }}</label><br />
                {% endif %}
             {% endfor %}
          </form>

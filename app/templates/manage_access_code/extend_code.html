@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+   <head>
+      <meta charset="utf-8">
+      <title>Change Your Name: Manage Access Code ({{ code_to_use.code_id }})</title>
+   </head>
+   <body>
+      {% extends "template_general.html" %}
+      {% block content %}
+      <div class="main_w_nav">
+         <h1>Extend Access Code: {{ code_to_use.uploaded_document.document_type }} for
+            {{ code_to_use.access_for_org.org_name }}</h1>
+
+         {% if feedback %}
+            <p class="failure_message">{{ feedback }}</p>
+         {% endif %}
+
+         <h2>Access Code Details</h2>
+         <table>
+            <tr>
+               <th>Code</th>
+               <td>{{ code_to_use.generated_code }}</td>
+            </tr>
+            <tr>
+               <th>Document</th>
+               <td>{{ code_to_use.uploaded_document.document_type }}
+                  ({{ code_to_use.uploaded_document.change_of_name_date_as_string }})</td>
+            </tr>
+            <tr>
+               <th>Organisation</th>
+               <td>{{ code_to_use.access_for_org.org_name }}</td>
+            </tr>
+            <tr>
+               <th>Expiry Time</th>
+               <td>{{ code_to_use.expiry_to_string }}</td>
+            </tr>
+            <tr>
+               <th>Access Status</th>
+               <td>{{ code_to_use.accessed_state.name|replace("_", " ")|capitalize }}</td>
+            </tr>
+         </table>
+
+         <p><div class="spacer"></div></p>
+
+         <h2>Code Extension Length</h2>
+         <p>Specify how long you wish to extend the length of the code by:</p>
+         <form id="extend_code_for" action="{{ url_for('extend_access_code', code_to_extend=code_to_use.code_id) }}" method="post">
+            <label for="code_duration_number" class="form_evener">Extend by: </label>
+            <input type="text" id="code_duration_number" name="code_duration_number" maxlength="2">
+            <select id="code_duration_type" name="code_duration_type">
+               <option></option>
+               <option value="hours">Hours</option>
+               <option value="days">Days</option>
+            </select><br />
+         </form>
+
+         <p>
+            <form action="{{ url_for('manage_access_code', code_to_retrieve=code_to_use.code_id) }}">
+               <button class="process_back_button" type="submit">Cancel</button>
+            </form>
+            <button form="extend_code_for" class="process_continue_button">Extend</button>
+         </p>
+      </div>
+      {% endblock %}
+   </body>

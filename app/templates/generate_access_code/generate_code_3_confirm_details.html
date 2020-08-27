@@ -24,20 +24,31 @@
             </div>
          </div>
          <h2>Confirm Access Code Details</h2>
-         <p>Please confirm the details for accessing your {{ code_to_use.uploaded_document.document_type }}:</p>
-            <label for="org" class="form_evener">Who requires access: </label>
-            <div id="org">{{ code_to_use.access_for_org.org_name }}</div><br />
-            <label for="code_duration" class="form_evener">Duration of access: </label>
-            <div id="code_duration">{{ code_to_use.duration_time }} {{ code_to_use.duration_denominator }}</div><br />
 
          {% if feedback %}
             <p class="failure_message">{{ feedback }}</p>
          {% endif %}
 
-         <form id="confirm_code_details" action="{{ url_for('generate_code_confirm_access_details') }}" method="post">
-            <input type="checkbox" id="code_agreement" name="code_agreement">
-               <label for="code_agreement">I confirm the details above are correct.</label><br /><br />
-         </form>
+         <p>Please confirm the details for accessing your {{ code_to_use.uploaded_document.document_type }}:</p>
+         <table>
+            <tr>
+               <th>Who requires access</th>
+               <td>{{ code_to_use.access_for_org.org_name }}</td>
+            </tr>
+            <tr>
+               <th>Duration of access</th>
+               <td>{{ code_to_use.duration_time }} {{ code_to_use.duration_denominator }}</td>
+            </tr>
+         </table>
+
+         <div class="spacer"></div>
+
+         <p>
+            <form id="confirm_code_details" action="{{ url_for('generate_code_confirm_access_details') }}" method="post">
+               <input type="checkbox" id="code_agreement" name="code_agreement">
+                  <label for="code_agreement">I confirm the details above are correct.</label><br /><br />
+            </form>
+         </p>
 
          <p>
             <form action="{{ url_for('generate_code_access_details') }}">

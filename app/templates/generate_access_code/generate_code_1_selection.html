@@ -30,9 +30,10 @@
          {% endif %}
          <form id="doc_to_select" action="{{ url_for('generate_code_document_selection') }}" method="post">
             {% for doc in user.docs %}
-               <input type="radio" id="{{  doc.document_type|replace(" ", "")  }}" name="user_doc"
-                  value="{{ doc.document_id }}">
-               <label for="{{  doc.document_type|replace(" ", "")  }}">{{ doc.doc_type_with_date }}</label><br />
+               <input type="radio" id="{{  doc.doc_type_with_date|replace(" ", "")|replace("/", "")|replace("(", "")|replace(")", "")  }}"
+                     name="user_doc" value="{{ doc.document_id }}">
+               <label for="{{  doc.doc_type_with_date|replace(" ", "")|replace("/", "")|replace("(", "")|replace(")", "")  }}">
+                  {{ doc.doc_type_with_date }}</label><br />
             {% endfor %}
          </form>
 

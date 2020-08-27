@@ -37,7 +37,7 @@ def mock_list_of_users() -> list:
                     document_verified_state=VerifiedStates.AWAITING_VERIFICATION)
 
     code1 = AccessCode(code_id=1474, generated_code="987654", expiry=datetime.datetime(2020, 9, 1, 12, 35, 12),
-                       uploaded_document=doc2, access_for_org=org1, accessed_state=AccessStates.REVOKED)
+                       uploaded_document=doc2, access_for_org=org1, accessed_state=AccessStates.EXPIRED)
 
     mock_user_2 = User(user_id=16, forenames="Miguel Marcel", surname="Tablot", email="mmt@testing.com",
                        prototype_password="test2", verified_state=True, docs=[doc2, doc3], access_codes=code1)

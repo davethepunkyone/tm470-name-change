@@ -98,6 +98,11 @@ def return_logged_in_user(email: str, pwd: str) -> User:
         raise LookupError("The email address specified is not registered with this service.")
 
 
+@app.route('/forgotten_password')
+def forgot_password():
+    return render_template('forgotten_password.html', user=user)
+
+
 @app.route('/test/<test_conditions>')
 def test(test_conditions):
     global user
@@ -539,11 +544,19 @@ def new_document_add_document_details():
 
                     if initial_feedback is not None:
                         return render_template('add_document/add_doc_6_add_document_details.html', user=user,
-                                               doc=document, feedback=initial_feedback)
+                                               doc=document, feedback=initial_feedback, form_data=marriage_obj)
                     else:
-                        document.change_of_name_date = datetime.date(int(marriage_obj["marriage_year"]),
-                                                                     int(marriage_obj["marriage_month"]),
-                                                                     int(marriage_obj["marriage_day"]))
+                        date_to_use = datetime.date(int(marriage_obj["marriage_year"]),
+                                                    int(marriage_obj["marriage_month"]),
+                                                    int(marriage_obj["marriage_day"]))
+
+                        secondary_feedback = check_doc_details_dont_already_exist_for_user(date_to_use)
+                        if secondary_feedback is not None:
+                            return render_template('add_document/add_doc_6_add_document_details.html', user=user,
+                                                   doc=document, feedback=secondary_feedback,
+                                                   form_data=marriage_obj)
+
+                        document.change_of_name_date = date_to_use
                         document.age_on_certificate = int(marriage_obj["marriage_age"])
                         document.registration_district = marriage_obj["marriage_reg_district"]
                         document.marriage_number = int(marriage_obj["marriage_no"])
@@ -553,17 +566,29 @@ def new_document_add_document_details():
                 elif document.document_type == "Deed Poll":
                     deed_poll_obj = {"deed_date_day": request.form["deed_date_day"],
                                      "deed_date_month": request.form["deed_date_month"],
-                                     "deed_date_year": request.form["deed_date_year"],
-                                     "deed_registered": request.form["deed_registered"]}
+                                     "deed_date_year": request.form["deed_date_year"]}
+                    if "deed_registered" in request.form:
+                        deed_poll_obj.update({"deed_registered": request.form["deed_registered"]})
+                    else:
+                        deed_poll_obj.update({"deed_registered": None})
+
                     initial_feedback = check_doc_details_mandatory_fields(deed_poll_obj)
 
                     if initial_feedback is not None:
                         return render_template('add_document/add_doc_6_add_document_details.html', user=user,
-                                               doc=document, feedback=initial_feedback)
+                                               doc=document, feedback=initial_feedback, form_data=deed_poll_obj)
                     else:
-                        document.change_of_name_date = datetime.date(int(deed_poll_obj["deed_date_year"]),
-                                                                     int(deed_poll_obj["deed_date_month"]),
-                                                                     int(deed_poll_obj["deed_date_day"]))
+                        date_to_use = datetime.date(int(deed_poll_obj["deed_date_year"]),
+                                                    int(deed_poll_obj["deed_date_month"]),
+                                                    int(deed_poll_obj["deed_date_day"]))
+
+                        secondary_feedback = check_doc_details_dont_already_exist_for_user(date_to_use)
+                        if secondary_feedback is not None:
+                            return render_template('add_document/add_doc_6_add_document_details.html', user=user,
+                                                   doc=document, feedback=secondary_feedback,
+                                                   form_data=deed_poll_obj)
+
+                        document.change_of_name_date = date_to_use
                         document.registered_with_courts = gen_functions.yesno_to_bool(request.form["deed_registered"])
 
                         logger.log_benchmark("Add New Document: Add Document Details")
@@ -578,11 +603,19 @@ def new_document_add_document_details():
 
                     if initial_feedback is not None:
                         return render_template('add_document/add_doc_6_add_document_details.html', user=user,
-                                               doc=document, feedback=initial_feedback)
+                                               doc=document, feedback=initial_feedback, form_data=decree_absolute_obj)
                     else:
-                        document.change_of_name_date = datetime.date(int(decree_absolute_obj["decree_date_year"]),
-                                                                     int(decree_absolute_obj["decree_date_month"]),
-                                                                     int(decree_absolute_obj["decree_date_day"]))
+                        date_to_use = datetime.date(int(decree_absolute_obj["decree_date_year"]),
+                                                    int(decree_absolute_obj["decree_date_month"]),
+                                                    int(decree_absolute_obj["decree_date_day"]))
+
+                        secondary_feedback = check_doc_details_dont_already_exist_for_user(date_to_use)
+                        if secondary_feedback is not None:
+                            return render_template('add_document/add_doc_6_add_document_details.html', user=user,
+                                                   doc=document, feedback=secondary_feedback,
+                                                   form_data=decree_absolute_obj)
+
+                        document.change_of_name_date = date_to_use
                         document.issuing_court = request.form["decree_issuing_court"]
                         document.number_of_matter = request.form["decree_no_of_matter"]
 
@@ -596,7 +629,16 @@ def new_document_add_document_details():
         return redirect(url_for('index'))
 
 
-def check_doc_details_mandatory_fields(fields_to_check: dict):
+def check_doc_details_dont_already_exist_for_user(day_to_check: datetime.date) -> str or None:
+    for check_users_doc in user.docs:
+        if document.document_type == check_users_doc.document_type:
+            if day_to_check == check_users_doc.change_of_name_date:
+                return "A {} for this date ({}) already exists."\
+                    .format(check_users_doc.document_type, check_users_doc.change_of_name_date_as_string)
+    return None
+
+
+def check_doc_details_mandatory_fields(fields_to_check: dict) -> str or None:
     if document.document_type == "Marriage Certificate":
         if fields_to_check["marriage_day"] == "" or fields_to_check["marriage_month"] == "" or \
                 fields_to_check["marriage_year"] == "" or fields_to_check["marriage_age"] == "" or \
@@ -647,6 +689,8 @@ def check_doc_details_mandatory_fields(fields_to_check: dict):
         elif int(fields_to_check["deed_date_year"]) > datetime.datetime.now().year or \
                 int(fields_to_check["deed_date_year"]) < 1900:
             return "The deed poll year value is not valid."
+        elif fields_to_check["deed_registered"] is None:
+            return "You must select if the document has been registered with the courts or not."
         else:
             return None
     elif document.document_type == "Decree Absolute":
@@ -673,6 +717,11 @@ def check_doc_details_mandatory_fields(fields_to_check: dict):
             return "The number of matter value must be a number."
         elif int(fields_to_check["decree_no_of_matter"]) < 1:
             return "The number of matter value is not valid."
+        elif document.marriage_certificate_details.change_of_name_date >= \
+                datetime.date(int(fields_to_check["decree_date_year"]), int(fields_to_check["decree_date_month"]),
+                              int(fields_to_check["decree_date_day"])):
+            return "The Decree Absolute date cannot be before or on the associated wedding date ({})."\
+                .format(document.marriage_certificate_details.change_of_name_date_as_string)
         else:
             return None
     else:
@@ -690,6 +739,10 @@ def new_document_confirm_document_details():
             if len(request.form) > 0:
                 if request.form["doc_details_correct"] == "on":
                     document.complete = True
+                    # If document isn't verified with courts, there is no way to validate it
+                    if document.document_type == "Deed Poll":
+                        if not document.registered_with_courts:
+                            document.document_verified_state = VerifiedStates.NOT_APPLICABLE
                     user.docs.append(document)
                     logger.log_benchmark("Add New Document: Confirm Document Details")
                     return redirect(url_for('new_document_finish'))
@@ -713,6 +766,24 @@ def new_document_finish():
     else:
         return redirect(url_for('index'))
 
+
+@app.route('/verify_document/<code>')
+def verify_document(code):
+    if user.logged_in:
+        if code == "0":
+            logger.log_benchmark("Add New Document: Validate Document")
+            return render_template('add_document/document_verification.html', user=user, doc=document)
+        elif code == "1":
+            document.document_verified_state = VerifiedStates.AWAITING_VERIFICATION
+        elif code == "2":
+            document.document_verified_state = VerifiedStates.VERIFICATION_FAILED
+        elif code == "9":
+            document.document_verified_state = VerifiedStates.VERIFIED
+
+        document.document_verified_org = "CYN Auto Admin"
+        return redirect(url_for('index'))
+    else:
+        return redirect(url_for('index'))
 
 # New Document Processes
 
@@ -785,9 +856,11 @@ def generate_code_access_details():
                 if request.form["org"] == "":
                     feedback = "You need to select an organisation."
                 elif request.form["code_duration_number"] == "":
-                    feedback = "You need to specify a duration value"
+                    feedback = "You need to specify a duration value."
+                elif not request.form["code_duration_number"].isnumeric():
+                    feedback = "The duration value must be a number."
                 elif request.form["code_duration_type"] == "":
-                    feedback = "You need to specify a duration denomination"
+                    feedback = "You need to specify a duration denomination."
 
                 if len(feedback) > 0:
                     return render_template('generate_access_code/generate_code_2_details.html', user=user,
@@ -862,6 +935,135 @@ def manage_access_code(code_to_retrieve):
         if code_to_manage is not None:
             return render_template('manage_access_code/manage_code.html', user=user, code_to_use=code_to_manage,
                                    success=success_to_display)
+        else:
+            return redirect(url_for('manage_all_access_codes'))
+    else:
+        return redirect(url_for('index'))
+
+
+@app.route('/extend_code/<code_to_extend>', methods=['GET', 'POST'])
+def extend_access_code(code_to_extend):
+    global user, success_message
+
+    if user.logged_in:
+        feedback = ""
+        code_to_manage = None
+
+        for code in user.access_codes:
+            if code.code_id == int(code_to_extend):
+                code_to_manage = code
+                break
+
+        if code_to_manage is not None:
+            if request.method == 'GET':
+                return render_template('manage_access_code/extend_code.html', user=user, code_to_use=code_to_manage)
+            elif request.method == 'POST':
+                if len(request.form) > 0:
+                    if request.form["code_duration_number"] == "":
+                        feedback = "You need to specify a duration value."
+                    elif not request.form["code_duration_number"].isnumeric():
+                        feedback = "The duration value must be a number."
+                    elif request.form["code_duration_type"] == "":
+                        feedback = "You need to specify a duration denomination."
+
+                    if len(feedback) > 0:
+                        return render_template('manage_access_code/extend_code.html', user=user,
+                                               code_to_use=code_to_manage, feedback=feedback)
+
+                    code_to_manage.duration_time = int(request.form["code_duration_number"])
+                    code_to_manage.duration_denominator = request.form["code_duration_type"]
+                    code_to_manage.generate_expiry_from_duration()
+
+                    success_message = "The code was successfully extended."
+                    return redirect(url_for('manage_access_code', code_to_retrieve=code_to_manage.code_id))
+                else:
+                    feedback = "You must specify the values you wish to extend the code by to extend it."
+                    return render_template('manage_access_code/extend_code.html', user=user, code_to_use=code_to_manage,
+                                           feedback=feedback)
+        else:
+            return redirect(url_for('manage_all_access_codes'))
+    else:
+        return redirect(url_for('index'))
+
+
+@app.route('/revoke_code/<code_to_revoke>', methods=['GET', 'POST'])
+def revoke_access_code(code_to_revoke):
+    global user, success_message
+
+    if user.logged_in:
+        feedback = ""
+        code_to_manage = None
+
+        for code in user.access_codes:
+            if code.code_id == int(code_to_revoke):
+                code_to_manage = code
+                break
+
+        if code_to_manage is not None:
+            if request.method == 'GET':
+                return render_template('manage_access_code/revoke_code.html', user=user, code_to_use=code_to_manage)
+            elif request.method == 'POST':
+                if len(request.form) > 0:
+                    if request.form["confirm_revoke"] == "on":
+                        code_to_manage.expiry = datetime.datetime.now()
+                        code_to_manage.accessed_state = AccessStates.REVOKED
+
+                        success_message = "The code was successfully revoked."
+                        return redirect(url_for('manage_access_code', code_to_retrieve=code_to_manage.code_id))
+                    else:
+                        feedback = "You must confirm that you want to revoke the code."
+                        return render_template('manage_access_code/revoke_code.html', user=user,
+                                               code_to_use=code_to_manage, feedback=feedback)
+                else:
+                    feedback = "You must confirm that you want to revoke the code."
+                    return render_template('manage_access_code/revoke_code.html', user=user, code_to_use=code_to_manage,
+                                           feedback=feedback)
+        else:
+            return redirect(url_for('manage_all_access_codes'))
+    else:
+        return redirect(url_for('index'))
+
+
+@app.route('/reactivate_code/<code_to_reactivate>', methods=['GET', 'POST'])
+def reactivate_access_code(code_to_reactivate):
+    global user, success_message
+
+    if user.logged_in:
+        feedback = ""
+        code_to_manage = None
+
+        for code in user.access_codes:
+            if code.code_id == int(code_to_reactivate):
+                code_to_manage = code
+                break
+
+        if code_to_manage is not None:
+            if request.method == 'GET':
+                return render_template('manage_access_code/reactivate_code.html', user=user, code_to_use=code_to_manage)
+            elif request.method == 'POST':
+                if len(request.form) > 0:
+                    if request.form["code_duration_number"] == "":
+                        feedback = "You need to specify a duration value."
+                    elif not request.form["code_duration_number"].isnumeric():
+                        feedback = "The duration value must be a number."
+                    elif request.form["code_duration_type"] == "":
+                        feedback = "You need to specify a duration denomination."
+
+                    if len(feedback) > 0:
+                        return render_template('manage_access_code/reactivate_code.html', user=user,
+                                               code_to_use=code_to_manage, feedback=feedback)
+
+                    code_to_manage.duration_time = int(request.form["code_duration_number"])
+                    code_to_manage.duration_denominator = request.form["code_duration_type"]
+                    code_to_manage.generate_expiry_from_duration()
+                    code_to_manage.accessed_state = AccessStates.ACTIVE
+
+                    success_message = "The code was successfully reactivated."
+                    return redirect(url_for('manage_access_code', code_to_retrieve=code_to_manage.code_id))
+                else:
+                    feedback = "You must specify how long the code should be reactivated for."
+                    return render_template('manage_access_code/reactivate_code.html.html', user=user,
+                                           code_to_use=code_to_manage, feedback=feedback)
         else:
             return redirect(url_for('manage_all_access_codes'))
     else:

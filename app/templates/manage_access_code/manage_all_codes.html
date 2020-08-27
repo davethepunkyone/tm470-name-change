@@ -10,7 +10,6 @@
       <div class="main_w_nav">
          <h1>Manage All Access Codes</h1>
          {% if user.access_codes|length > 0 %}
-            <p>There are {{ user.access_codes|length }} codes to display here.</p>
          <table>
             <tr>
                <th>Access Code</th>
@@ -21,7 +20,7 @@
 
             {% for code in user.access_codes %}
             <tr>
-               <td {% if code.accessed_state.name == 'ACTIVE' %}class="active"{% endif %}>
+               <td class="bold_text {% if code.accessed_state.name == 'ACTIVE' %}active{% endif %}">
                   <a href="{{ url_for('manage_access_code', code_to_retrieve=code.code_id) }}">
                      {{ code.generated_code }}</a></td>
                <td {% if code.accessed_state.name == 'ACTIVE' %}class="active"{% endif %}>
@@ -37,7 +36,6 @@
          {% else %}
             <p>There are no uploaded codes to manage.</p>
          {% endif %}
-         <p class="to_remove"> This is a test to see how this behaves </p>
       </div>
       {% endblock %}
    </body>

@@ -45,12 +45,16 @@
 
          <h2>Actions</h2>
          {% if code_to_use.accessed_state.name == "ACTIVE" %}
-            <a href=""><div class="general_actions_button">Extend Code Duration</div></a>
-            <a href=""><div class="general_actions_button">Revoke Access Code</div></a>
+            <a href="{{ url_for('extend_access_code', code_to_extend=code_to_use.code_id) }}">
+               <div class="general_actions_button">Extend Code Duration</div></a>
+            <a href="{{ url_for('revoke_access_code', code_to_revoke=code_to_use.code_id) }}">
+               <div class="general_actions_button">Revoke Access Code</div></a>
          {% elif code_to_use.accessed_state.name == "EXPIRED" %}
-            <a href=""><div class="general_actions_button">Reactivate Code</div></a>
+            <a href="{{ url_for('reactivate_access_code', code_to_reactivate=code_to_use.code_id) }}">
+               <div class="general_actions_button">Reactivate Code</div></a>
          {% endif %}
-         <a href=""><div class="general_actions_button">Return to Manage Access Codes</div></a>
+         <a href="{{ url_for('manage_all_access_codes') }}">
+            <div class="general_actions_button">Return to Manage Access Codes</div></a>
       </div>
       {% endblock %}
    </body>

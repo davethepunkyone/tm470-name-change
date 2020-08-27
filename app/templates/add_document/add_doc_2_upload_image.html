@@ -38,8 +38,13 @@
          <p>Please upload an image of your {{doc.document_type}} using the form below:</p>
          <form id="file_upload" action="{{ url_for('new_document_upload_image') }}" method="post"
                enctype=multipart/form-data>
-           <input type="file" id="user_file" name="user_file">
+            <div class="placeholder_box">Drag image here <br />(placeholder)</div>
+            or: <input type="file" id="user_file" name="user_file">
          </form>
+         <p><div class="mini_info_header">Supported image formats:</div>
+               <div class="mini_info_text">PNG, JPEG, JPG, GIF</div><br />
+            <div class="mini_info_header">Maximum file size:</div>
+               <div class="mini_info_text">10MB</div></p>
          {% if doc.uploaded_file_path != None %}
             <p class="to_remove">A file has been uploaded, so there is no need to add another file unless you need to
                replace the originally uploaded document.</p>

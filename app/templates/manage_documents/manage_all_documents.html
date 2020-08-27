@@ -10,7 +10,6 @@
       <div class="main_w_nav">
          <h1>Manage All Documents</h1>
          {% if user.docs|length > 0 %}
-            <p>There are {{ user.docs|length }} documents to display here.</p>
          <table>
             <tr>
                <th>Document Type</th>
@@ -20,18 +19,20 @@
 
             {% for doc in user.docs %}
             <tr>
-               <td><a href="{{ url_for('manage_document', doc_id=doc.document_id) }}">{{doc.document_type}}</a></td>
-               <td>{{doc.change_of_name_date_as_string}}</td>
+               <td class="bold_text"><a href="{{ url_for('manage_document', doc_id=doc.document_id) }}">{{doc.document_type}}</a></td>
+               <td class="center_content">{{doc.change_of_name_date_as_string}}</td>
                {% if doc.document_verified_state.name == 'VERIFIED' %}
-                  <td><img class="icon_image" title="Verified"
+                  <td class="center_content"><img class="icon_image" title="Verified"
                            src={{url_for('static', filename='verified_tick.png')}}></td>
                {% elif doc.document_verified_state.name == 'AWAITING_VERIFICATION' %}
-                  <td><img class="icon_image" title="Awaiting Verification"
+                  <td class="center_content"><img class="icon_image" title="Awaiting Verification"
                            src={{url_for('static', filename='awaiting_verification.png')}}></td>
                {% elif doc.document_verified_state.name == 'VERIFICATION_FAILED' %}
-                  <td>Verification Failed</td>
+                  <td class="center_content">Verification Failed</td>
+               {% elif doc.document_verified_state.name == 'NOT_APPLICABLE' %}
+                  <td class="center_content">N/A</td>
                {% else %}
-                  <td></td>
+                  <td class="center_content">-</td>
                {% endif %}
             </tr>
             {% endfor %}

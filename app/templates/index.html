@@ -27,7 +27,7 @@
 
             <p>
                <button form="login" class="process_continue_button">Login</button>
-               <form action="">
+               <form action="{{url_for('forgot_password')}}">
                   <button class="process_back_button" type="submit">Forgotten Password?</button>
                </form>
             </p>
@@ -35,17 +35,19 @@
             <div class="spacer"></div>
          </div>
 
-            <p class="to_remove">
-               <a class="general_link" href="{{ url_for('test', test_conditions=1) }}">Login as test user 1</a><br />
-               <a class="general_link" href="{{ url_for('test', test_conditions=2) }}">Login as test user 2</a><br />
-               <a class="general_link" href="{{ url_for('test', test_conditions=3) }}">Login as test user 3</a><br />
-            </p>
-
-
          <h2>What is Change Your Name?</h2>
          <p>Change your name is a service that allows people who have legally changed their name to easily communicate
          their new name to any organisations or companies from the comfort of their own home.</p>
-         <p><a class="general_link" href="{{ url_for('new_account_signup') }}">Create a new account for free</a></p>
+         <p>
+            <a href="{{ url_for('new_account_signup') }}">
+                  <div class="recommended_actions_button">Create a new account for free</div></a>
+         </p>
+
+         <p class="to_remove">
+            <a class="general_link" href="{{ url_for('test', test_conditions=1) }}">Login as test user 1</a><br />
+            <a class="general_link" href="{{ url_for('test', test_conditions=2) }}">Login as test user 2</a><br />
+            <a class="general_link" href="{{ url_for('test', test_conditions=3) }}">Login as test user 3</a><br />
+         </p>
 
       </div>
       {% endblock %}

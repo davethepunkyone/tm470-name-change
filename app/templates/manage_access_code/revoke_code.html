@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+   <head>
+      <meta charset="utf-8">
+      <title>Change Your Name: Revoke Access Code ({{ code_to_use.code_id }})</title>
+   </head>
+   <body>
+      {% extends "template_general.html" %}
+      {% block content %}
+      <div class="main_w_nav">
+         <h1>Revoke Access Code: {{ code_to_use.uploaded_document.document_type }} for
+            {{ code_to_use.access_for_org.org_name }}</h1>
+
+         {% if feedback %}
+            <p class="failure_message">{{ feedback }}</p>
+         {% endif %}
+
+         <h2>Access Code Details</h2>
+         <table>
+            <tr>
+               <th>Code</th>
+               <td>{{ code_to_use.generated_code }}</td>
+            </tr>
+            <tr>
+               <th>Document</th>
+               <td>{{ code_to_use.uploaded_document.document_type }}
+                  ({{ code_to_use.uploaded_document.change_of_name_date_as_string }})</td>
+            </tr>
+            <tr>
+               <th>Organisation</th>
+               <td>{{ code_to_use.access_for_org.org_name }}</td>
+            </tr>
+            <tr>
+               <th>Expiry Time</th>
+               <td>{{ code_to_use.expiry_to_string }}</td>
+            </tr>
+            <tr>
+               <th>Access Status</th>
+               <td>{{ code_to_use.accessed_state.name|replace("_", " ")|capitalize }}</td>
+            </tr>
+         </table>
+
+         <p><div class="spacer"></div></p>
+
+         <h2>Revoke Code</h2>
+         <form id="revoke_code_for" action="{{ url_for('revoke_access_code', code_to_revoke=code_to_use.code_id) }}" method="post">
+            <input type="checkbox" id="confirm_revoke" name="confirm_revoke">
+               <label for="confirm_revoke">I confirm I want to revoke access for this code.</label><br /><br />
+         </form>
+
+         <p>
+            <form action="{{ url_for('manage_access_code', code_to_retrieve=code_to_use.code_id) }}">
+               <button class="process_back_button" type="submit">Cancel</button>
+            </form>
+            <button form="revoke_code_for" class="process_continue_button">Revoke</button>
+         </p>
+      </div>
+      {% endblock %}
+   </body>

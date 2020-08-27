@@ -23,7 +23,7 @@ class Document:
         self._address = None
         self._change_of_name_date = None
         self._document_verified_state = VerifiedStates.NOT_VERIFIED
-        self._document_verified_id = None
+        self._document_verified_org = None
         self._added_datetime = None
         self._last_modified_datetime = None
         if len(kwargs) > 0:
@@ -53,8 +53,8 @@ class Document:
                 self.change_of_name_date = value
             elif key == "document_verified_state":
                 self.document_verified_state = value
-            elif key == "document_verified_id":
-                self.document_verified_id = value
+            elif key == "document_verified_org":
+                self.document_verified_org = value
             elif key == "added_datetime":
                 self.added_datetime = value
             elif key == "last_modified_datetime":
@@ -188,20 +188,12 @@ class Document:
                              .format(document_verified_state_val))
 
     @property
-    def document_verified_id(self) -> int:
-        return self._document_verified_id
+    def document_verified_org(self) -> str:
+        return self._document_verified_org
 
-    @document_verified_id.setter
-    def document_verified_id(self, document_verified_id_val: int) -> None:
-        try:
-            id_to_use = int(document_verified_id_val)
-            self._document_verified_id = id_to_use
-        except ValueError:
-            if document_verified_id_val is None:
-                self._document_verified_id = None
-            else:
-                raise ValueError("Document Verified ID provided ({0}) is not numeric or None"
-                                 .format(document_verified_id_val))
+    @document_verified_org.setter
+    def document_verified_org(self, org: str) -> None:
+        self._document_verified_org = org
 
     @property
     def added_datetime(self) -> datetime:
