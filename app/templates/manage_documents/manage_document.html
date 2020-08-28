@@ -16,9 +16,34 @@
                <td>{{ doc.document_id }}</td>
             </tr>
             <tr>
+               <th>Uploaded Image File</th>
+               <td class="bold_text"><a href="{{ url_for('view_document_image', doc_id=doc.document_id) }}">Click to view</a></td>
+            </tr>
+            <tr>
                <th>Verified Status</th>
                <td>{{ doc.document_verified_state.name|replace("_", " ")|capitalize }}</td>
             </tr>
+
+            {% if doc.document_verified_state.name == 'AWAITING_VERIFICATION' %}
+            <tr>
+               <th>Being Verified By</th>
+               <td>{{ doc.document_verified_org }}</td>
+            </tr>
+
+            {% elif doc.document_verified_state.name == 'VERIFIED' or doc.document_verified_state.name == 'VERIFICATION_FAILED' %}
+            <tr>
+               <th>Verified By</th>
+               <td>{{ doc.document_verified_org }}</td>
+            </tr>
+            {% endif %}
+
+            {% if doc.document_verified_state.name == 'VERIFICATION_FAILED' %}
+            <tr>
+               <th>Failure Reason</th>
+               <td>{{ doc.document_verified_comment }}</td>
+            </tr>
+            {% endif %}
+
          </table>
          <h2>Document Details</h2>
          <table>
@@ -71,13 +96,50 @@
                   </a></td>
             </tr>
             {% endif %}
+
+            {% if doc.old_forenames != "" %}
+               <tr>
+                  <th>Previous Forename(s)</th>
+                  <td>{{ doc.old_forenames }}</td>
+               </tr>
+            {% endif %}
+            {% if doc.old_surname != "" %}
+               <tr>
+                  <th>Previous Surname</th>
+                  <td>{{ doc.old_surname }}</td>
+               </tr>
+            {% endif %}
+            {% if doc.new_forenames != "" %}
+               <tr>
+                  <th>New Forename(s)</th>
+                  <td>{{ doc.new_forenames }}</td>
+               </tr>
+            {% endif %}
+            {% if doc.new_surname != "" %}
+               <tr>
+                  <th>New Surname</th>
+                  <td>{{ doc.new_surname }}</td>
+               </tr>
+            {% endif %}
+            <tr>
+               <th>Address</th>
+               <td>{{ doc.address.house_name_no }}<br />
+               {{ doc.address.line_1 }}<br />
+               {% if doc.address.line_2 != "" %}{{ doc.address.line_2 }}<br />{% endif %}
+               {{ doc.address.town_city }}<br />
+               {{ doc.address.postcode }}</td>
+            </tr>
          </table>
-         <h2>Document Image</h2>
-         <p class="to_remove"> Add image in here </p>
-         <!--<img class="upload_reference_image" src={{url_for('static', filename='placeholder_doc.png')}} /></div>-->
+
          <h2>Actions</h2>
-         <a href=""><div class="general_actions_button">Remove Document</div></a>
-         <a href=""><div class="general_actions_button">Return to Manage Documents</div></a>
+         {% if doc.document_verified_state.name == 'NOT_VERIFIED' %}
+            <a href="{{ url_for('verify_document', code=0) }}">
+               <div class="general_actions_button">Get Document Verified</div></a>
+         {% endif %}
+         <a href="{{ url_for('remove_document', doc_id=doc.document_id) }}">
+            <div class="general_actions_button">Remove Document</div></a>
+         <a href="{{ url_for('manage_all_documents') }}">
+            <div class="general_actions_button">Return to Manage Documents</div></a>
       </div>
       {% endblock %}
    </body>

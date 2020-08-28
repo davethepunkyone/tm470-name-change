@@ -17,6 +17,23 @@ def confirm_email_address_value(email: str) -> bool:
         return False
 
 
+def confirm_password_value(pwd: str) -> str or None:
+    caps_check = re.compile('[A-Z]', re.UNICODE)
+    lower_check = re.compile('[a-z]', re.UNICODE)
+    num_check = re.compile('[0-9]', re.UNICODE)
+
+    if len(pwd) < 8:
+        return "The password must be at least 8 characters."
+    elif caps_check.search(pwd) is None:
+        return "The password requires at least one uppercase letter."
+    elif lower_check.search(pwd) is None:
+        return "The password requires at least one lowercase letter."
+    elif num_check.search(pwd) is None:
+        return "The password requires at least one numeric character."
+    else:
+        return None
+
+
 def generate_code(no_of_chars: int) -> str:
     code = ""
     characters = string.ascii_letters + string.digits

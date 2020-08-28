@@ -24,7 +24,7 @@
             </div>
          </div>
          <h2>Access Code Details</h2>
-         <p>Please provide the details for accessing your {{ code_to_use.uploaded_document.document_type }}:</p>
+         <p>Please provide the details of the organisation that requires access to your {{ code_to_use.uploaded_document.document_type }}:</p>
 
          {% if feedback %}
             <p class="failure_message">{{ feedback }}</p>
@@ -35,16 +35,30 @@
             <select id="org" name="org">
                <option></option>
                {% for org in orgs %}
-                  <option value="{{ org.org_id }}">{{ org.org_name }}</option>
+                  <option value="{{ org.org_id }}"
+                    {% if form_data %}
+                     {% if form_data.org == org.org_id %}selected{% endif %}
+                    {% elif code_to_use.access_for_org.org_name == org.org_name %}selected{% endif %}>
+                              {{ org.org_name }}</option>
                {% endfor %}
             </select><br />
 
             <label for="code_duration_number" class="form_evener">Duration of access: </label>
-            <input type="text" id="code_duration_number" name="code_duration_number" maxlength="2">
-            <select id="code_duration_type" name="code_duration_type">
+            <input type="text" id="code_duration_number" name="code_duration_number" maxlength="2" class="dateboxes_two"
+            {% if form_data %} value="{{ form_data.code_duration_number }}"
+            {% elif code_to_use.duration_time != None %} value="{{ code_to_use.duration_time }}" {% endif %}>
+            <select id="code_duration_type" name="code_duration_type" class="denominator_box"
+            {% if form_data %} value="{{ form_data.code_duration_type }}"
+            {% elif code_to_use.duration_denominator != None %} value="{{ code_to_use.duration_denominator }}" {% endif %}>
                <option></option>
-               <option value="hours">Hours</option>
-               <option value="days">Days</option>
+               <option value="hours"
+                    {% if form_data %}
+                     {% if form_data.code_duration_type == 'hours' %}selected{% endif %}
+                    {% elif code_to_use.duration_denominator == 'hours' %}selected{% endif %}>Hour(s)</option>
+               <option value="days"
+               {% if form_data %}
+                     {% if form_data.code_duration_type == 'days' %}selected{% endif %}
+                    {% elif code_to_use.duration_denominator == 'days' %}selected{% endif %}>Day(s)</option>
             </select><br />
          </form>
 

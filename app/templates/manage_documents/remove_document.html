@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+   <head>
+      <meta charset="utf-8">
+      <title>Change Your Name: Manage Document ({{ doc.document_type }})</title>
+   </head>
+   <body>
+      {% extends "template_general.html" %}
+      {% block content %}
+      <div class="main_w_nav">
+         <h1>Manage Document: {{ doc.document_type }}</h1>
+         <h2>Document Summary</h2>
+         <table>
+            <tr>
+               <th>Document ID</th>
+               <td>{{ doc.document_id }}</td>
+            </tr>
+            <tr>
+               <th>Verified Status</th>
+               <td>{{ doc.document_verified_state.name|replace("_", " ")|capitalize }}</td>
+            </tr>
+
+               <th>Change of Name Date</th>
+               <td>{{ doc.change_of_name_date_as_string }}</td>
+            </tr>
+
+            {% if doc.document_type == "Marriage Certificate" %}
+            <tr>
+               <th>Age On Certificate</th>
+               <td>{{ doc.age_on_certificate }}</td>
+            </tr>
+            <tr>
+               <th>Registration District</th>
+               <td>{{ doc.registration_district }}</td>
+            </tr>
+            <tr>
+               <th>Marriage Number</th>
+               <td>{{ doc.marriage_number }}</td>
+            </tr>
+            {% endif %}
+
+            {% if doc.document_type == "Deed Poll" %}
+            <tr>
+               <th>Registered With Courts</th>
+               <td>
+                  {% if doc.registered_with_courts %}
+                  Yes
+                  {% else %}
+                  No
+                  {% endif %}</td>
+            </tr>
+            {% endif %}
+
+            {% if doc.document_type == "Decree Absolute" %}
+            <tr>
+               <th>Issuing Court</th>
+               <td>{{ doc.issuing_court }}</td>
+            </tr>
+            <tr>
+               <th>No. of Matter</th>
+               <td>{{ doc.number_of_matter }}</td>
+            </tr>
+            <tr>
+               <th>Associated Document</th>
+               <td>
+                  <a href="{{ url_for('manage_document', doc_id=doc.marriage_certificate_details.document_id) }}">
+                  {{ doc.marriage_certificate_details.doc_type_with_date }}
+                  </a></td>
+            </tr>
+            {% endif %}
+         </table>
+
+         <h2>Document Removal</h2>
+         <p>Please be advised that removing this document will remove any data relating to this document (including any
+         verification that has taken place) and will immediately expire any active access codes associated with the
+         document.</p>
+         <form id="remove_document" action="{{ url_for('remove_document', doc_id=doc.document_id) }}" method="post">
+            <input type="checkbox" id="confirm_remove" name="confirm_remove">
+               <label for="confirm_remove">I confirm I want to remove this document and any data associated with it.</label><br /><br />
+         </form>
+
+         <p>
+            <form action="{{ url_for('manage_document', doc_id=doc.document_id) }}">
+               <button class="process_back_button" type="submit">Cancel</button>
+            </form>
+            <button form="remove_document" class="process_continue_button">Remove</button>
+         </p>
+      </div>
+      {% endblock %}
+   </body>

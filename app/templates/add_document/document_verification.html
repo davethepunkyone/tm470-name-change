@@ -11,7 +11,7 @@
          <h1>Document Verification</h1>
          <p class="to_remove">This page would allow you to verify your uploaded document.</p>
          <h2>Admin Actions (Prototype Only)</h2>
-         Set document to:<br />
+         Set {{ doc.document_type }} to:<br />
          <a href="{{ url_for('verify_document', code=1) }}">
                      <div class="recommended_actions_button">Awaiting Verification</div></a>
          <a href="{{ url_for('verify_document', code=2) }}">

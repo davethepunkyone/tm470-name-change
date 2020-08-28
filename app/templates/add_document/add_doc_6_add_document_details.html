@@ -43,13 +43,13 @@
          <form id="add_marriage_cert_details" action="{{ url_for('new_document_add_document_details') }}"
                method="post">
             <label for="marriage_date_day" class="form_evener">Marriage Date (dd/mm/yyyy): </label>
-            <input type="text" id="marriage_date_day" name="marriage_date_day" maxlength="2"
+            <input type="text" id="marriage_date_day" name="marriage_date_day" maxlength="2" class="dateboxes_two"
             {% if form_data %} value="{{ form_data.marriage_day }}"
             {% elif doc.change_of_name_date != None %} value="{{ doc.change_of_name_date.strftime('%d') }}"{% endif %}>
-            <input type="text" id="marriage_date_month" name="marriage_date_month" maxlength="2"
+            <input type="text" id="marriage_date_month" name="marriage_date_month" maxlength="2" class="dateboxes_two"
             {% if form_data %} value="{{ form_data.marriage_month }}"
             {% elif doc.change_of_name_date != None %} value="{{ doc.change_of_name_date.strftime('%m') }}"{% endif %}>
-            <input type="text" id="marriage_date_year" name="marriage_date_year" maxlength="4"
+            <input type="text" id="marriage_date_year" name="marriage_date_year" maxlength="4" class="dateboxes_four"
             {% if form_data %} value="{{ form_data.marriage_year }}"
             {% elif doc.change_of_name_date != None %} value="{{ doc.change_of_name_date.strftime('%Y') }}"{% endif %}><br />
             <label for="marriage_age_cert" class="form_evener">Age On Certificate: </label>
@@ -78,13 +78,13 @@
          <form id="add_deed_poll_details" action="{{ url_for('new_document_add_document_details') }}"
                method="post">
             <label for="deed_date_day" class="form_evener">Deed Poll Date (dd/mm/yyyy): </label>
-            <input type="text" id="deed_date_day" name="deed_date_day" maxlength="2"
+            <input type="text" id="deed_date_day" name="deed_date_day" maxlength="2" class="dateboxes_two"
             {% if form_data %} value="{{ form_data.deed_date_day }}"
             {% elif doc.change_of_name_date != None %} value="{{ doc.change_of_name_date.strftime('%d') }}"{% endif %}>
-            <input type="text" id="deed_date_month" name="deed_date_month" maxlength="2"
+            <input type="text" id="deed_date_month" name="deed_date_month" maxlength="2" class="dateboxes_two"
             {% if form_data %} value="{{ form_data.deed_date_month }}"
             {% elif doc.change_of_name_date != None %} value="{{ doc.change_of_name_date.strftime('%m') }}"{% endif %}>
-            <input type="text" id="deed_date_year" name="deed_date_year" maxlength="4"
+            <input type="text" id="deed_date_year" name="deed_date_year" maxlength="4" class="dateboxes_four"
             {% if form_data %} value="{{ form_data.deed_date_year }}"
             {% elif doc.change_of_name_date != None %} value="{{ doc.change_of_name_date.strftime('%Y') }}"{% endif %}><br /><br />
             <label>Has this been registered with the courts:</label><br />
@@ -116,13 +116,13 @@
          <form id="add_decree_absolute_details" action="{{ url_for('new_document_add_document_details') }}"
                method="post">
             <label for="decree_date_day" class="form_evener">Decree Date (dd/mm/yyyy): </label>
-            <input type="text" id="decree_date_day" name="decree_date_day" maxlength="2"
+            <input type="text" id="decree_date_day" name="decree_date_day" maxlength="2" class="dateboxes_two"
             {% if form_data %} value="{{ form_data.decree_date_day }}"
             {% elif doc.change_of_name_date != None %} value="{{ doc.change_of_name_date.strftime('%d') }}"{% endif %}>
-            <input type="text" id="decree_date_month" name="decree_date_month" maxlength="2"
+            <input type="text" id="decree_date_month" name="decree_date_month" maxlength="2" class="dateboxes_two"
             {% if form_data %} value="{{ form_data.decree_date_month }}"
             {% elif doc.change_of_name_date != None %} value="{{ doc.change_of_name_date.strftime('%m') }}"{% endif %}>
-            <input type="text" id="decree_date_year" name="decree_date_year" maxlength="4"
+            <input type="text" id="decree_date_year" name="decree_date_year" maxlength="4" class="dateboxes_four"
             {% if form_data %} value="{{ form_data.decree_date_year }}"
             {% elif doc.change_of_name_date != None %} value="{{ doc.change_of_name_date.strftime('%Y') }}"{% endif %}><br />
             <label for="decree_issuing_court" class="form_evener">Issuing Court: </label>

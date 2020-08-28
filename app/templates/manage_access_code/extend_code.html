@@ -45,12 +45,12 @@
          <h2>Code Extension Length</h2>
          <p>Specify how long you wish to extend the length of the code by:</p>
          <form id="extend_code_for" action="{{ url_for('extend_access_code', code_to_extend=code_to_use.code_id) }}" method="post">
-            <label for="code_duration_number" class="form_evener">Extend by: </label>
-            <input type="text" id="code_duration_number" name="code_duration_number" maxlength="2">
-            <select id="code_duration_type" name="code_duration_type">
+            <label for="code_duration_number" class="form_evener">Extend duration by: </label>
+            <input type="text" id="code_duration_number" name="code_duration_number" maxlength="2" class="dateboxes_two">
+            <select id="code_duration_type" name="code_duration_type" class="denominator_box">
                <option></option>
-               <option value="hours">Hours</option>
-               <option value="days">Days</option>
+               <option value="hours">Hour(s)</option>
+               <option value="days">Day(s)</option>
             </select><br />
          </form>
 

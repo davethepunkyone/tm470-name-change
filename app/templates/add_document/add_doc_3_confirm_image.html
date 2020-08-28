@@ -39,7 +39,7 @@
          <img class="upload_image" src={{url_for('static', filename='uploads/' + doc.uploaded_file_path)}} />
          <form id="doc_successful_upload" action="{{ url_for('new_document_confirm_image') }}" method="post">
             <input type="checkbox" id="image_correct" name="image_correct">
-            <label for="image_correct">I confirm all text is viewable in the image above.</label><br /><br />
+            <label for="image_correct">I confirm that I can read the contents of the uploaded image above.</label><br /><br />
          </form>
          <p>
             <form action="{{ url_for('new_document_upload_image') }}">

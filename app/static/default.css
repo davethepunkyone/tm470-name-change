@@ -116,6 +116,27 @@ td.center_content {
   text-align: center;
 }
 
+input[type=text], input[type=password], select {
+  padding: 3px 3px;
+  box-sizing: border-box;
+}
+
+input[type=text].dateboxes_two {
+  width: 40px;
+}
+
+input[type=text].dateboxes_four {
+  width: 50px;
+}
+
+input[type=text].longer_box, input[type=password].longer_box, select.longer_box {
+  width: 250px;
+}
+
+select.denominator_box {
+  width: 75px;
+}
+
 .main {
   position: fixed;
   top: 85px;

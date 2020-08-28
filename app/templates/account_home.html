@@ -9,18 +9,17 @@
       {% block content %}
       <div class="main_w_nav">
          <h1>Account Home</h1>
-         <p>Welcome! You're currently logged in as: {{ user.forenames }} {{ user.surname }} ({{ user.email }}).</p>
+         <p>Welcome! I'm currently logged in as: {{ user.forenames }} {{ user.surname }} ({{ user.email }}).</p>
          {% if user.docs|length == 0 %}
             <div class="darkened_section">
                <h2>Getting Started</h2>
                <p>Before you can start using this service, you will need to upload a copy of your name change
-                  documentation.  Click the Add Document option below to get started adding a new document ready
-                  to use!</p>
+                  documentation.  Click the Add Document option below to get started adding a new document!</p>
                <a href="{{ url_for('new_document_selection') }}">
                   <div class="recommended_actions_button">Add a new document</div></a>
             </div>
          {% else %}
-            <h2>Your Uploaded Documents</h2>
+            <h2>My Uploaded Documents</h2>
             <p class="to_remove">Table here</p>
             <div class="darkened_section">
                <h2>Recommended Actions</h2>

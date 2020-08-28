@@ -24,6 +24,7 @@ class Document:
         self._change_of_name_date = None
         self._document_verified_state = VerifiedStates.NOT_VERIFIED
         self._document_verified_org = None
+        self._document_verified_comment = None
         self._added_datetime = None
         self._last_modified_datetime = None
         if len(kwargs) > 0:
@@ -55,6 +56,8 @@ class Document:
                 self.document_verified_state = value
             elif key == "document_verified_org":
                 self.document_verified_org = value
+            elif key == "document_verified_comment":
+                self.document_verified_comment = value
             elif key == "added_datetime":
                 self.added_datetime = value
             elif key == "last_modified_datetime":
@@ -194,6 +197,14 @@ class Document:
     @document_verified_org.setter
     def document_verified_org(self, org: str) -> None:
         self._document_verified_org = org
+
+    @property
+    def document_verified_comment(self) -> str:
+        return self._document_verified_comment
+
+    @document_verified_comment.setter
+    def document_verified_comment(self, comment: str) -> None:
+        self._document_verified_comment = comment
 
     @property
     def added_datetime(self) -> datetime:

@@ -8,6 +8,7 @@ from werkzeug.utils import secure_filename
 import globals.mock_variables as mock
 import globals.global_variables as gv
 import functions.general_functions as gen_functions
+from classes.organisation_class import Organisation
 
 from classes.user_class import User
 from classes.signup_verification_class import SignupVerification
@@ -19,9 +20,9 @@ from classes.accesscode_class import AccessCode
 from classes.address_class import Address
 from classes.enums import VerifiedStates, AccessStates
 from functions.org_functions import return_specific_org_from_list
-from functions.access_code_functions import generate_unique_access_code
+from functions.access_code_functions import generate_unique_access_code, check_expiry_date_is_valid
 from functions.signup_functions import generate_signup_code, email_user_notepad_version, generate_capcha_code, \
-    confirm_email_address_value
+    confirm_email_address_value, confirm_password_value
 from functions.file_upload_functions import check_filetype_valid, get_upload_directory, return_filename
 
 from functions import logging_functions as logger
@@ -196,6 +197,8 @@ def new_account_signup():
 
 
 def check_new_user_form_values(form_data: dict, secure_form_data: dict):
+    pw_check = confirm_password_value(secure_form_data["pwd"])
+
     if form_data["forenames"] == "" or form_data["surname"] == "" or form_data["email"] == "" or \
             form_data["email_confirm"] == "" or secure_form_data["pwd"] == "" or \
             secure_form_data["pwd_confirm"] == "" or secure_form_data["capcha"] == "":
@@ -206,10 +209,10 @@ def check_new_user_form_values(form_data: dict, secure_form_data: dict):
         return "The email address and confirm email address do not match."
     elif not confirm_email_address_value(form_data["email"]):
         return "The email address is not in a valid format."
+    elif pw_check is not None:
+        return pw_check
     elif secure_form_data["pwd"] != secure_form_data["pwd_confirm"]:
         return "The password and confirm password do not match."
-    elif len(secure_form_data["pwd"]) < 8:
-        return "The password provided is too short, it must be at least 8 characters."
     elif capcha_on_page != secure_form_data["capcha"]:
         return "The CAPCHA verification failed, please try again."
     else:
@@ -633,7 +636,7 @@ def check_doc_details_dont_already_exist_for_user(day_to_check: datetime.date) -
     for check_users_doc in user.docs:
         if document.document_type == check_users_doc.document_type:
             if day_to_check == check_users_doc.change_of_name_date:
-                return "A {} for this date ({}) already exists."\
+                return "A {} for this date ({}) already exists." \
                     .format(check_users_doc.document_type, check_users_doc.change_of_name_date_as_string)
     return None
 
@@ -720,7 +723,7 @@ def check_doc_details_mandatory_fields(fields_to_check: dict) -> str or None:
         elif document.marriage_certificate_details.change_of_name_date >= \
                 datetime.date(int(fields_to_check["decree_date_year"]), int(fields_to_check["decree_date_month"]),
                               int(fields_to_check["decree_date_day"])):
-            return "The Decree Absolute date cannot be before or on the associated wedding date ({})."\
+            return "The Decree Absolute date cannot be before or on the associated wedding date ({})." \
                 .format(document.marriage_certificate_details.change_of_name_date_as_string)
         else:
             return None
@@ -777,6 +780,7 @@ def verify_document(code):
             document.document_verified_state = VerifiedStates.AWAITING_VERIFICATION
         elif code == "2":
             document.document_verified_state = VerifiedStates.VERIFICATION_FAILED
+            document.document_verified_comment = "Document is not in good enough condition to verify."
         elif code == "9":
             document.document_verified_state = VerifiedStates.VERIFIED
 
@@ -785,20 +789,29 @@ def verify_document(code):
     else:
         return redirect(url_for('index'))
 
+
 # New Document Processes
 
 
 @app.route('/manage_all_documents')
 def manage_all_documents():
+    global success_message
+
     if user.logged_in:
+        success_to_display = success_message
+        if success_message is not None:
+            success_message = None
+
         logger.log_benchmark("Manage All Documents")
-        return render_template('manage_documents/manage_all_documents.html', user=user)
+        return render_template('manage_documents/manage_all_documents.html', user=user, success=success_to_display)
     else:
         return redirect(url_for('index'))
 
 
 @app.route('/manage_document/<doc_id>')
 def manage_document(doc_id):
+    global document
+
     if user.logged_in:
         doc_to_manage = None
         for doc_to_check in user.docs:
@@ -808,7 +821,72 @@ def manage_document(doc_id):
 
         if doc_to_manage is not None:
             logger.log_benchmark("Manage Document")
+            document = doc_to_manage
             return render_template('manage_documents/manage_document.html', user=user, doc=doc_to_manage)
+        else:
+            return redirect(url_for('manage_all_documents'))
+    else:
+        return redirect(url_for('index'))
+
+
+@app.route('/view_document_image/<doc_id>')
+def view_document_image(doc_id):
+    global document
+
+    if user.logged_in:
+        doc_to_manage = None
+        for doc_to_check in user.docs:
+            if doc_to_check.document_id == int(doc_id):
+                doc_to_manage = doc_to_check
+                break
+
+        if doc_to_manage is not None:
+            logger.log_benchmark("View Document Image")
+            document = doc_to_manage
+            return render_template('manage_documents/view_document_image.html', user=user, doc=doc_to_manage)
+        else:
+            return redirect(url_for('manage_all_documents'))
+    else:
+        return redirect(url_for('index'))
+
+
+@app.route('/remove_document/<doc_id>', methods=['GET', 'POST'])
+def remove_document(doc_id):
+    global user, document, success_message
+
+    if user.logged_in:
+        doc_to_manage = None
+        for doc_to_check in user.docs:
+            if doc_to_check.document_id == int(doc_id):
+                doc_to_manage = doc_to_check
+                break
+
+        if doc_to_manage is not None:
+            if request.method == 'GET':
+                return render_template('manage_documents/remove_document.html', user=user, doc=doc_to_manage)
+            elif request.method == 'POST':
+                if len(request.form) > 0:
+                    if request.form["confirm_remove"] == "on":
+
+                        # Stop Access Codes from working
+                        for codes in user.access_codes:
+                            if codes.uploaded_document.document_id == doc_to_manage.document_id:
+                                if codes.accessed_state in (AccessStates.ACTIVE, AccessStates.EXPIRED):
+                                    codes.accessed_state = AccessStates.DOCUMENT_NO_LONGER_AVAILABLE
+                                codes.expiry = datetime.datetime.now()
+
+                        user.docs.remove(doc_to_manage)
+
+                        success_message = "The document was successfully removed."
+                        return redirect(url_for('manage_all_documents'))
+                    else:
+                        feedback = "You must confirm that you want to remove the document."
+                        return render_template('manage_documents/remove_document.html', user=user, doc=doc_to_manage,
+                                               feedback=feedback)
+                else:
+                    feedback = "You must confirm that you want to remove the document."
+                    return render_template('manage_documents/remove_document.html', user=user, doc=doc_to_manage,
+                                           feedback=feedback)
         else:
             return redirect(url_for('manage_all_documents'))
     else:
@@ -853,22 +931,43 @@ def generate_code_access_details():
                                    code_to_use=access_code, orgs=orgs)
         elif request.method == 'POST':
             if len(request.form) > 0:
-                if request.form["org"] == "":
-                    feedback = "You need to select an organisation."
-                elif request.form["code_duration_number"] == "":
-                    feedback = "You need to specify a duration value."
-                elif not request.form["code_duration_number"].isnumeric():
-                    feedback = "The duration value must be a number."
-                elif request.form["code_duration_type"] == "":
-                    feedback = "You need to specify a duration denomination."
+                feedback = None
 
-                if len(feedback) > 0:
+                form_data = {"org": request.form["org"],
+                             "code_duration_number": request.form["code_duration_number"],
+                             "code_duration_type": request.form["code_duration_type"]}
+
+                if form_data["org"].isnumeric():
+                    form_data.update({"org": int(request.form["org"])})
+
+                if form_data["org"] == "":
+                    feedback = "You need to select an organisation."
+                elif form_data["code_duration_number"] == "":
+                    feedback = "You need to specify a duration value."
+                elif not form_data["code_duration_number"].isnumeric():
+                    feedback = "The duration value must be a number."
+                elif int(form_data["code_duration_number"]) < 1:
+                    feedback = "The duration value must be greater than 0."
+                elif form_data["code_duration_type"] not in ("hours", "days"):
+                    feedback = "You need to specify a valid duration denomination."
+
+                if feedback is None:
+                    org_to_check = return_specific_org_from_list(orgs, int(form_data["org"]))
+                    if org_to_check.requires_verified and \
+                            access_code.uploaded_document.document_verified_state != VerifiedStates.VERIFIED:
+                        feedback = "This organisation requires the document to be verified first."
+
+                if feedback is None:
+                    feedback = check_expiry_date_is_valid(None, int(form_data["code_duration_number"]),
+                                                          form_data["code_duration_type"])
+
+                if feedback is not None:
                     return render_template('generate_access_code/generate_code_2_details.html', user=user,
-                                           code_to_use=access_code, orgs=orgs, feedback=feedback)
+                                           code_to_use=access_code, orgs=orgs, feedback=feedback, form_data=form_data)
                 else:
-                    access_code.access_for_org = return_specific_org_from_list(orgs, int(request.form["org"]))
-                    access_code.duration_time = int(request.form["code_duration_number"])
-                    access_code.duration_denominator = request.form["code_duration_type"]
+                    access_code.access_for_org = return_specific_org_from_list(orgs, int(form_data["org"]))
+                    access_code.duration_time = int(form_data["code_duration_number"])
+                    access_code.duration_denominator = form_data["code_duration_type"]
                     logger.log_benchmark("Generate Access Code: Access Code Details (Submit)")
                     return redirect(url_for('generate_code_confirm_access_details'))
             else:
@@ -959,14 +1058,23 @@ def extend_access_code(code_to_extend):
                 return render_template('manage_access_code/extend_code.html', user=user, code_to_use=code_to_manage)
             elif request.method == 'POST':
                 if len(request.form) > 0:
+                    feedback = None
+
                     if request.form["code_duration_number"] == "":
                         feedback = "You need to specify a duration value."
                     elif not request.form["code_duration_number"].isnumeric():
                         feedback = "The duration value must be a number."
-                    elif request.form["code_duration_type"] == "":
+                    elif int(request.form["code_duration_number"]) < 1:
+                        feedback = "The duration value must be greater than 0."
+                    elif request.form["code_duration_type"] not in ("hours", "days"):
                         feedback = "You need to specify a duration denomination."
 
-                    if len(feedback) > 0:
+                    if feedback is None:
+                        feedback = check_expiry_date_is_valid(code_to_manage.expiry,
+                                                              int(request.form["code_duration_number"]),
+                                                              request.form["code_duration_type"])
+
+                    if feedback is not None:
                         return render_template('manage_access_code/extend_code.html', user=user,
                                                code_to_use=code_to_manage, feedback=feedback)
 
@@ -1046,7 +1154,9 @@ def reactivate_access_code(code_to_reactivate):
                         feedback = "You need to specify a duration value."
                     elif not request.form["code_duration_number"].isnumeric():
                         feedback = "The duration value must be a number."
-                    elif request.form["code_duration_type"] == "":
+                    elif int(request.form["code_duration_number"]) < 1:
+                        feedback = "The duration value must be greater than 0."
+                    elif request.form["code_duration_type"] not in ("hours", "days"):
                         feedback = "You need to specify a duration denomination."
 
                     if len(feedback) > 0:

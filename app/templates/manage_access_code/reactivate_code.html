@@ -46,11 +46,11 @@
          <p>Specify how long you wish to reactivate this code for:</p>
          <form id="extend_code_for" action="{{ url_for('reactivate_access_code', code_to_reactivate=code_to_use.code_id) }}" method="post">
             <label for="code_duration_number" class="form_evener">Reactivate for: </label>
-            <input type="text" id="code_duration_number" name="code_duration_number" maxlength="2">
-            <select id="code_duration_type" name="code_duration_type">
+            <input type="text" id="code_duration_number" name="code_duration_number" maxlength="2" class="dateboxes_two">
+            <select id="code_duration_type" name="code_duration_type" class="denominator_box">
                <option></option>
-               <option value="hours">Hours</option>
-               <option value="days">Days</option>
+               <option value="hours">Hour(s)</option>
+               <option value="days">Day(s)</option>
             </select><br />
          </form>
 

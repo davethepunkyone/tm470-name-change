@@ -24,17 +24,20 @@ def mock_list_of_users() -> list:
 
     # User 1
     doc1 = MarriageCertificate(document_id=100, change_of_name_date=datetime.date(2020, 2, 1),
-                               document_verified_state=VerifiedStates.VERIFIED)
+                               document_verified_state=VerifiedStates.VERIFIED,
+                               uploaded_file_path="placeholder_doc.png")
 
     mock_user_1 = User(user_id=5, forenames="Testy", surname="McTesterson", email= "testemail1@testing.com",
                        prototype_password="test1", verified_state=True, docs=doc1)
 
     # User 2
     doc2 = MarriageCertificate(document_id=200, change_of_name_date=datetime.date(2019, 7, 4),
-                               document_verified_state=VerifiedStates.VERIFIED)
+                               document_verified_state=VerifiedStates.VERIFIED,
+                               uploaded_file_path="placeholder_doc.png")
 
     doc3 = DeedPoll(document_id=201, change_of_name_date=datetime.date(2018, 12, 25),
-                    document_verified_state=VerifiedStates.AWAITING_VERIFICATION)
+                    document_verified_state=VerifiedStates.AWAITING_VERIFICATION,
+                    uploaded_file_path="placeholder_doc.png")
 
     code1 = AccessCode(code_id=1474, generated_code="987654", expiry=datetime.datetime(2020, 9, 1, 12, 35, 12),
                        uploaded_document=doc2, access_for_org=org1, accessed_state=AccessStates.EXPIRED)

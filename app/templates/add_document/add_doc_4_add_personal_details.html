@@ -58,6 +58,7 @@
             {% if form_data %} value="{{ form_data.surname }}"
             {% elif doc.new_surname != None %} value="{{ doc.new_surname }}" {% endif %}><br /><br />
 
+            <p>Note: Please provide the address listed on the document uploaded.</p>
             <label for="address_name_no" class="form_evener">House Name / Number*: </label>
             <input type="text" id="address_name_no" name="address_name_no"
             {% if form_data %} value="{{ form_data.address_house_name_no }}"

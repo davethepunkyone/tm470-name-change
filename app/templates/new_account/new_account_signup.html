@@ -17,21 +17,21 @@
 
          <form id="signup" action="{{ url_for('new_account_signup') }}" method="post">
             <label for="forenames" class="form_evener">Forename(s): </label>
-            <input type="text" id="forenames" name="forenames"
+            <input type="text" id="forenames" name="forenames" class="longer_box"
                    {% if form_data %}value="{{ form_data.forenames}}"{% endif %}}><br />
             <label for="surname" class="form_evener">Surname: </label>
-            <input type="text" id="surname" name="surname"
+            <input type="text" id="surname" name="surname" class="longer_box"
                    {% if form_data %}value="{{ form_data.surname}}"{% endif %}}><br />
             <label for="email" class="form_evener">Email Address: </label>
-            <input type="text" id="email" name="email"
+            <input type="text" id="email" name="email" class="longer_box"
                    {% if form_data %}value="{{ form_data.email}}"{% endif %}}><br />
             <label for="email_confirm" class="form_evener">Confirm Email Address: </label>
-            <input type="text" id="email_confirm" name="email_confirm"
+            <input type="text" id="email_confirm" name="email_confirm" class="longer_box"
                    {% if form_data %}value="{{ form_data.email_confirm}}"{% endif %}}><br />
             <label for="pwd" class="form_evener">Password: </label>
-            <input type="password" id="pwd" name="password"><br />
+            <input type="password" id="pwd" name="password" class="longer_box"><br />
             <label for="pwd_confirm" class="form_evener">Confirm Password: </label>
-            <input type="password" id="pwd_confirm" name="password_confirm"><br />
+            <input type="password" id="pwd_confirm" name="password_confirm" class="longer_box"><br />
             <label for="capcha" class="form_evener">CAPCHA (Repeat code): </label><div id="capcha_code">{{ capcha }}</div>
             <input type="text" id="capcha" name="capcha"><br /><br />
             <input type="checkbox" id="agreement" name="agreement">

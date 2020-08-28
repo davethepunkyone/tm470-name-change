@@ -14,6 +14,7 @@
             <tr>
                <th>Access Code</th>
                <th>Document</th>
+               <th>Organisation</th>
                <th>Status</th>
                <th>Expiry Time</th>
             </tr>
@@ -25,6 +26,8 @@
                      {{ code.generated_code }}</a></td>
                <td {% if code.accessed_state.name == 'ACTIVE' %}class="active"{% endif %}>
                   {{ code.uploaded_document.document_type }}</td>
+               <td {% if code.accessed_state.name == 'ACTIVE' %}class="active"{% endif %}>
+                  {{ code.access_for_org.org_name }}</td>
                <td {% if code.accessed_state.name == 'ACTIVE' %}class="active"{% endif %}>
                   {{ code.accessed_state.name|replace("_", " ")|capitalize }}</td>
                <td {% if code.accessed_state.name == 'ACTIVE' %}class="active"{% endif %}>

@@ -37,7 +37,20 @@
             </tr>
             <tr>
                <th>Duration of access</th>
-               <td>{{ code_to_use.duration_time }} {{ code_to_use.duration_denominator }}</td>
+               <td>{{ code_to_use.duration_time }}
+                  {% if code_to_use.duration_denominator == "hours" %}
+                     {% if code_to_use.duration_time == 1 %}
+                     hour
+                     {% else %}
+                     hours
+                     {% endif %}
+                  {% elif code_to_use.duration_denominator == "days" %}
+                     {% if code_to_use.duration_time == 1 %}
+                     day
+                     {% else %}
+                     days
+                     {% endif %}
+                  {% endif %}</td>
             </tr>
          </table>
 

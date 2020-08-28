@@ -9,6 +9,11 @@
       {% block content %}
       <div class="main_w_nav">
          <h1>Manage All Documents</h1>
+
+         {% if success %}
+            <p class="success_message">{{ success }}</p>
+         {% endif %}
+
          {% if user.docs|length > 0 %}
          <table>
             <tr>
@@ -28,11 +33,14 @@
                   <td class="center_content"><img class="icon_image" title="Awaiting Verification"
                            src={{url_for('static', filename='awaiting_verification.png')}}></td>
                {% elif doc.document_verified_state.name == 'VERIFICATION_FAILED' %}
-                  <td class="center_content">Verification Failed</td>
+                  <td class="center_content"><img class="icon_image" title="Verification Failed"
+                           src={{url_for('static', filename='verification_failed.png')}}></td>
                {% elif doc.document_verified_state.name == 'NOT_APPLICABLE' %}
-                  <td class="center_content">N/A</td>
+                  <td class="center_content"><img class="icon_image" title="Not Applicable"
+                           src={{url_for('static', filename='not_applicable.png')}}></td>
                {% else %}
-                  <td class="center_content">-</td>
+                  <td class="center_content"><img class="icon_image" title="Uploaded"
+                           src={{url_for('static', filename='uploaded.png')}}></td>
                {% endif %}
             </tr>
             {% endfor %}
