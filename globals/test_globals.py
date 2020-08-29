@@ -1,3 +1,6 @@
+"""This file contains all the variables used for unit testing different elements of the system to ensure
+a stable build."""
+
 import datetime
 from classes.marriagecertificate_class import MarriageCertificate
 from classes.address_class import Address

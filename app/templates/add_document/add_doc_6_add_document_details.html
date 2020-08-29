@@ -42,111 +42,108 @@
             <p class="failure_message">{{ feedback }}</p>
          {% endif %}
 
-         <p>Please provide the following details for the {{ doc.document_type }}:</p>
+         <div class="spacer"></div>
 
-         {% if doc.document_type == "Marriage Certificate" %}
-         <form id="add_marriage_cert_details" action="{{ url_for('new_document_add_document_details') }}"
-               method="post">
-            <label for="marriage_date_day" class="form_evener">Marriage Date (dd/mm/yyyy): </label>
-            <input type="text" id="marriage_date_day" name="marriage_date_day" maxlength="2" class="dateboxes_two"
-            {% if form_data %} value="{{ form_data.marriage_day }}"
-            {% elif doc.change_of_name_date != None %} value="{{ doc.change_of_name_date.strftime('%d') }}"{% endif %}>
-            <input type="text" id="marriage_date_month" name="marriage_date_month" maxlength="2" class="dateboxes_two"
-            {% if form_data %} value="{{ form_data.marriage_month }}"
-            {% elif doc.change_of_name_date != None %} value="{{ doc.change_of_name_date.strftime('%m') }}"{% endif %}>
-            <input type="text" id="marriage_date_year" name="marriage_date_year" maxlength="4" class="dateboxes_four"
-            {% if form_data %} value="{{ form_data.marriage_year }}"
-            {% elif doc.change_of_name_date != None %} value="{{ doc.change_of_name_date.strftime('%Y') }}"{% endif %}><br />
-            <label for="marriage_age_cert" class="form_evener">Age On Certificate: </label>
-            <input type="text" id="marriage_age_cert" name="marriage_age_cert"
-            {% if form_data %} value="{{ form_data.marriage_age }}"
-            {% elif doc.age_on_certificate != None %} value="{{ doc.age_on_certificate }}"{% endif %}><br />
-            <label for="marriage_reg_district" class="form_evener">Registration District: </label>
-            <input type="text" id="marriage_reg_district" name="marriage_reg_district"
-            {% if form_data %} value="{{ form_data.marriage_reg_district }}"
-            {% elif doc.registration_district != None %} value="{{ doc.registration_district }}"{% endif %}><br />
-            <label for="marriage_no" class="form_evener">Marriage Number: </label>
-            <input type="text" id="marriage_no" name="marriage_no"
-            {% if form_data %} value="{{ form_data.marriage_no }}"
-            {% elif doc.marriage_number != None %} value="{{ doc.marriage_number }}"{% endif %}><br />
-         </form>
+         <div class="float_left">
+            <p>Please provide the following details for the {{ doc.document_type }}:</p>
 
-         <p>
-            <form action="{{ url_for('new_document_confirm_personal_details') }}" >
-               <button class="process_back_button" type="submit">Back</button>
-            </form>
-            <button form="add_marriage_cert_details" class="process_continue_button">Next</button>
-         </p>
+            {% if doc.document_type == "Marriage Certificate" %}
+               <form id="add_marriage_cert_details" action="{{ url_for('new_document_add_document_details') }}"
+                     method="post">
+                  <label for="marriage_date_day" class="form_evener">Marriage Date (dd/mm/yyyy): </label>
+                  <input type="text" id="marriage_date_day" name="marriage_date_day" maxlength="2" class="dateboxes_two"
+                  {% if form_data %} value="{{ form_data.marriage_day }}"
+                  {% elif doc.change_of_name_date != None %} value="{{ doc.change_of_name_date.strftime('%d') }}"{% endif %}>
+                  <input type="text" id="marriage_date_month" name="marriage_date_month" maxlength="2" class="dateboxes_two"
+                  {% if form_data %} value="{{ form_data.marriage_month }}"
+                  {% elif doc.change_of_name_date != None %} value="{{ doc.change_of_name_date.strftime('%m') }}"{% endif %}>
+                  <input type="text" id="marriage_date_year" name="marriage_date_year" maxlength="4" class="dateboxes_four"
+                  {% if form_data %} value="{{ form_data.marriage_year }}"
+                  {% elif doc.change_of_name_date != None %} value="{{ doc.change_of_name_date.strftime('%Y') }}"{% endif %}><br />
+                  <label for="marriage_age_cert" class="form_evener">Age On Certificate: </label>
+                  <input type="text" id="marriage_age_cert" name="marriage_age_cert"
+                  {% if form_data %} value="{{ form_data.marriage_age }}"
+                  {% elif doc.age_on_certificate != None %} value="{{ doc.age_on_certificate }}"{% endif %}><br />
+                  <label for="marriage_reg_district" class="form_evener">Registration District: </label>
+                  <input type="text" id="marriage_reg_district" name="marriage_reg_district"
+                  {% if form_data %} value="{{ form_data.marriage_reg_district }}"
+                  {% elif doc.registration_district != None %} value="{{ doc.registration_district }}"{% endif %}><br />
+                  <label for="marriage_no" class="form_evener">Marriage Number: </label>
+                  <input type="text" id="marriage_no" name="marriage_no"
+                  {% if form_data %} value="{{ form_data.marriage_no }}"
+                  {% elif doc.marriage_number != None %} value="{{ doc.marriage_number }}"{% endif %}><br />
+               </form>
+            {% endif %}
+
+            {% if doc.document_type == "Deed Poll" %}
+               <form id="add_deed_poll_details" action="{{ url_for('new_document_add_document_details') }}"
+                     method="post">
+                  <label for="deed_date_day" class="form_evener">Deed Poll Date (dd/mm/yyyy): </label>
+                  <input type="text" id="deed_date_day" name="deed_date_day" maxlength="2" class="dateboxes_two"
+                  {% if form_data %} value="{{ form_data.deed_date_day }}"
+                  {% elif doc.change_of_name_date != None %} value="{{ doc.change_of_name_date.strftime('%d') }}"{% endif %}>
+                  <input type="text" id="deed_date_month" name="deed_date_month" maxlength="2" class="dateboxes_two"
+                  {% if form_data %} value="{{ form_data.deed_date_month }}"
+                  {% elif doc.change_of_name_date != None %} value="{{ doc.change_of_name_date.strftime('%m') }}"{% endif %}>
+                  <input type="text" id="deed_date_year" name="deed_date_year" maxlength="4" class="dateboxes_four"
+                  {% if form_data %} value="{{ form_data.deed_date_year }}"
+                  {% elif doc.change_of_name_date != None %} value="{{ doc.change_of_name_date.strftime('%Y') }}"{% endif %}><br /><br />
+                  <label>Has this been registered with the courts:</label><br />
+                  <input type="radio" id="deed_poll_reg_yes" name="deed_registered" value="yes"
+                  {% if form_data %}
+                     {% if form_data.deed_registered == 'yes' %} checked="checked"
+                     {% elif form_data.deed_registered != 'no' and doc.registered_with_courts  == True %} checked="checked" {% endif %}
+                  {% elif doc.registered_with_courts == True %} checked="checked"
+                  {% endif %}>
+                  <label for="deed_poll_reg_yes">Yes</label><br />
+                  <input type="radio" id="deed_poll_reg_no" name="deed_registered" value="no"
+                  {% if form_data %}
+                     {% if form_data.deed_registered == 'no' %} checked="checked"
+                     {% elif form_data.deed_registered != 'yes' and not doc.registered_with_courts == False %} checked="checked" {% endif %}
+                  {% elif doc.registered_with_courts == False %} checked="checked"
+                  {% endif %}>
+                  <label for="deed_poll_reg_no">No</label><br />
+               </form>
+            {% endif %}
+
+            {% if doc.document_type == "Decree Absolute" %}
+
+               <form id="add_decree_absolute_details" action="{{ url_for('new_document_add_document_details') }}"
+                     method="post">
+                  <label for="decree_date_day" class="form_evener">Decree Date (dd/mm/yyyy): </label>
+                  <input type="text" id="decree_date_day" name="decree_date_day" maxlength="2" class="dateboxes_two"
+                  {% if form_data %} value="{{ form_data.decree_date_day }}"
+                  {% elif doc.change_of_name_date != None %} value="{{ doc.change_of_name_date.strftime('%d') }}"{% endif %}>
+                  <input type="text" id="decree_date_month" name="decree_date_month" maxlength="2" class="dateboxes_two"
+                  {% if form_data %} value="{{ form_data.decree_date_month }}"
+                  {% elif doc.change_of_name_date != None %} value="{{ doc.change_of_name_date.strftime('%m') }}"{% endif %}>
+                  <input type="text" id="decree_date_year" name="decree_date_year" maxlength="4" class="dateboxes_four"
+                  {% if form_data %} value="{{ form_data.decree_date_year }}"
+                  {% elif doc.change_of_name_date != None %} value="{{ doc.change_of_name_date.strftime('%Y') }}"{% endif %}><br />
+                  <label for="decree_issuing_court" class="form_evener">Issuing Court: </label>
+                  <input type="text" id="decree_issuing_court" name="decree_issuing_court"
+                  {% if form_data %} value="{{ form_data.decree_issuing_court }}"
+                  {% elif doc.issuing_court != None %} value="{{ doc.issuing_court }}"{% endif %}><br />
+                  <label for="decree_no_of_matter" class="form_evener">Number of Matter: </label>
+                  <input type="text" id="decree_no_of_matter" name="decree_no_of_matter"
+                  {% if form_data %} value="{{ form_data.decree_no_of_matter }}"
+                  {% elif doc.number_of_matter != None %} value="{{ doc.number_of_matter }}"{% endif %}><br />
+               </form>
          {% endif %}
+         </div>
+         <div class="upload_reference_image_div">Uploaded Image:<br />
+            <img class="upload_reference_image" src={{url_for('static', filename='uploads/' + doc.uploaded_file_path)}} /></div>
 
-         {% if doc.document_type == "Deed Poll" %}
-         <form id="add_deed_poll_details" action="{{ url_for('new_document_add_document_details') }}"
-               method="post">
-            <label for="deed_date_day" class="form_evener">Deed Poll Date (dd/mm/yyyy): </label>
-            <input type="text" id="deed_date_day" name="deed_date_day" maxlength="2" class="dateboxes_two"
-            {% if form_data %} value="{{ form_data.deed_date_day }}"
-            {% elif doc.change_of_name_date != None %} value="{{ doc.change_of_name_date.strftime('%d') }}"{% endif %}>
-            <input type="text" id="deed_date_month" name="deed_date_month" maxlength="2" class="dateboxes_two"
-            {% if form_data %} value="{{ form_data.deed_date_month }}"
-            {% elif doc.change_of_name_date != None %} value="{{ doc.change_of_name_date.strftime('%m') }}"{% endif %}>
-            <input type="text" id="deed_date_year" name="deed_date_year" maxlength="4" class="dateboxes_four"
-            {% if form_data %} value="{{ form_data.deed_date_year }}"
-            {% elif doc.change_of_name_date != None %} value="{{ doc.change_of_name_date.strftime('%Y') }}"{% endif %}><br /><br />
-            <label>Has this been registered with the courts:</label><br />
-            <input type="radio" id="deed_poll_reg_yes" name="deed_registered" value="yes"
-            {% if form_data %}
-               {% if form_data.deed_registered == 'yes' %} checked="checked"
-               {% elif form_data.deed_registered != 'no' and doc.registered_with_courts  == True %} checked="checked" {% endif %}
-            {% elif doc.registered_with_courts == True %} checked="checked"
-            {% endif %}>
-            <label for="deed_poll_reg_yes">Yes</label><br />
-            <input type="radio" id="deed_poll_reg_no" name="deed_registered" value="no"
-            {% if form_data %}
-               {% if form_data.deed_registered == 'no' %} checked="checked"
-               {% elif form_data.deed_registered != 'yes' and not doc.registered_with_courts == False %} checked="checked" {% endif %}
-            {% elif doc.registered_with_courts == False %} checked="checked"
-            {% endif %}>
-            <label for="deed_poll_reg_no">No</label><br />
-         </form>
-
-         <p>
-            <form action="{{ url_for('new_document_confirm_personal_details') }}">
-               <button class="process_back_button" type="submit">Back</button>
-            </form>
-            <button form="add_deed_poll_details" class="process_continue_button">Next</button>
-         </p>
-         {% endif %}
-
-         {% if doc.document_type == "Decree Absolute" %}
-         <form id="add_decree_absolute_details" action="{{ url_for('new_document_add_document_details') }}"
-               method="post">
-            <label for="decree_date_day" class="form_evener">Decree Date (dd/mm/yyyy): </label>
-            <input type="text" id="decree_date_day" name="decree_date_day" maxlength="2" class="dateboxes_two"
-            {% if form_data %} value="{{ form_data.decree_date_day }}"
-            {% elif doc.change_of_name_date != None %} value="{{ doc.change_of_name_date.strftime('%d') }}"{% endif %}>
-            <input type="text" id="decree_date_month" name="decree_date_month" maxlength="2" class="dateboxes_two"
-            {% if form_data %} value="{{ form_data.decree_date_month }}"
-            {% elif doc.change_of_name_date != None %} value="{{ doc.change_of_name_date.strftime('%m') }}"{% endif %}>
-            <input type="text" id="decree_date_year" name="decree_date_year" maxlength="4" class="dateboxes_four"
-            {% if form_data %} value="{{ form_data.decree_date_year }}"
-            {% elif doc.change_of_name_date != None %} value="{{ doc.change_of_name_date.strftime('%Y') }}"{% endif %}><br />
-            <label for="decree_issuing_court" class="form_evener">Issuing Court: </label>
-            <input type="text" id="decree_issuing_court" name="decree_issuing_court"
-            {% if form_data %} value="{{ form_data.decree_issuing_court }}"
-            {% elif doc.issuing_court != None %} value="{{ doc.issuing_court }}"{% endif %}><br />
-            <label for="decree_no_of_matter" class="form_evener">Number of Matter: </label>
-            <input type="text" id="decree_no_of_matter" name="decree_no_of_matter"
-            {% if form_data %} value="{{ form_data.decree_no_of_matter }}"
-            {% elif doc.number_of_matter != None %} value="{{ doc.number_of_matter }}"{% endif %}><br />
-         </form>
-
+         <div class="spacer"></div>
          <p>
             <form action="{{ url_for('new_document_confirm_personal_details') }}">
                <button class="process_back_button" type="submit">Back</button>
             </form>
-            <button form="add_decree_absolute_details" class="process_continue_button">Next</button>
+            <button {% if doc.document_type == "Marriage Certificate" %}form="add_marriage_cert_details"
+               {% elif doc.document_type == "Deed Poll" %}form="add_deed_poll_details"
+               {% elif doc.document_type == "Decree Absolute" %}form="add_decree_absolute_details"{% endif %}
+                  class="process_continue_button">Next</button>
          </p>
-         {% endif %}
 
       </div>
       {% endblock %}

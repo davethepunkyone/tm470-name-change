@@ -37,62 +37,67 @@
             <p class="failure_message">{{ feedback }}</p>
          {% endif %}
 
-         <p>Please confirm the following details are correct for the {{ doc.document_type }}:</p>
-
-         <table>
-         {% if doc.document_type == "Marriage Certificate" %}
-            <tr>
-               <th>Marriage Date</th>
-               <td class="fixed_extender">{{ doc.change_of_name_date_as_string }}</td>
-            </tr>
-            <tr>
-               <th>Age On Certificate</th>
-               <td class="fixed_extender">{{ doc.age_on_certificate }}</td>
-            </tr>
-            <tr>
-               <th>Registration District</th>
-               <td class="fixed_extender">{{ doc.registration_district }}</td>
-            </tr>
-            <tr>
-               <th>Marriage Number</th>
-               <td class="fixed_extender">{{ doc.marriage_number }}</td>
-            </tr>
-
-         {% elif doc.document_type == "Deed Poll" %}
-            <tr>
-               <th>Date on Deed Poll</th>
-               <td class="fixed_extender">{{ doc.change_of_name_date_as_string }}</td>
-            </tr>
-            <tr>
-               <th>Registered With Courts</th>
-               <td class="fixed_extender">{% if doc.registered_with_courts %}Yes{% else %}No{% endif %}</td>
-            </tr>
-
-         {% elif doc.document_type == "Decree Absolute" %}
-            <tr>
-               <th>Decree Date</th>
-               <td class="fixed_extender">{{ doc.change_of_name_date_as_string }}</td>
-            </tr>
-            <tr>
-               <th>Issuing Court</th>
-               <td class="fixed_extender">{{ doc.issuing_court }}</td>
-            </tr>
-            <tr>
-               <th>Number of Matter</th>
-               <td class="fixed_extender">{{ doc.number_of_matter }}</td>
-            </tr>
-         {% endif %}
-         </table>
-
          <div class="spacer"></div>
 
-         <p>
-            <form id="doc_details_confirm" action="{{ url_for('new_document_confirm_document_details') }}"
-                  method="post">
-               <input type="checkbox" id="doc_details_correct" name="doc_details_correct">
-               <label for="doc_details_correct">I confirm all the details listed above are correct.</label><br /><br />
-            </form>
-         </p>
+         <div class="float_left">
+            <p>Please confirm the following details are correct for the {{ doc.document_type }}:</p>
+
+            <table>
+            {% if doc.document_type == "Marriage Certificate" %}
+               <tr>
+                  <th>Marriage Date</th>
+                  <td class="fixed_extender">{{ doc.change_of_name_date_as_string }}</td>
+               </tr>
+               <tr>
+                  <th>Age On Certificate</th>
+                  <td class="fixed_extender">{{ doc.age_on_certificate }}</td>
+               </tr>
+               <tr>
+                  <th>Registration District</th>
+                  <td class="fixed_extender">{{ doc.registration_district }}</td>
+               </tr>
+               <tr>
+                  <th>Marriage Number</th>
+                  <td class="fixed_extender">{{ doc.marriage_number }}</td>
+               </tr>
+
+            {% elif doc.document_type == "Deed Poll" %}
+               <tr>
+                  <th>Date on Deed Poll</th>
+                  <td class="fixed_extender">{{ doc.change_of_name_date_as_string }}</td>
+               </tr>
+               <tr>
+                  <th>Registered With Courts</th>
+                  <td class="fixed_extender">{% if doc.registered_with_courts %}Yes{% else %}No{% endif %}</td>
+               </tr>
+
+            {% elif doc.document_type == "Decree Absolute" %}
+               <tr>
+                  <th>Decree Date</th>
+                  <td class="fixed_extender">{{ doc.change_of_name_date_as_string }}</td>
+               </tr>
+               <tr>
+                  <th>Issuing Court</th>
+                  <td class="fixed_extender">{{ doc.issuing_court }}</td>
+               </tr>
+               <tr>
+                  <th>Number of Matter</th>
+                  <td class="fixed_extender">{{ doc.number_of_matter }}</td>
+               </tr>
+            {% endif %}
+            </table>
+            <p>
+               <form id="doc_details_confirm" action="{{ url_for('new_document_confirm_document_details') }}"
+                     method="post">
+                  <input type="checkbox" id="doc_details_correct" name="doc_details_correct">
+                  <label for="doc_details_correct">I confirm all the details listed above are correct.</label><br /><br />
+               </form>
+            </p>
+         </div>
+         <div class="upload_reference_image_div">Uploaded Image:<br />
+            <img class="upload_reference_image" src={{url_for('static', filename='uploads/' + doc.uploaded_file_path)}} /></div>
+
+         <div class="spacer"></div>
 
          <p>
             <form action="{{ url_for('new_document_add_document_details') }}">

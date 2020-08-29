@@ -8,6 +8,7 @@ import datetime
 
 
 def mock_list_of_organisations() -> list:
+    """This returns a list of mock organisations that are used to populate the prototype."""
     mock_org_1 = Organisation(org_id=50, org_name="Testing Organisation 1", requires_verified=True,
                               avg_time_to_process_days=3)
     mock_org_2 = Organisation(org_id=55, org_name="Another Testing Organisation", requires_verified=False,
@@ -19,6 +20,8 @@ def mock_list_of_organisations() -> list:
 
 
 def mock_list_of_users() -> list:
+    """This returns a list of mock users that can be used for testing purposes."""
+
     # Can be used by all
     org1 = mock_list_of_organisations().__getitem__(0)
 

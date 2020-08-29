@@ -43,51 +43,57 @@
             <p class="failure_message">{{ feedback }}</p>
          {% endif %}
 
-         <p>Please provide your previous and new names below.  If your forename or surname has not changed, leave the applicable
-         fields blank:</p>
-         <form id="add_personal_details" action="{{ url_for('new_document_add_personal_details') }}" method="post">
-            <label for="prev_forenames" class="form_evener">Previous Forename(s): </label>
-            <input type="text" id="prev_forenames" name="prev_forenames"
-            {% if form_data %} value="{{ form_data.prev_forenames }}"
-            {% elif doc.old_forenames != None %} value="{{ doc.old_forenames }}" {% endif %}><br />
-            <label for="prev_surname" class="form_evener">Previous Surname: </label>
-            <input type="text" id="prev_surname" name="prev_surname"
-            {% if form_data %} value="{{ form_data.prev_surname }}"
-            {% elif doc.old_surname != None %} value="{{ doc.old_surname }}" {% endif %}><br /><br />
+         <div class="spacer"></div>
 
-            <label for="forenames" class="form_evener">New Forename(s): </label>
-            <input type="text" id="forenames" name="forenames"
-            {% if form_data %} value="{{ form_data.forenames }}"
-            {% elif doc.new_forenames != None %} value="{{ doc.new_forenames }}" {% endif %}><br />
-            <label for="surname" class="form_evener">New Surname: </label>
-            <input type="text" id="surname" name="surname"
-            {% if form_data %} value="{{ form_data.surname }}"
-            {% elif doc.new_surname != None %} value="{{ doc.new_surname }}" {% endif %}><br /><br />
+         <div class="float_left">
+            <p>Please provide your previous and new names below.  If your forename or surname has not changed, leave the applicable
+            fields blank:</p>
+            <form id="add_personal_details" action="{{ url_for('new_document_add_personal_details') }}" method="post">
+               <label for="prev_forenames" class="form_evener">Previous Forename(s): </label>
+               <input type="text" id="prev_forenames" name="prev_forenames"
+               {% if form_data %} value="{{ form_data.prev_forenames }}"
+               {% elif doc.old_forenames != None %} value="{{ doc.old_forenames }}" {% endif %}><br />
+               <label for="prev_surname" class="form_evener">Previous Surname: </label>
+               <input type="text" id="prev_surname" name="prev_surname"
+               {% if form_data %} value="{{ form_data.prev_surname }}"
+               {% elif doc.old_surname != None %} value="{{ doc.old_surname }}" {% endif %}><br /><br />
 
-            <p>Please provide the address as it is listed on the document. All fields marked with an asterisk (*) are mandatory:</p>
-            <label for="address_name_no" class="form_evener">House Name / Number*: </label>
-            <input type="text" id="address_name_no" name="address_name_no"
-            {% if form_data %} value="{{ form_data.address_house_name_no }}"
-            {% elif doc.address.house_name_no != None %} value="{{ doc.address.house_name_no }}" {% endif %}><br />
-            <label for="address_line_1" class="form_evener">Address Line 1*: </label>
-            <input type="text" id="address_line_1" name="address_line_1"
-            {% if form_data %} value="{{ form_data.address_line_1 }}"
-            {% elif doc.address.line_1 != None %} value="{{ doc.address.line_1 }}" {% endif %}><br />
-            <label for="address_line_2" class="form_evener">Address Line 2: </label>
-            <input type="text" id="address_line_2" name="address_line_2"
-            {% if form_data %} value="{{ form_data.address_line_2 }}"
-            {% elif doc.address.line_2 != None %} value="{{ doc.address.line_2 }}" {% endif %}><br />
-            <label for="address_town_city" class="form_evener">Town / City*: </label>
-            <input type="text" id="address_town_city" name="address_town_city"
-            {% if form_data %} value="{{ form_data.address_city }}"
-            {% elif doc.address.town_city != None %} value="{{ doc.address.town_city }}" {% endif %}><br />
-            <label for="address_postcode" class="form_evener">Postcode*: </label>
-            <input type="text" id="address_postcode" name="address_postcode"
-            {% if form_data %} value="{{ form_data.address_postcode }}"
-            {% elif doc.address.postcode != None %} value="{{ doc.address.postcode }}" {% endif %}>
-         </form>
-         <!--<div>Uploaded Image:<br /><img class="upload_reference_image"
-         src={{url_for('static', filename='placeholder_doc.png')}} /></div>-->
+               <label for="forenames" class="form_evener">New Forename(s): </label>
+               <input type="text" id="forenames" name="forenames"
+               {% if form_data %} value="{{ form_data.forenames }}"
+               {% elif doc.new_forenames != None %} value="{{ doc.new_forenames }}" {% endif %}><br />
+               <label for="surname" class="form_evener">New Surname: </label>
+               <input type="text" id="surname" name="surname"
+               {% if form_data %} value="{{ form_data.surname }}"
+               {% elif doc.new_surname != None %} value="{{ doc.new_surname }}" {% endif %}><br /><br />
+
+               <p>Please provide the address as it is listed on the document. All fields marked with an asterisk (*) are mandatory:</p>
+               <label for="address_name_no" class="form_evener">House Name / Number*: </label>
+               <input type="text" id="address_name_no" name="address_name_no"
+               {% if form_data %} value="{{ form_data.address_house_name_no }}"
+               {% elif doc.address.house_name_no != None %} value="{{ doc.address.house_name_no }}" {% endif %}><br />
+               <label for="address_line_1" class="form_evener">Address Line 1*: </label>
+               <input type="text" id="address_line_1" name="address_line_1"
+               {% if form_data %} value="{{ form_data.address_line_1 }}"
+               {% elif doc.address.line_1 != None %} value="{{ doc.address.line_1 }}" {% endif %}><br />
+               <label for="address_line_2" class="form_evener">Address Line 2: </label>
+               <input type="text" id="address_line_2" name="address_line_2"
+               {% if form_data %} value="{{ form_data.address_line_2 }}"
+               {% elif doc.address.line_2 != None %} value="{{ doc.address.line_2 }}" {% endif %}><br />
+               <label for="address_town_city" class="form_evener">Town / City*: </label>
+               <input type="text" id="address_town_city" name="address_town_city"
+               {% if form_data %} value="{{ form_data.address_city }}"
+               {% elif doc.address.town_city != None %} value="{{ doc.address.town_city }}" {% endif %}><br />
+               <label for="address_postcode" class="form_evener">Postcode*: </label>
+               <input type="text" id="address_postcode" name="address_postcode"
+               {% if form_data %} value="{{ form_data.address_postcode }}"
+               {% elif doc.address.postcode != None %} value="{{ doc.address.postcode }}" {% endif %}>
+            </form>
+         </div>
+         <div class="upload_reference_image_div">Uploaded Image:<br />
+            <img class="upload_reference_image" src={{url_for('static', filename='uploads/' + doc.uploaded_file_path)}} /></div>
+
+         <div class="spacer"></div>
 
          <p>
             <form action="{{ url_for('new_document_confirm_image') }}">

@@ -37,55 +37,61 @@
             <p class="failure_message">{{ feedback }}</p>
          {% endif %}
 
-         <p>Please confirm the following details are correct:</p>
-         <table>
-            {% if doc.old_forenames != "" %}
+         <div class="spacer"></div>
+
+         <div class="float_left">
+            <p>Please confirm the following details are correct:</p>
+            <table>
+               {% if doc.old_forenames != "" %}
+                  <tr>
+                     <th>Previous Forename(s)</th>
+                     <td class="fixed_extender">{{ doc.old_forenames }}</td>
+                  </tr>
+               {% endif %}
+               {% if doc.old_surname != "" %}
+                  <tr>
+                     <th>Previous Surname</th>
+                     <td class="fixed_extender">{{ doc.old_surname }}</td>
+                  </tr>
+               {% endif %}
+               {% if doc.new_forenames != "" %}
+                  <tr>
+                     <th>New Forename(s)</th>
+                     <td class="fixed_extender">{{ doc.new_forenames }}</td>
+                  </tr>
+               {% endif %}
+               {% if doc.new_surname != "" %}
+                  <tr>
+                     <th>New Surname</th>
+                     <td class="fixed_extender">{{ doc.new_surname }}</td>
+                  </tr>
+               {% endif %}
                <tr>
-                  <th>Previous Forename(s)</th>
-                  <td class="fixed_extender">{{ doc.old_forenames }}</td>
+                  <th>House Name / Number</th>
+                  <td class="fixed_extender">{{ doc.address.house_name_no }}</td>
                </tr>
-            {% endif %}
-            {% if doc.old_surname != "" %}
                <tr>
-                  <th>Previous Surname</th>
-                  <td class="fixed_extender">{{ doc.old_surname }}</td>
+                  <th>Address Line 1</th>
+                  <td class="fixed_extender">{{ doc.address.line_1 }}</td>
                </tr>
-            {% endif %}
-            {% if doc.new_forenames != "" %}
+               {% if doc.address.line_2 != "" %}
+                  <tr>
+                     <th>Address Line 2</th>
+                     <td class="fixed_extender">{{ doc.address.line_2 }}</td>
+                  </tr>
+               {% endif %}
                <tr>
-                  <th>New Forename(s)</th>
-                  <td class="fixed_extender">{{ doc.new_forenames }}</td>
+                  <th>Town / City</th>
+                  <td class="fixed_extender">{{ doc.address.town_city }}</td>
                </tr>
-            {% endif %}
-            {% if doc.new_surname != "" %}
                <tr>
-                  <th>New Surname</th>
-                  <td class="fixed_extender">{{ doc.new_surname }}</td>
+                  <th>Postcode</th>
+                  <td class="fixed_extender">{{ doc.address.postcode }}</td>
                </tr>
-            {% endif %}
-            <tr>
-               <th>House Name / Number</th>
-               <td class="fixed_extender">{{ doc.address.house_name_no }}</td>
-            </tr>
-            <tr>
-               <th>Address Line 1</th>
-               <td class="fixed_extender">{{ doc.address.line_1 }}</td>
-            </tr>
-            {% if doc.address.line_2 != "" %}
-               <tr>
-                  <th>Address Line 2</th>
-                  <td class="fixed_extender">{{ doc.address.line_2 }}</td>
-               </tr>
-            {% endif %}
-            <tr>
-               <th>Town / City</th>
-               <td class="fixed_extender">{{ doc.address.town_city }}</td>
-            </tr>
-            <tr>
-               <th>Postcode</th>
-               <td class="fixed_extender">{{ doc.address.postcode }}</td>
-            </tr>
-         </table>
+            </table>
+         </div>
+         <div class="upload_reference_image_div">Uploaded Image:<br />
+            <img class="upload_reference_image" src={{url_for('static', filename='uploads/' + doc.uploaded_file_path)}} /></div>
 
          <div class="spacer"></div>
          <p>

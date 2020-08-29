@@ -3,12 +3,10 @@ import os
 from flask import render_template, redirect, url_for, request
 from app import app
 import datetime
-from werkzeug.utils import secure_filename
 
 import globals.mock_variables as mock
 import globals.global_variables as gv
 import functions.general_functions as gen_functions
-from classes.organisation_class import Organisation
 
 from classes.user_class import User
 from classes.signup_verification_class import SignupVerification
@@ -55,40 +53,60 @@ failure_message = None
 @app.route('/')
 @app.route('/index', methods=['GET', 'POST'])
 def index():
+    """This covers handling of the initial index page, either loading or submitting the page.
+
+    Allowed methods: GET, POST"""
     global user, failure_message
     if user.logged_in:
+        # If the user is already logged in, direct them to their account homepage
         return redirect(url_for('account_home'))
     else:
         if request.method == 'GET':
+            # If the page is just loaded, render the page with any applicable feedback messages displayed.
             logger.log_benchmark("Load Homepage")
             feedback = failure_message
             failure_message = None
             return render_template('index.html', user=user, feedback=feedback)
         elif request.method == 'POST':
+            # Submit the login form and verify the details before logging in.
             logger.log_benchmark("Homepage - Attempt Login")
             if len(request.form) > 0:
                 email = request.form["email_address"]
                 pwd = request.form["password"]
                 if email == "" or pwd == "":
+                    # Both fields need values to proceed - fail with error advising of this.
                     feedback = "You need to provide your email and password to log in."
                     return render_template('index.html', user=user, feedback=feedback)
                 else:
                     try:
+                        # Attempt to set the user object with the details provided
                         user = return_logged_in_user(email, pwd)
                     except LookupError as err:
+                        # If lookup fails, catch the error and return feedback stating failure.
                         feedback = err
                         return render_template('index.html', user=user, feedback=feedback)
                     if not user.verified_state:
+                        # If the user account is not verified but exists, redirect to page to generate email
+                        # activation link
                         return redirect(url_for('new_account_click_link'))
                     else:
+                        # Log the user in and direct them to the account homepage
                         user.logged_in = True
                         return redirect(url_for('account_home'))
             else:
+                # The form is empty, so notify the user they have to provide some values before submitting.
                 feedback = "You need to provide your email and password to log in."
                 return render_template('index.html', user=user, feedback=feedback)
 
 
 def return_logged_in_user(email: str, pwd: str) -> User:
+    """This function checks the email and password against the global user list and returns a User object if found,
+    or raises a LookupError if not found.  If the user is found but the password doesn't match, a LookupError is also
+    raised.
+
+    Keyword arguments:
+    email (str) -- The email address of the user.
+    pwd (str) -- The prototype password of the user."""
     for user_check in users_list:
         if user_check.email == email:
             if user_check.prototype_password == pwd:
@@ -101,11 +119,16 @@ def return_logged_in_user(email: str, pwd: str) -> User:
 
 @app.route('/forgotten_password')
 def forgot_password():
+    """This covers rendering the forgotten password page, which is a placeholder document in this prototype."""
     return render_template('forgotten_password.html', user=user)
 
 
 @app.route('/test/<test_conditions>')
 def test(test_conditions):
+    """This is a test method used to automatically log in as a mock test user.
+
+    Keyword arguments:
+    test_conditions (str) -- The condition to apply."""
     global user
     user = User()
     if test_conditions == "1":
@@ -125,21 +148,25 @@ def test(test_conditions):
 
 @app.route('/about')
 def about():
+    """This covers rendering the about page, which is a placeholder document in this prototype."""
     return render_template('general/about.html', user=user)
 
 
 @app.route('/how_it_works')
 def how_it_works():
+    """This covers rendering the how it works page, which is a placeholder document in this prototype."""
     return render_template('general/how_it_works.html', user=user)
 
 
 @app.route('/faq')
 def faq():
+    """This covers rendering the FAQ page, which is a placeholder document in this prototype."""
     return render_template('general/faq.html', user=user)
 
 
 @app.route('/contact')
 def contact():
+    """This covers rendering the contact page, which is a placeholder document in this prototype."""
     return render_template('general/contact.html', user=user)
 
 
@@ -148,9 +175,13 @@ def contact():
 
 @app.route('/new_account_signup', methods=['GET', 'POST'])
 def new_account_signup():
+    """This covers handling of the new account signup page, either loading or submitting the page.
+
+    Allowed methods: GET, POST"""
     global user, incrementer_user, capcha_on_page
 
     if user.logged_in:
+        # If the user is already logged in, direct them to their account homepage
         return redirect(url_for('account_home'))
     else:
         if request.method == 'GET':
@@ -233,6 +264,7 @@ def new_account_click_link():
     global success_message
 
     if user.logged_in:
+        # If the user is already logged in, direct them to their account homepage
         return redirect(url_for('account_home'))
     else:
         feedback = success_message
@@ -245,6 +277,7 @@ def resend_new_account_email():
     global success_message
 
     if user.logged_in:
+        # If the user is already logged in, direct them to their account homepage
         return redirect(url_for('account_home'))
     else:
         for signup_user in signup_verification_list:
@@ -289,6 +322,7 @@ def retrieve_user_from_list(user_id: int):
 @app.route('/account')
 def account_home():
     if not user.logged_in:
+        # If the user is not logged in, direct them to the index page
         return redirect(url_for('index'))
     else:
         logger.log_benchmark("Account Homepage")
@@ -323,6 +357,7 @@ def account_home():
 @app.route('/edit_profile')
 def edit_profile():
     if not user.logged_in:
+        # If the user is not logged in, direct them to the index page
         return redirect(url_for('index'))
     else:
         return render_template('profile/edit_profile.html', user=user)
@@ -330,6 +365,7 @@ def edit_profile():
 
 @app.route('/logout')
 def logout():
+    """This logs the user out and redirects them to the index page"""
     global user
     user = User()
     logger.log_benchmark("User Logout")
@@ -380,6 +416,7 @@ def new_document_selection():
                 return render_template('add_document/add_doc_1_selection.html', user=user,
                                        divorce_on=marriage_cert_present, feedback=feedback)
     else:
+        # If the user is not logged in, direct them to the index page
         return redirect(url_for('index'))
 
 
@@ -402,6 +439,7 @@ def new_document_decree_absolute_certificate():
                 return render_template('add_document/add_doc_1a_decree_absolute_selection.html', user=user,
                                        doc=document, feedback=feedback)
     else:
+        # If the user is not logged in, direct them to the index page
         return redirect(url_for('index'))
 
 
@@ -443,6 +481,7 @@ def new_document_upload_image():
                     return render_template('add_document/add_doc_2_upload_image.html', user=user, doc=document,
                                            feedback=feedback)
     else:
+        # If the user is not logged in, direct them to the index page
         return redirect(url_for('index'))
 
 
@@ -465,6 +504,7 @@ def new_document_confirm_image():
                 return render_template('add_document/add_doc_3_confirm_image.html', user=user, doc=document,
                                        feedback=feedback)
     else:
+        # If the user is not logged in, direct them to the index page
         return redirect(url_for('index'))
 
 
@@ -507,6 +547,7 @@ def new_document_add_personal_details():
                 return render_template('add_document/add_doc_4_add_personal_details.html', user=user, doc=document,
                                        feedback=feedback)
     else:
+        # If the user is not logged in, direct them to the index page
         return redirect(url_for('index'))
 
 
@@ -549,6 +590,7 @@ def new_document_confirm_personal_details():
                 return render_template('add_document/add_doc_5_confirm_personal_details.html', user=user, doc=document,
                                        feedback=feedback)
     else:
+        # If the user is not logged in, direct them to the index page
         return redirect(url_for('index'))
 
 
@@ -654,6 +696,7 @@ def new_document_add_document_details():
                 return render_template('add_document/add_doc_6_add_document_details.html', user=user, doc=document,
                                        feedback=feedback)
     else:
+        # If the user is not logged in, direct them to the index page
         return redirect(url_for('index'))
 
 
@@ -789,6 +832,7 @@ def new_document_confirm_document_details():
                 return render_template('add_document/add_doc_7_confirm_document_details.html', user=user, doc=document,
                                        feedback=feedback)
     else:
+        # If the user is not logged in, direct them to the index page
         return redirect(url_for('index'))
 
 
@@ -798,6 +842,7 @@ def new_document_finish():
         logger.log_benchmark("Add New Document: Reached Finish Page")
         return render_template('add_document/add_doc_8_finish.html', user=user, doc=document, orgs=orgs)
     else:
+        # If the user is not logged in, direct them to the index page
         return redirect(url_for('index'))
 
 
@@ -816,8 +861,9 @@ def verify_document(code):
             document.document_verified_state = VerifiedStates.VERIFIED
 
         document.document_verified_org = "CYN Auto Admin"
-        return redirect(url_for('index'))
+        return redirect(url_for('account_home'))
     else:
+        # If the user is not logged in, direct them to the index page
         return redirect(url_for('index'))
 
 
@@ -836,6 +882,7 @@ def manage_all_documents():
         logger.log_benchmark("Manage All Documents")
         return render_template('manage_documents/manage_all_documents.html', user=user, success=success_to_display)
     else:
+        # If the user is not logged in, direct them to the index page
         return redirect(url_for('index'))
 
 
@@ -857,6 +904,7 @@ def manage_document(doc_id):
         else:
             return redirect(url_for('manage_all_documents'))
     else:
+        # If the user is not logged in, direct them to the index page
         return redirect(url_for('index'))
 
 
@@ -878,6 +926,7 @@ def view_document_image(doc_id):
         else:
             return redirect(url_for('manage_all_documents'))
     else:
+        # If the user is not logged in, direct them to the index page
         return redirect(url_for('index'))
 
 
@@ -921,6 +970,7 @@ def remove_document(doc_id):
         else:
             return redirect(url_for('manage_all_documents'))
     else:
+        # If the user is not logged in, direct them to the index page
         return redirect(url_for('index'))
 
 
@@ -947,6 +997,7 @@ def generate_code_document_selection():
                 return render_template('generate_access_code/generate_code_1_selection.html', user=user,
                                        feedback=feedback)
     else:
+        # If the user is not logged in, direct them to the index page
         return redirect(url_for('index'))
 
 
@@ -1006,6 +1057,7 @@ def generate_code_access_details():
                 return render_template('generate_access_code/generate_code_2_details.html', user=user,
                                        code_to_use=access_code, orgs=orgs, feedback=feedback)
     else:
+        # If the user is not logged in, direct them to the index page
         return redirect(url_for('index'))
 
 
@@ -1041,6 +1093,7 @@ def generate_code_confirm_access_details():
                 return render_template('generate_access_code/generate_code_3_confirm_details.html', user=user,
                                        code_to_use=access_code, feedback=feedback)
     else:
+        # If the user is not logged in, direct them to the index page
         return redirect(url_for('index'))
 
 
@@ -1068,6 +1121,7 @@ def manage_access_code(code_to_retrieve):
         else:
             return redirect(url_for('manage_all_access_codes'))
     else:
+        # If the user is not logged in, direct them to the index page
         return redirect(url_for('index'))
 
 
@@ -1122,6 +1176,7 @@ def extend_access_code(code_to_extend):
         else:
             return redirect(url_for('manage_all_access_codes'))
     else:
+        # If the user is not logged in, direct them to the index page
         return redirect(url_for('index'))
 
 
@@ -1160,6 +1215,7 @@ def revoke_access_code(code_to_revoke):
         else:
             return redirect(url_for('manage_all_access_codes'))
     else:
+        # If the user is not logged in, direct them to the index page
         return redirect(url_for('index'))
 
 
@@ -1208,6 +1264,7 @@ def reactivate_access_code(code_to_reactivate):
         else:
             return redirect(url_for('manage_all_access_codes'))
     else:
+        # If the user is not logged in, direct them to the index page
         return redirect(url_for('index'))
 
 
@@ -1216,6 +1273,7 @@ def manage_all_access_codes():
     if user.logged_in:
         return render_template('manage_access_code/manage_all_codes.html', user=user)
     else:
+        # If the user is not logged in, direct them to the index page
         return redirect(url_for('index'))
 
 
@@ -1224,9 +1282,11 @@ def manage_all_access_codes():
 
 @app.errorhandler(404)
 def page_not_found(error):
+    """Handles returning the 404 template if the page isn't found."""
     return render_template('errors/404.html', user=user, err=error)
 
 
 @app.errorhandler(500)
 def internal_server_error(error):
+    """Handles returning the 500 template if an error occurs."""
     return render_template('errors/500.html', user=user, err=error)

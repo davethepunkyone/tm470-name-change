@@ -3,6 +3,7 @@ from random import randint
 
 
 def generate_unique_access_code() -> str:
+    """This generates a randomly generated six digit access code and returns it as a str."""
     digit1 = str(randint(0, 9))
     digit2 = str(randint(0, 9))
     digit3 = str(randint(0, 9))
@@ -15,6 +16,15 @@ def generate_unique_access_code() -> str:
 
 def check_expiry_date_is_valid(current_expiry: datetime or None, duration_time: int, duration_denominator: str)\
         -> str or None:
+    """This checks that the expiry date intending to be set would be under 31 days, which is the current fixed
+    limit within the system.
+
+    Keyword arguments:
+    current_expiry (datetime or None) -- The current expiry datetime.  Setting None uses the current datetime.
+    duration_time (int) -- The numeric value that the expiry date is intended to be extended by.
+    duration_denominator (str) -- The denominator value used to extend the expiry date by. Acceptable values: hours,
+    days."""
+
     max_datetime_allowed = datetime.datetime.now() + datetime.timedelta(days=31)
     if current_expiry is None:
         calculated_expiry = datetime.datetime.now()

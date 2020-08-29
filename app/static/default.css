@@ -143,6 +143,11 @@ select.denominator_box {
   width: 75px;
 }
 
+.float_left {
+  float: left;
+  width: 500px;
+}
+
 .main {
   position: fixed;
   top: 85px;
@@ -228,7 +233,7 @@ select.denominator_box {
   font-style: italic;
   border-bottom-style: dotted;
   border-bottom-width: thin;
-  display: inline;
+  display: inline-block;
 }
 
 .help_tooltip .help_tooltip_content {
@@ -261,13 +266,25 @@ select.denominator_box {
   background-color: #5D5C5C;
 }
 
-.upload_reference_image {
+.upload_reference_image_div {
+  float: right;
   border-style: solid;
   border-color: #2F528F;
+  font-weight: bold;
+  font-style: italic;
+  padding: 2px 2px;
+  background-color: #dedddd;
+}
+
+.upload_reference_image {
+  border-width: thin;
+  border-style: solid;
+  margin-top: 2px;
   width: 250px;
   height: 175px;
   overflow: hidden;
-  float: left;
+  object-fit: scale-down;
+  background-color: #5D5C5C;
 }
 
 .links, .field_values {
@@ -408,6 +425,11 @@ select.denominator_box {
 
 .recommended_actions_button:hover {
   background-color: #5D5C5C;
+  box-shadow: 0 0;
+}
+
+.promoted_action:hover {
+  background-color: #365422;
   box-shadow: 0 0;
 }
 

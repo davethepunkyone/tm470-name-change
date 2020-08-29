@@ -1,3 +1,5 @@
+"""This file encompasses global variables applicable to the whole system."""
+
 # URL
 live_url = "http://127.0.0.1:5000"
 
