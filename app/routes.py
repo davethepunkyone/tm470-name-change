@@ -292,7 +292,32 @@ def account_home():
         return redirect(url_for('index'))
     else:
         logger.log_benchmark("Account Homepage")
-        return render_template('account_home.html', user=user)
+        table_values = []
+        entry_val = 1
+
+        for doc in user.docs:
+            total_codes = 0
+            active_codes = 0
+            expired_codes = 0
+            for code in user.access_codes:
+                if code.uploaded_document.document_id == doc.document_id:
+                    total_codes = total_codes = + 1
+                    if code.accessed_state == AccessStates.ACTIVE:
+                        active_codes = active_codes = + 1
+                    elif code.accessed_state == AccessStates.EXPIRED:
+                        expired_codes = expired_codes = + 1
+
+            table_row = {"doc_name": doc.document_type + " (" + doc.change_of_name_date_as_string + ")",
+                         "doc_state": doc.document_verified_state,
+                         "total_codes": total_codes,
+                         "active_codes": active_codes,
+                         "expired_codes": expired_codes}
+
+            table_values.append(table_row)
+
+            entry_val += 1
+
+        return render_template('account_home.html', user=user, table_data=table_values)
 
 
 @app.route('/edit_profile')
@@ -741,6 +766,12 @@ def new_document_confirm_document_details():
         elif request.method == 'POST':
             if len(request.form) > 0:
                 if request.form["doc_details_correct"] == "on":
+                    doc_check_feedback = check_doc_details_dont_already_exist_for_user(document.change_of_name_date)
+                    # Check that the user hasn't pressed the back button after finishing and tries to add again
+                    if doc_check_feedback is not None:
+                        return render_template('add_document/add_doc_7_confirm_document_details.html', user=user,
+                                               doc=document, feedback=doc_check_feedback)
+
                     document.complete = True
                     # If document isn't verified with courts, there is no way to validate it
                     if document.document_type == "Deed Poll":
@@ -998,7 +1029,7 @@ def generate_code_confirm_access_details():
                     access_code.added_datetime = datetime.datetime.now()
                     user.access_codes.append(access_code)
                     success_message = "The code was successfully generated!"
-                    # access_code = AccessCode()
+
                     logger.log_benchmark("Generate Access Code: Finish")
                     return redirect(url_for('manage_access_code', code_to_retrieve=access_code.code_id))
                 else:

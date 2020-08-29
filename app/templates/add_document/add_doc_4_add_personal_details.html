@@ -31,15 +31,21 @@
                Finish
             </div>
          </div>
-         <h2>Your Details</h2>
+         <h2 class="with_help">Your Details</h2>
+         <div class="help_tooltip">
+            <img class="help_icon" src={{url_for('static', filename='help.png')}}> Why do I need to provide this?
+            <span class="help_tooltip_content">Providing this information allows for organisations to find your document
+            when you provide them with an access code - as part of retrieving the document they must prove they have the
+            correct details for you to ensure they are receiving the correct document.</span>
+         </div>
 
          {% if feedback %}
             <p class="failure_message">{{ feedback }}</p>
          {% endif %}
 
-         <p>Please provide the following details: <div class="to_remove">Help Tooltip Here</div></p>
+         <p>Please provide your previous and new names below.  If your forename or surname has not changed, leave the applicable
+         fields blank:</p>
          <form id="add_personal_details" action="{{ url_for('new_document_add_personal_details') }}" method="post">
-            <p>Note: If your forename or surname has not changed, leave the applicable fields blank.</p>
             <label for="prev_forenames" class="form_evener">Previous Forename(s): </label>
             <input type="text" id="prev_forenames" name="prev_forenames"
             {% if form_data %} value="{{ form_data.prev_forenames }}"
@@ -58,7 +64,7 @@
             {% if form_data %} value="{{ form_data.surname }}"
             {% elif doc.new_surname != None %} value="{{ doc.new_surname }}" {% endif %}><br /><br />
 
-            <p>Note: Please provide the address listed on the document uploaded.</p>
+            <p>Please provide the address as it is listed on the document. All fields marked with an asterisk (*) are mandatory:</p>
             <label for="address_name_no" class="form_evener">House Name / Number*: </label>
             <input type="text" id="address_name_no" name="address_name_no"
             {% if form_data %} value="{{ form_data.address_house_name_no }}"
@@ -78,8 +84,7 @@
             <label for="address_postcode" class="form_evener">Postcode*: </label>
             <input type="text" id="address_postcode" name="address_postcode"
             {% if form_data %} value="{{ form_data.address_postcode }}"
-            {% elif doc.address.postcode != None %} value="{{ doc.address.postcode }}" {% endif %}><br />
-            <p>* = Fields are mandatory</p>
+            {% elif doc.address.postcode != None %} value="{{ doc.address.postcode }}" {% endif %}>
          </form>
          <!--<div>Uploaded Image:<br /><img class="upload_reference_image"
          src={{url_for('static', filename='placeholder_doc.png')}} /></div>-->

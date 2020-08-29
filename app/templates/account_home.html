@@ -20,7 +20,40 @@
             </div>
          {% else %}
             <h2>My Uploaded Documents</h2>
-            <p class="to_remove">Table here</p>
+            <table>
+               <tr>
+                  <th>Document</th>
+                  <th>State</th>
+                  <th>Total Access Codes</th>
+                  <th>Active Codes</th>
+                  <th>Expired Codes</th>
+               </tr>
+               {% for table_entry in table_data %}
+                  <tr>
+                     <td>{{ table_entry["doc_name"] }}</td>
+                        {% if table_entry["doc_state"].name == 'VERIFIED' %}
+                           <td class="center_content"><img class="icon_image" title="Verified"
+                                    src={{url_for('static', filename='verified_tick.png')}}></td>
+                        {% elif table_entry["doc_state"].name == 'AWAITING_VERIFICATION' %}
+                           <td class="center_content"><img class="icon_image" title="Awaiting Verification"
+                                    src={{url_for('static', filename='awaiting_verification.png')}}></td>
+                        {% elif table_entry["doc_state"].name == 'VERIFICATION_FAILED' %}
+                           <td class="center_content"><img class="icon_image" title="Verification Failed"
+                                    src={{url_for('static', filename='verification_failed.png')}}></td>
+                        {% elif table_entry["doc_state"].name == 'NOT_APPLICABLE' %}
+                           <td class="center_content"><img class="icon_image" title="Not Applicable"
+                                    src={{url_for('static', filename='not_applicable.png')}}></td>
+                        {% else %}
+                           <td class="center_content"><img class="icon_image" title="Uploaded"
+                                    src={{url_for('static', filename='uploaded.png')}}></td>
+                        {% endif %}
+                     <td class="center_content">{{ table_entry["total_codes"] }}</td>
+                     <td class="center_content">{{ table_entry["active_codes"] }}</td>
+                     <td class="center_content">{{ table_entry["expired_codes"] }}</td>
+                  </tr>
+               {% endfor %}
+            </table>
+            <p><div class="spacer"></div></p>
             <div class="darkened_section">
                <h2>Recommended Actions</h2>
                <p>These are the actions we recommend taking next:</p>

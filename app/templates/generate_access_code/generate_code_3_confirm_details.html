@@ -33,7 +33,9 @@
          <table>
             <tr>
                <th>Who requires access</th>
-               <td>{{ code_to_use.access_for_org.org_name }}</td>
+               <td>{{ code_to_use.access_for_org.org_name }}<br />
+                  <div class="org_info">This organisation on average takes
+                     {{ code_to_use.access_for_org.avg_time_to_process_days }} day(s) to retrieve documents.</div></td>
             </tr>
             <tr>
                <th>Duration of access</th>

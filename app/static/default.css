@@ -22,6 +22,14 @@ h2 {
   font-size: 22px;
 }
 
+h3 {
+  color: black;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  font-weight: bold;
+  font-size: 18px;
+}
+
 p {
   color: black;
   text-align: left;
@@ -57,10 +65,8 @@ header {
 }
 
 footer {
-  /*margin: auto;*/
   position: fixed;
   top: 965px;
-  /*bottom: 5px;*/
   width: 1000px;
   padding: 10px;
   height: 50px;
@@ -183,6 +189,14 @@ select.denominator_box {
   border-style: solid;
 }
 
+.green_section {
+  background-color: #deffba;
+  padding-left: 10px;
+  padding-right: 10px;
+  border-color: #478638;
+  border-style: solid;
+}
+
 .header_text {
   float: left;
   color: white;
@@ -201,6 +215,40 @@ select.denominator_box {
   vertical-align: middle;
   width: 30px;
   height: 30px;
+}
+
+.help_icon {
+  width: 15px;
+  height: 15px;
+  display: inline-block;
+}
+
+.help_tooltip {
+  position: relative;
+  font-style: italic;
+  border-bottom-style: dotted;
+  border-bottom-width: thin;
+  display: inline;
+}
+
+.help_tooltip .help_tooltip_content {
+  visibility: hidden;
+  width: 250px;
+  background-color: black;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px 5px;
+  position: absolute;
+  z-index: 1;
+  top: 100%;
+  left: 50%;
+  margin-left: -100px;
+}
+
+.help_tooltip:hover .help_tooltip_content {
+  visibility: visible;
+  font-style: normal;
 }
 
 .upload_image {
@@ -466,6 +514,17 @@ select.denominator_box {
   width: 200px;
   height: 100px;
   display: inline-block;
+}
+
+.org_info {
+  background-color: #d0cece;
+  border-color: #9f9b9b;
+  padding: 2px 2px;
+  margin-top: 2px;
+  border-style: solid;
+  border-width: 2px;
+  border-radius: 4px;
+  font-style: italic;
 }
 
 .to_remove {

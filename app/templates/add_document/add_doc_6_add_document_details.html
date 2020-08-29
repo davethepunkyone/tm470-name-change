@@ -32,12 +32,17 @@
             </div>
          </div>
          <h2>Add Document Details</h2>
+         <div class="help_tooltip">
+            <img class="help_icon" src={{url_for('static', filename='help.png')}}> Why do I need to provide this?
+            <span class="help_tooltip_content">Providing this information allows for this document to be easily
+            validated if required, and can serve as additional checks for organisations requesting your data.</span>
+         </div>
 
          {% if feedback %}
             <p class="failure_message">{{ feedback }}</p>
          {% endif %}
 
-         <p>Please provide the following details for the {{ doc.document_type }}: <div class="to_remove">Help Tooltip Here</div></p>
+         <p>Please provide the following details for the {{ doc.document_type }}:</p>
 
          {% if doc.document_type == "Marriage Certificate" %}
          <form id="add_marriage_cert_details" action="{{ url_for('new_document_add_document_details') }}"
