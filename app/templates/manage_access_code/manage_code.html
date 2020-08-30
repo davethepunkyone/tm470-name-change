@@ -40,8 +40,22 @@
             </tr>
          </table>
 
-         <h2>Activity</h2>
-         <p class="to_remove"> The activity for the code needs to go here </p>
+         <h2>Activity (Example Only)</h2>
+         <p>The table below outlines all the activity that has taken place against this access code.</p>
+         <table>
+            <tr>
+               <th>Date / Time</th>
+               <th>Description</th>
+            </tr>
+            <tr>
+               <td>{{ code_to_use.added_datetime.strftime("%d/%m/%Y %H:%M") }}
+               <td>Access code created</td>
+            </tr>
+            <tr>
+               <td>{{ date_now.strftime("%d/%m/%Y %H:%M") }}
+               <td>Another example activity</td>
+            </tr>
+         </table>
 
          <h2>Actions</h2>
          {% if code_to_use.accessed_state.name == "ACTIVE" %}
