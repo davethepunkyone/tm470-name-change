@@ -26,7 +26,7 @@ def log_info(message_to_log: str) -> None:
 
 
 def log_benchmark(process_to_log: str) -> None:
-    """This logs a benchmark value to the benchmark log file.  Benchmarks record the activity and the time that
+    """This logs a benchmark value to the benchmark log text file.  Benchmarks record the activity and the time that
     activity was conducted in the following format: BENCHMARK|Activity|TIME|datetime (dd/mm/yyyy hh:mm:ss)
 
     Keyword arguments:

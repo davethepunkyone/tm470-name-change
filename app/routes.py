@@ -63,13 +63,13 @@ def index():
     else:
         if request.method == 'GET':
             # If the page is just loaded, render the page with any applicable feedback messages displayed
-            logger.log_benchmark("Load Homepage")
+            logger.log_benchmark("Load Index")
             feedback = failure_message
             failure_message = None
             return render_template('index.html', user=user, feedback=feedback)
         elif request.method == 'POST':
             # Submit the login form and verify the details before logging in
-            logger.log_benchmark("Homepage - Attempt Login")
+            logger.log_benchmark("Index - Attempt Login")
             if len(request.form) > 0:
                 email = request.form["email_address"]
                 pwd = request.form["password"]
@@ -92,7 +92,7 @@ def index():
                     else:
                         # Log the user in and direct them to the account homepage
                         user.logged_in = True
-                        logger.log_benchmark("Homepage - Successful Login")
+                        logger.log_benchmark("Index - Successful Login")
                         return redirect(url_for('account_home'))
             else:
                 # The form is empty, so notify the user they have to provide some values before submitting
@@ -135,12 +135,15 @@ def test(test_conditions):
     if test_conditions == "1":
         user = users_list.__getitem__(0)
         user.logged_in = True
+        logger.log_benchmark("Admin Action - Auto-login: Test User 1")
     elif test_conditions == "2":
         user = users_list.__getitem__(1)
         user.logged_in = True
+        logger.log_benchmark("Admin Action - Auto-login: Test User 2")
     elif test_conditions == "3":
         user = users_list.__getitem__(2)
         user.logged_in = True
+        logger.log_benchmark("Admin Action - Auto-login: Test User 3")
     return redirect(url_for('index'))
 
 
@@ -1641,7 +1644,7 @@ def reactivate_access_code(code_to_reactivate):
                 else:
                     # The form is empty, so notify the user they have to provide some values before submitting
                     feedback = "You must specify how long the code should be reactivated for."
-                    return render_template('manage_access_code/reactivate_code.html.html', user=user,
+                    return render_template('manage_access_code/reactivate_code.html', user=user,
                                            code_to_use=code_to_manage, feedback=feedback)
         else:
             # If the access code is not found in the list redirect to manage all codes
