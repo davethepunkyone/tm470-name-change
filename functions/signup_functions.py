@@ -54,11 +54,9 @@ def generate_code(no_of_chars: int) -> str:
     no_of_chars (int) -- The number of characters needed in the code."""
     code = ""
     characters = string.ascii_letters + string.digits
-    i = 1
-    while i <= no_of_chars:
+    while len(code) < no_of_chars:
         character_to_use = random.randint(0, len(characters))
         code = code + characters[character_to_use:character_to_use + 1]
-        i += 1
     return code
 
 
